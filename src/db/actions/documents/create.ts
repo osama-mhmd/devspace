@@ -19,6 +19,7 @@ type Process =
 export default async function createDocument(
   workspace_id: string,
   parent_id = "",
+  content: string | null = null,
   title: string | null = null,
 ): Promise<Process> {
   const userPermission = await permission(workspace_id);
@@ -36,6 +37,7 @@ export default async function createDocument(
     .values({
       id: documentId,
       title,
+      content,
       workspace_id,
       parent_id,
     })

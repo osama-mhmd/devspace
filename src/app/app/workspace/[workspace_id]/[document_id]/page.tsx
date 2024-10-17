@@ -26,6 +26,7 @@ const Space = ({
       const process = await createDocument(
         params.workspace_id,
         parent_id,
+        null,
         `<h1>${params.document_id}</h1>`,
       );
 

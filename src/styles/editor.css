@@ -80,7 +80,7 @@ span[comment_id] {
 }
 
 .tiptap a {
-  @apply underline text-blue-900 cursor-pointer;
+  @apply underline text-blue-900 dark:text-blue-400 cursor-pointer;
 }
 
 .tiptap .callout {

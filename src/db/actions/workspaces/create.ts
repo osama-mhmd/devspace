@@ -6,6 +6,10 @@ import { validateRequest } from "../../auth";
 import { usersPermissions, workspaceTable } from "../../schemas";
 import { redirect } from "next/navigation";
 import createDocument from "../documents/create";
+import {
+  defaultDocumentContent,
+  defaultDocumentTitle,
+} from "../documents/_config";
 
 export type Err = {
   message: string;
@@ -46,7 +50,12 @@ export default async function createWorkspace(data: any): Promise<Err | never> {
     permission: "owner",
   });
 
-  const result = await createDocument(workspaceId);
+  const result = await createDocument(
+    workspaceId,
+    undefined,
+    defaultDocumentContent,
+    defaultDocumentTitle,
+  );
 
   if (!result.ok)
     return {
