@@ -7,6 +7,14 @@ import { Toaster } from "sonner";
 import "@/styles/globals.css";
 import { ThemeProvider } from "./theme-provider";
 
+import * as m from "@/paraglide/messages";
+import {
+  availableLanguageTags,
+  languageTag,
+  setLanguageTag,
+} from "@/paraglide/runtime";
+import { cookies } from "next/headers";
+
 export const metadata: Metadata = {
   title: "Nonote | Homepage",
   description:
@@ -20,8 +28,21 @@ export default async function RootLayout({
 }>) {
   const { session } = await validateRequest();
 
+  const cookieLang = cookies().get("lang")?.value;
+
+  availableLanguageTags.forEach((tag) => {
+    if (tag == cookieLang) {
+      setLanguageTag(tag);
+    }
+  });
+  console.log(languageTag());
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang={languageTag()}
+      dir={languageTag() == "ar" ? "rtl" : "ltr"}
+      suppressHydrationWarning
+    >
       <body className={inter}>
         <ThemeProvider
           attribute="class"

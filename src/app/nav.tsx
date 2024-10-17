@@ -4,15 +4,37 @@ import { Button } from "../components/ui/button";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import GithubIcon from "../components/icons/github";
-import { ArrowRight, List } from "lucide-react";
+import { ArrowRight, Globe, List } from "lucide-react";
 import { merienda } from "@/lib/fonts";
 import { Session } from "lucia";
 import { ThemeToggle } from "@/components/change-theme";
+import {
+  Select,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectContent,
+} from "@/components/ui/select";
+import {
+  AvailableLanguageTag,
+  languageTag,
+  setLanguageTag,
+} from "@/paraglide/runtime";
 
 export default function Nav({ session }: { session: Session | null }) {
   const pathname = usePathname();
 
+  const s = document.cookie.match(/lang=(\w+)/);
+
+  if (s) setLanguageTag(s[1] as AvailableLanguageTag);
+  // else set
+
   const shouldNotRender = /^\/app\/?(.*)$/.test(pathname);
+
+  function changeLanguage(val: AvailableLanguageTag) {
+    document.cookie = `lang=${val}`;
+    window.location.reload();
+  }
 
   return shouldNotRender ? null : (
     <nav className="main-nav">
@@ -50,6 +72,19 @@ export default function Nav({ session }: { session: Session | null }) {
           </li>
           <li>
             <ThemeToggle />
+          </li>
+          <li>
+            <Select defaultValue={languageTag()} onValueChange={changeLanguage}>
+              <SelectTrigger className="flex items-center gap-1.5">
+                <span className="capitalize">{languageTag()}</span> <Globe />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="en">English</SelectItem>
+                  <SelectItem value="ar">Arabic</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </li>
         </ul>
       </div>
