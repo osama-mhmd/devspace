@@ -147,16 +147,20 @@ code * {
   @apply inline w-5 mb-0.5 h-5;
 }
 
+.spinner {
+  @apply rounded-full border-2 p-[6px] animate-spin !border-l-transparent inline-block;
+}
+
 .bg-primary > .spinner {
-  @apply rounded-full border-2 p-[6px] border-primary-foreground animate-spin border-l-transparent;
+  @apply border-primary-foreground;
 }
 
 .bg-destructive > .spinner {
-  @apply rounded-full border-2 p-[6px] border-destructive-foreground animate-spin border-l-transparent;
+  @apply border-destructive-foreground;
 }
 
 *:not(.bg-primary, .bg-destructive) > .spinner {
-  @apply rounded-full border-2 p-[6px] border-black animate-spin border-l-transparent;
+  @apply border-black dark:border-white;
 }
 
 .error,
