@@ -94,3 +94,15 @@ span[comment_id] {
 ul[data-type="taskList"] li[data-checked="true"] {
   @apply line-through text-gray-600 dark:text-gray-400;
 }
+
+[data-type="kanban"] {
+  @apply flex;
+}
+
+[data-type="column"] {
+  @apply rounded-md bg-green-400 dark:bg-green-700 flex-1 flex flex-col gap-2 p-2;
+}
+
+[data-type="task"] {
+  @apply rounded-md bg-blue-400 dark:bg-blue-700 flex-1 flex flex-col gap-2 p-2;
+}
