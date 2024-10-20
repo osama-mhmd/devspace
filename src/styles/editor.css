@@ -38,7 +38,7 @@ ul[data-type="taskList"] > li label input[type="checkbox"] {
 }
 
 ul[data-type="taskList"] > li label input[type="checkbox"]::after {
-  @apply content-[""] absolute top-0 left-0 w-full h-full border border-white dark:border-border rounded-sm;
+  @apply content-[""] absolute top-0 left-0 w-full h-full border border-gray-500 dark:border-border rounded-sm;
 }
 
 ul[data-type="taskList"] > li label input[type="checkbox"]:checked::after {
@@ -91,6 +91,6 @@ span[comment_id] {
   flex-grow: 1;
 }
 
-ul[data-type="taskList"] li[data-checked="true"] {
+ul[data-type="taskList"] li[data-checked="true"] > div > p {
   @apply line-through text-gray-600 dark:text-gray-400;
 }
