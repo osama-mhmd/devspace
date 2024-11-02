@@ -12,12 +12,16 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-const timerMax = 25;
+const timerMax = 120;
 const breakTimerMax = 5;
 
-export default function Pomodoro() {
+export default function Pomodoro({
+  lastPomodoro,
+}: {
+  lastPomodoro: string | undefined;
+}) {
   const [pomodoroProps, setPomodoroProps] = useState({
-    time: 0,
+    time: lastPomodoro ? parseInt(lastPomodoro) : 0,
     type: "work" as "work" | "break",
     paused: false,
   });
@@ -26,9 +30,19 @@ export default function Pomodoro() {
   const secondsLeft = `${pomodoroProps.time % 60}`.padStart(2, "0");
 
   useEffect(() => {
+    if (lastPomodoro) toast("Resuming your last pomodoro");
+
     const interval = setInterval(() => {
       setPomodoroProps((prev) => {
         if (prev.paused) return prev;
+        if (prev.time % 60 == 0 && prev.type === "work" && prev.time !== 0) {
+          document.cookie = `last-pomodoro=${prev.time}`; // saving locally
+          // TODO: save to db
+        }
+        if (prev.time > 0 && prev.type === "break") {
+          document.cookie = `last-pomodoro=0`; // saving locally
+          // TODO: save to db
+        }
         if (prev.type === "work" && prev.time >= timerMax) {
           toast.success("Time's up! Take a 5 minutes break");
           return { ...prev, type: "break", time: 0, paused: true };
@@ -69,9 +83,10 @@ export default function Pomodoro() {
           }}
           style={{
             background: `conic-gradient(
-            hsl(var(--primary)) ${((timerMax - pomodoroProps.time) / timerMax) * 100}%,
-            transparent 0
-          )`,
+              hsl(var(--primary)) ${((timerMax - pomodoroProps.time) / timerMax) * 100}%,
+              transparent 0
+            )`,
+            transition: "background 0.5s linear",
           }}
           className="border-4 cursor-pointer hover:bg-muted/30 rounded-full mx-auto border-primary flex items-center justify-center w-36 h-36"
         >
