@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const userTable = pgTable("users", {
   id: text("id").primaryKey(),
@@ -52,4 +52,11 @@ export const resetPasswordTokens = pgTable("reset_password_tokens", {
   token_code: text("token_code").primaryKey().notNull(),
   token_hash: text("token_hash").notNull(),
   expires_at: timestamp("expires_at").notNull(),
+});
+
+export const pomodorosTable = pgTable("pomodoros", {
+  id: text("id").primaryKey(),
+  user_id: text("user_id").notNull(),
+  duration: integer("duration").notNull().default(0), // in seconds
+  tag: text("tag").notNull(), // e.g. work, study
 });

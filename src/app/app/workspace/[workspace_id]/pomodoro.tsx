@@ -7,6 +7,8 @@ import {
   PanelHeader,
   PanelTrigger,
 } from "@/components/ui/panel";
+import createPomodoro from "@/db/actions/pomodoros/create";
+import updatePomodoro from "@/db/actions/pomodoros/update";
 import { Pause, Play } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -18,10 +20,13 @@ const breakTimerMax = 5;
 export default function Pomodoro({
   lastPomodoro,
 }: {
-  lastPomodoro: string | undefined;
+  lastPomodoro: {
+    id: string | undefined;
+    time: string | undefined;
+  };
 }) {
   const [pomodoroProps, setPomodoroProps] = useState({
-    time: lastPomodoro ? parseInt(lastPomodoro) : 0,
+    time: lastPomodoro.time ? parseInt(lastPomodoro.time) : 0,
     type: "work" as "work" | "break",
     paused: false,
   });
@@ -32,12 +37,31 @@ export default function Pomodoro({
   useEffect(() => {
     if (lastPomodoro) toast("Resuming your last pomodoro");
 
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
+      if (!lastPomodoro.id) {
+        const id = await createPomodoro();
+        if (!id) {
+          toast.error(
+            "Something went wrong! You work will not be saved! Please refresh the page",
+          );
+          return;
+        }
+        document.cookie = `last-pomodoro-id=${id}`;
+        console.log(lastPomodoro.id, id);
+        lastPomodoro.id = id;
+      }
+
       setPomodoroProps((prev) => {
         if (prev.paused) return prev;
         if (prev.time % 60 == 0 && prev.type === "work" && prev.time !== 0) {
           document.cookie = `last-pomodoro=${prev.time}`; // saving locally
-          // TODO: save to db
+          updatePomodoro(lastPomodoro.id ?? "", prev.time)
+            .then((result) => {
+              if (!result) toast.error("Something went wrong!");
+            })
+            .catch(() => {
+              toast.error("Something went wrong!");
+            });
         }
         if (prev.time > 0 && prev.type === "break") {
           document.cookie = `last-pomodoro=0`; // saving locally
@@ -50,6 +74,7 @@ export default function Pomodoro({
         if (prev.type === "break" && prev.time >= breakTimerMax) {
           // TODO: this toast is triggered twise in development mode (coz of React.StrictMode)
           toast.success("Break finished! Let's start again");
+          lastPomodoro.id = undefined;
           return { ...prev, type: "work", time: 0, paused: true };
         }
         return { ...prev, time: prev.time + 1 };
