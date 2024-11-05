@@ -1,5 +1,5 @@
 {
-  "id": "8081eecd-df46-4cd1-ae09-a6ec6693c673",
+  "id": "3c2e4f20-c100-40de-a0ed-079ae8640ec3",
   "prevId": "b894c375-ff9e-459d-856d-92672be7fcfe",
   "version": "7",
   "dialect": "postgresql",
@@ -30,6 +30,12 @@
         "tag": {
           "name": "tag",
           "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "date": {
+          "name": "date",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         }

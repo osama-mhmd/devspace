@@ -59,4 +59,5 @@ export const pomodorosTable = pgTable("pomodoros", {
   user_id: text("user_id").notNull(),
   duration: integer("duration").notNull().default(0), // in seconds
   tag: text("tag").notNull(), // e.g. work, study
+  date: timestamp("date").notNull(),
 });

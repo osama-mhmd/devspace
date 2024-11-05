@@ -18,6 +18,7 @@ export default async function createPomodoro(tag?: string) {
       user_id: user.id,
       id,
       tag: tag ?? "work",
+      date: new Date(),
     })
     .catch((e) => {
       console.log(e);
