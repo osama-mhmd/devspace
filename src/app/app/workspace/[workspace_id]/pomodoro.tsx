@@ -14,8 +14,14 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-const timerMax = 120;
+const timerMax = 25;
 const breakTimerMax = 5;
+
+function setCookies(time?: number, type?: "work" | "break", id?: string) {
+  if (time) document.cookie = `last-pomodoro.time=${time}`;
+  if (type) document.cookie = `last-pomodoro.type=${type}`;
+  if (id) document.cookie = `last-pomodoro.id=${id}`;
+}
 
 export default function Pomodoro({
   lastPomodoro,
@@ -23,11 +29,15 @@ export default function Pomodoro({
   lastPomodoro: {
     id: string | undefined;
     time: string | undefined;
+    type: string | undefined;
   };
 }) {
   const [pomodoroProps, setPomodoroProps] = useState({
+    id: lastPomodoro.id ?? "",
     time: lastPomodoro.time ? parseInt(lastPomodoro.time) : 0,
-    type: "work" as "work" | "break",
+    type: (["work", "break"].includes(lastPomodoro.type ?? "")
+      ? lastPomodoro.type
+      : "work") as "work" | "break",
     paused: false,
   });
 
@@ -35,10 +45,13 @@ export default function Pomodoro({
   const secondsLeft = `${pomodoroProps.time % 60}`.padStart(2, "0");
 
   useEffect(() => {
-    if (lastPomodoro) toast("Resuming your last pomodoro");
+    // Enable Notifications
+    Notification.requestPermission().then((result) => console.log(result));
+
+    if (lastPomodoro.id) toast("Resuming your last pomodoro");
 
     const interval = setInterval(async () => {
-      if (!lastPomodoro.id) {
+      if (!pomodoroProps.id && pomodoroProps.type == "work") {
         const id = await createPomodoro();
         if (!id) {
           toast.error(
@@ -46,16 +59,19 @@ export default function Pomodoro({
           );
           return;
         }
-        document.cookie = `last-pomodoro-id=${id}`;
-        console.log(lastPomodoro.id, id);
-        lastPomodoro.id = id;
+
+        setCookies(0, "work", id);
+        setPomodoroProps((prev) => ({ ...prev, id }));
       }
 
       setPomodoroProps((prev) => {
         if (prev.paused) return prev;
+
+        // update the cookies
+        setCookies(prev.time);
+
         if (prev.time % 60 == 0 && prev.type === "work" && prev.time !== 0) {
-          document.cookie = `last-pomodoro=${prev.time}`; // saving locally
-          updatePomodoro(lastPomodoro.id ?? "", prev.time)
+          updatePomodoro(prev.id, prev.time)
             .then((result) => {
               if (!result) toast.error("Something went wrong!");
             })
@@ -63,20 +79,31 @@ export default function Pomodoro({
               toast.error("Something went wrong!");
             });
         }
-        if (prev.time > 0 && prev.type === "break") {
-          document.cookie = `last-pomodoro=0`; // saving locally
-          // TODO: save to db
-        }
+
         if (prev.type === "work" && prev.time >= timerMax) {
-          toast.success("Time's up! Take a 5 minutes break");
-          return { ...prev, type: "break", time: 0, paused: true };
+          const message = "Time's up! Take a 5 minutes break";
+
+          // Notifications (toast, and web)
+          toast.success(message);
+          new Notification(message);
+
+          // Reset Cookie, and Pomodoro
+          setCookies(0, "break", "");
+          return { id: "", type: "break", time: 0, paused: true };
         }
+
         if (prev.type === "break" && prev.time >= breakTimerMax) {
+          const message = "Break finished! Let's start again";
+
           // TODO: this toast is triggered twise in development mode (coz of React.StrictMode)
-          toast.success("Break finished! Let's start again");
-          lastPomodoro.id = undefined;
-          return { ...prev, type: "work", time: 0, paused: true };
+          toast.success(message);
+          new Notification(message);
+
+          // Reset Cookies, and Pomodoro
+          setCookies(0, "work", "");
+          return { id: "", type: "work", time: 0, paused: true };
         }
+
         return { ...prev, time: prev.time + 1 };
       });
     }, 1000);
