@@ -18,9 +18,9 @@ const timerMax = 25;
 const breakTimerMax = 5;
 
 function setCookies(time?: number, type?: "work" | "break", id?: string) {
-  if (time) document.cookie = `last-pomodoro.time=${time}`;
+  if (time !== undefined) document.cookie = `last-pomodoro.time=${time}`;
   if (type) document.cookie = `last-pomodoro.type=${type}`;
-  if (id) document.cookie = `last-pomodoro.id=${id}`;
+  if (id !== undefined) document.cookie = `last-pomodoro.id=${id}`;
 }
 
 export default function Pomodoro({
@@ -48,28 +48,15 @@ export default function Pomodoro({
     // Enable Notifications
     Notification.requestPermission().then((result) => console.log(result));
 
-    if (lastPomodoro.id) toast("Resuming your last pomodoro");
+    if (lastPomodoro.time || lastPomodoro.type == "break") {
+      toast("Resuming your last pomodoro");
+    }
 
     const interval = setInterval(async () => {
-      if (!pomodoroProps.id && pomodoroProps.type == "work") {
-        const id = await createPomodoro();
-        if (!id) {
-          toast.error(
-            "Something went wrong! You work will not be saved! Please refresh the page",
-          );
-          return;
-        }
-
-        setCookies(0, "work", id);
-        setPomodoroProps((prev) => ({ ...prev, id }));
-      }
-
       setPomodoroProps((prev) => {
         if (prev.paused) return prev;
 
-        // update the cookies
-        setCookies(prev.time);
-
+        // saving to the db every minute in the work mode
         if (prev.time % 60 == 0 && prev.type === "work" && prev.time !== 0) {
           updatePomodoro(prev.id, prev.time)
             .then((result) => {
@@ -104,12 +91,31 @@ export default function Pomodoro({
           return { id: "", type: "work", time: 0, paused: true };
         }
 
+        // update the cookies
+        setCookies(prev.time + 1);
+
         return { ...prev, time: prev.time + 1 };
       });
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (!pomodoroProps.id && pomodoroProps.type == "work") {
+      createPomodoro("work").then((id) => {
+        if (!id) {
+          toast.error(
+            "Something went wrong! You work will not be saved! Please refresh the page",
+          );
+          return;
+        }
+
+        setCookies(undefined, undefined, id);
+        setPomodoroProps((prev) => ({ ...prev, id }));
+      });
+    }
+  }, [pomodoroProps.id, pomodoroProps.type]);
 
   return (
     <Panel>
