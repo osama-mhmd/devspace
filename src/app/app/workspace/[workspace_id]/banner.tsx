@@ -12,6 +12,7 @@ import { Workspace } from "@/db/actions/workspaces/get-workspaces";
 import { Permission } from "@/db/actions/workspaces/permission";
 import { useState } from "react";
 import { toast } from "sonner";
+import * as m from "@/paraglide/messages";
 
 const images = [
   "linear-gradient(to right, #6366f1, #a855f7, #ec4899)",
@@ -41,13 +42,13 @@ export default function Banner({
         {permission == "owner" && (
           <Panel>
             <PanelTrigger>
-              <Button variant="secondary" className="absolute bottom-2 right-2">
-                Change Image
+              <Button variant="secondary" className="absolute bottom-2 end-2">
+                {m.changeImage()}
               </Button>
             </PanelTrigger>
             <PanelBody>
               <PanelHeader>
-                <h3 className="my-0">Change Image</h3>
+                <h3 className="my-0">{m.changeImage()}</h3>
               </PanelHeader>
               <div className="common-grid gap-2">
                 {images.map((image, index) => {

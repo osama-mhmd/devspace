@@ -38,12 +38,10 @@ export default async function RootLayout({
   console.log(languageTag());
 
   return (
-    <html
-      lang={languageTag()}
-      dir={languageTag() == "ar" ? "rtl" : "ltr"}
-      suppressHydrationWarning
-    >
-      <body className={inter}>
+    <html lang={languageTag()} suppressHydrationWarning>
+      <body
+        className={`${inter} ${languageTag() == "ar" ? "rtl" : "ltr"} ${languageTag()}`}
+      >
         <ThemeProvider
           attribute="class"
           disableTransitionOnChange

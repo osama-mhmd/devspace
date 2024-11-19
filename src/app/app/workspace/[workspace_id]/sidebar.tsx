@@ -1,6 +1,12 @@
 "use client";
 
-import React, { ElementRef, useEffect, useRef, useState } from "react";
+import React, {
+  ElementRef,
+  MouseEventHandler,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { usePathname } from "next/navigation";
 
@@ -17,6 +23,7 @@ import {
 } from "../../../../components/ui/panel";
 import { Permission } from "@/db/actions/workspaces/permission";
 import { Workspace } from "@/db/actions/workspaces/get-workspaces";
+import dir from "@/lib/dir";
 
 const Sidebar = ({
   workspace,
@@ -61,14 +68,16 @@ const Sidebar = ({
 
   const handleMouseMove = (e: MouseEvent) => {
     if (!isResizingRef.current) return;
-    let newWidth = e.clientX;
+    let newWidth: number;
+    if (dir() == "ltr") newWidth = e.clientX;
+    else newWidth = document.body.clientWidth - e.clientX;
 
     if (newWidth < 240) newWidth = 240;
     if (newWidth > 480) newWidth = 480;
 
     if (sidebarRef.current && navbarRef.current) {
       sidebarRef.current.style.width = `${newWidth}px`;
-      navbarRef.current.style.setProperty("left", `${newWidth}px`);
+      navbarRef.current.style.setProperty(dir("css"), `${newWidth}px`);
       navbarRef.current.style.setProperty(
         "width",
         `calc(100% - ${newWidth}px)`,
@@ -93,7 +102,7 @@ const Sidebar = ({
         "width",
         isMobile ? "240px" : "calc(100%-240px)",
       );
-      navbarRef.current.style.setProperty("left", isMobile ? "0" : "240px");
+      navbarRef.current.style.setProperty(dir("css"), isMobile ? "0" : "240px");
       setTimeout(() => setIsResetting(false), 300);
     }
   };
@@ -105,7 +114,7 @@ const Sidebar = ({
 
       sidebarRef.current.style.width = "0";
       navbarRef.current.style.setProperty("width", "100%");
-      navbarRef.current.style.setProperty("left", "0");
+      navbarRef.current.style.setProperty(dir("css"), "0");
       setTimeout(() => setIsResetting(false), 300);
     }
   };
@@ -115,7 +124,7 @@ const Sidebar = ({
       <aside
         ref={sidebarRef}
         className={cn(
-          "group/sidebar px-3 z-[15] flex h-screen w-60 flex-col bg-secondary sticky top-0 left-0",
+          "group/sidebar px-3 z-[15] flex h-screen w-60 flex-col bg-secondary sticky top-0 start-0",
           isResetting &&
             "transition-all duration-300 ease-in-out overflow-y-auto",
           isMobile && "w-0",
@@ -127,12 +136,16 @@ const Sidebar = ({
           onClick={collapse}
           role="button"
           className={cn(
-            "absolute right-2 top-3 size-8 rounded-sm text-muted-foreground opacity-0 transition hover:bg-primary/10 group-hover/sidebar:opacity-100",
+            "absolute end-2 top-3 size-8 rounded-sm text-muted-foreground opacity-0 transition hover:bg-primary/10 group-hover/sidebar:opacity-100",
             isMobile && "opacity-100",
           )}
           suppressHydrationWarning={true}
         >
-          <ChevronsLeft className="size-8 p-1" />
+          {dir() == "ltr" ? (
+            <ChevronsLeft className="size-8 p-1" />
+          ) : (
+            <ChevronsRight className="size-8 p-1" />
+          )}
         </div>
         {permission == "owner" && (
           <Panel>
@@ -161,15 +174,15 @@ const Sidebar = ({
         <div
           onMouseDown={handleMouseDown}
           onClick={resetWidth}
-          className="absolute right-0 top-0 h-full w-1 cursor-ew-resize bg-primary/10 opacity-0 transition group-hover/sidebar:opacity-100"
+          className={`absolute ${dir() == "ltr" ? "right" : "left"}-0 top-0 h-full w-1 cursor-ew-resize bg-primary/10 opacity-0 transition group-hover/sidebar:opacity-100`}
         ></div>
       </aside>
       <div
         ref={navbarRef}
         className={cn(
-          "absolute left-60 top-0 z-[300] w-[calc(100%-240px)]",
+          `absolute ${dir("css")}-60 top-0 z-20 w-[calc(100%-240px)]`,
           isResetting && "transition-all duration-300 ease-in-out",
-          isMobile && "left-0 w-full",
+          isMobile && `${dir("css")}-0 w-full`,
         )}
       >
         <nav
@@ -178,16 +191,27 @@ const Sidebar = ({
             !isCollapsed && "p-0",
           )}
         >
-          {isCollapsed && (
-            <ChevronsRight
-              onClick={resetWidth}
-              role="button"
-              className="size-8 bg-white p-1 rounded-md bg-primary/10 text-muted-foreground"
-            />
-          )}
+          {isCollapsed && <Open fn={resetWidth} />}
         </nav>
       </div>
     </>
   );
 };
+
+function Open({ fn }: { fn: MouseEventHandler<SVGSVGElement> }) {
+  return dir() == "ltr" ? (
+    <ChevronsRight
+      onClick={fn}
+      role="button"
+      className="size-8 bg-white p-1 rounded-md bg-primary/10 text-muted-foreground"
+    />
+  ) : (
+    <ChevronsLeft
+      onClick={fn}
+      role="button"
+      className="size-8 bg-white p-1 rounded-md bg-primary/10 text-muted-foreground"
+    />
+  );
+}
+
 export default Sidebar;

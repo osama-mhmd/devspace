@@ -1,5 +1,19 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "lang": "ar",
-  "login": "تسجيل الدخول"
+  "login": "تسجيل الدخول",
+  "synced": "متزامن",
+  "syncing": "يتم المزامنة",
+  "changeImage": "غير الصورة",
+  "settings": "الإعدادات",
+  "visibility": "الظاهرية",
+  "public": "عام",
+  "private": "خاص",
+  "view": "مشاهدة",
+  "comment": "تعليق",
+  "edit": "تعديل",
+  "app": "التطبيق",
+  "landingCaption": "كل يوم يظهر تطبيق جديد لتدوين ملحظاتك، لكنهم جميعا لا يناسبونك! لا تقلل، هذا التطبيق سيناسبك",
+  "starOnGithub": "قم بإعطائنا نجمة على جت هب",
+  "viewSourceCode": "مشاهدة الكود"
 }

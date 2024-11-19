@@ -1,5 +1,19 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "lang": "en",
-  "login": "login"
+  "login": "Login",
+  "synced": "Synced",
+  "syncing": "Syncing",
+  "changeImage": "Change image",
+  "settings": "Settings",
+  "visibility": "Visibility",
+  "public": "Public",
+  "private": "Private",
+  "view": "View",
+  "comment": "Comment",
+  "edit": "Edit",
+  "app": "App",
+  "landingCaption": "Everyday you see a new note taking app appears, but they all don't fit you. Don't worry, this app will fit you",
+  "starOnGithub": "Star us on Github",
+  "viewSourceCode": "View source code"
 }

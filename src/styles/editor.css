@@ -10,6 +10,14 @@
   pointer-events: none;
 }
 
+.ar .tiptap .is-empty::before {
+  content: "اكتب هنا..." !important;
+}
+
+.is-empty::before {
+  float: right !important;
+}
+
 .tiptap *.is-empty.callout::before {
   @apply absolute left-10;
 }

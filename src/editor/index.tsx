@@ -30,6 +30,7 @@ import { toast } from "sonner";
 import Callout from "./extensions/callout";
 import CommentList from "./components/comment-list";
 import { Column, Kanban, Task } from "./extensions/kanban";
+import * as m from "@/paraglide/messages";
 
 async function updateDocument(
   document_id: string,
@@ -281,7 +282,7 @@ const Editor = ({
 
   return (
     <div className="relative max-w-4xl mx-auto px-4 mt-8 pb-14">
-      <div className="absolute top-4 right-4">
+      <div className="absolute top-4 end-4">
         {!saving && (
           <motion.div
             initial={{ y: -10, opacity: 0 }}
@@ -289,11 +290,11 @@ const Editor = ({
           >
             <Button
               variant={"ghost"}
-              className="flex gap-1 mb-3"
+              className="flex capitalize gap-1 mb-3"
               disabled={true}
             >
               <RefreshCw width={20} height={20} />
-              Synced
+              {m.synced()}
             </Button>
           </motion.div>
         )}
@@ -304,11 +305,11 @@ const Editor = ({
           >
             <Button
               variant={"ghost"}
-              className="flex gap-2 mb-3 items-center"
+              className="flex capitalize gap-2 mb-3 items-center"
               disabled={true}
             >
               <span className="spinner"></span>
-              Syncing
+              {m.syncing()}
             </Button>
           </motion.div>
         )}
