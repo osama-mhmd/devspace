@@ -14,8 +14,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-const timerMax = 25;
-const breakTimerMax = 5;
+const timerMax = 25 * 60;
+const breakTimerMax = 5 * 60;
 
 function setCookies(time?: number, type?: "work" | "break", id?: string) {
   if (time !== undefined) document.cookie = `last-pomodoro.time=${time}`;
@@ -141,7 +141,11 @@ export default function Pomodoro({
           }}
           style={{
             background: `conic-gradient(
-              hsl(var(--primary)) ${((timerMax - pomodoroProps.time) / timerMax) * 100}%,
+              hsl(var(--primary)) ${
+                pomodoroProps.type == "work"
+                  ? ((timerMax - pomodoroProps.time) / timerMax) * 100
+                  : ((breakTimerMax - pomodoroProps.time) / breakTimerMax) * 100
+              }%,
               transparent 0
             )`,
             transition: "background 0.5s linear",

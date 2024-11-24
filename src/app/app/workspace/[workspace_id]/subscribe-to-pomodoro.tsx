@@ -12,11 +12,9 @@ import Image from "next/image";
 import { useState } from "react";
 
 export default function SubscribeToPomodoro() {
-  const [checked, setChecked] = useState(false);
-
-  const subscribe = async () => {
-    if (checked) document.cookie = `subscribed-pomodoro=${checked}`;
-    window.location.reload();
+  const setSubscribe = async (sub: boolean) => {
+    document.cookie = `subscribed-pomodoro=${sub}`;
+    if (sub) window.location.reload();
   };
 
   return (
@@ -38,18 +36,13 @@ export default function SubscribeToPomodoro() {
             className="p-8 rounded-3xl bg-muted"
           />
           <div className="flex items-center space-x-2">
-            <Checkbox
-              onCheckedChange={(val: boolean) => setChecked(val)}
-              id="always"
-            />
-            <label htmlFor="always">Treat my action as an always</label>
-          </div>
-          <div className="flex items-center space-x-2">
             <PanelClose>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline" onClick={() => setSubscribe(false)}>
+                Cancel
+              </Button>
             </PanelClose>
             <PanelClose>
-              <Button onClick={subscribe}>Start</Button>
+              <Button onClick={() => setSubscribe(true)}>Start</Button>
             </PanelClose>
           </div>
         </div>
