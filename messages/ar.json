@@ -92,5 +92,11 @@
   "invalidUsername": "اسم المستخدم غير صحيح",
   "invalidPassword": "كلمة المرور غير صحيحة",
   "successLoging": "تم تسجيل الدخول بنجاح",
-  "plzEnterName": "من فضلك أدخل الاسم"
+  "plzEnterName": "من فضلك أدخل الاسم",
+  "verify": "تأكيد",
+  "emailSentMessage": "لقد قمنا بإرسال أيميلا إلى {email}. بالرجاء فحص صندوق البريد الخاص بك... إضافة إلى ذلك يرجى ملاحظة أن الإيميل قد يتأخر قليلا ليصل لك.",
+  "codeConsistsOf8Digits": "الكود يجب أن يتكون من 8 أرقام",
+  "accountIsVerified": "حسابك مفعل",
+  "somethingWentWrong": "حدث خطأ ما",
+  "habitCreatedSuccessfully": "تم إنشاء العادة بنجاح"
 }

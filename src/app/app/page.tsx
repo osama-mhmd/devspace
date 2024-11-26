@@ -20,7 +20,7 @@ export default async function App() {
   if (workspaces.length == 0) {
     Workspaces = (
       <div className="text-center">
-        <h3 className="text-2xl mb-3">No workspaces yet 😞</h3>
+        <h3 className="text-2xl mb-3">{m.noWorkspacesYet()}</h3>
         <Button asChild>
           <Link
             href="/app/workspace/create"

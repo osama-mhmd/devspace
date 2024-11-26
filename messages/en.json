@@ -81,7 +81,7 @@
   "resetPassword": "Reset password",
   "code": "Code",
   "codeMustBe8Digits": "Code must be 8 digits",
-  "plzEnterCode": "Please enter your code",
+  "plzEnterCode": "Please enter the code",
   "invalidCode": "Invalid code",
   "expiredCode": "Expired code",
   "userNotFound": "User not found",
@@ -92,5 +92,10 @@
   "invalidUsername": "Invalid username",
   "invalidPassword": "Invalid password",
   "successLoging": "Loged in successfully",
-  "plzEnterName": "Please enter the name"
+  "plzEnterName": "Please enter the name",
+  "verify": "Verify",
+  "accountIsVerified": "Your account is verified",
+  "emailSentMessage": "We have sent an email to {email}. Please check out your inbox... Please note that the verification email may take a few minutes to arrive.",
+  "somethingWentWrong": "Something went wrong",
+  "habitCreatedSuccessfully": "Habit created successfully"
 }

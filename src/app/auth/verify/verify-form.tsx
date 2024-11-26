@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { verify } from "@/db/actions/users/verify-email";
 import { ReactNode } from "react";
 import { useForm } from "react-hook-form";
+import * as m from "@/paraglide/messages";
+import { Error } from "../login/page";
 
 export default function VerifyForm({ text }: { text: string | ReactNode }) {
   const {
@@ -20,7 +22,7 @@ export default function VerifyForm({ text }: { text: string | ReactNode }) {
     if (err) {
       if (err.message == "invalid-code")
         setError("code", {
-          message: "Invalid code",
+          message: "invalidCode",
         });
     }
   };
@@ -32,21 +34,21 @@ export default function VerifyForm({ text }: { text: string | ReactNode }) {
     >
       <span className="text-muted-foreground mb-2">{text}</span>
       <Input
-        placeholder="Code"
+        placeholder={m.code()}
         {...register("code", {
-          required: "Please enter the code",
+          required: "plzEnterCode",
           minLength: {
             value: 8,
-            message: "Code consists of 8 digits",
+            message: "codeMustBe8Digits",
           },
           maxLength: {
             value: 8,
-            message: "Code consists of 8 digits",
+            message: "codeMustBe8Digits",
           },
         })}
       />
-      {errors.code && <span className="error">{errors.code.message}</span>}
-      <Button loading={isSubmitting}>Verify</Button>
+      <Error error={errors.code} />
+      <Button loading={isSubmitting}>{m.verify()}</Button>
     </form>
   );
 }

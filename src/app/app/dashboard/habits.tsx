@@ -99,7 +99,7 @@ export default async function Habits({ habits }: { habits: Habit[] }) {
             </Panel>
           );
         })}
-        {!habits.length && <i>No habits</i>}
+        {!habits.length && <i>{m.noHabits()}</i>}
         <AddHabit />
       </div>
     </div>
