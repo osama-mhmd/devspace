@@ -14,6 +14,8 @@ import {
 import changeWorkspaceVisibility from "@/db/actions/workspaces/change-visibility";
 import { toast } from "sonner";
 import { Workspace } from "@/db/actions/workspaces/get-workspaces";
+import * as m from "@/paraglide/messages";
+import dir, { Direction } from "@/lib/dir";
 
 type Access = "view" | "comment" | "edit";
 export type Visibility =
@@ -44,7 +46,7 @@ export default function WorkspaceSettings({
 
   return (
     <div>
-      <h3 className="my-0 mb-2">Visibility</h3>
+      <h3 className="my-0 mb-2">{m.visibility()}</h3>
       <RadioGroup
         defaultValue={visibility}
         className="gap-0"
@@ -53,10 +55,11 @@ export default function WorkspaceSettings({
           if (val == "private") await changeVisibility("private");
           else await changeVisibility(`${val}-${access}`);
         }}
+        dir={dir() as Direction}
       >
         <div className="flex items-center space-x-2">
           <RadioGroupItem value="public" id="public" />
-          <label htmlFor="public">Public</label>
+          <label htmlFor="public">{m.publicVisibility()}</label>
           <Select
             defaultValue={access}
             onValueChange={async (val) => {
@@ -64,6 +67,7 @@ export default function WorkspaceSettings({
               await changeVisibility(`${visibility}-${val}` as Visibility);
             }}
             disabled={visibility !== "public"}
+            dir={dir() as Direction}
           >
             <SelectTrigger className="w-[180px] focus:ring-0 focus:ring-transparent">
               <SelectValue placeholder="Everyone access" />
@@ -71,16 +75,16 @@ export default function WorkspaceSettings({
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Access</SelectLabel>
-                <SelectItem value="view">View</SelectItem>
-                <SelectItem value="comment">Comment</SelectItem>
-                <SelectItem value="edit">Edit</SelectItem>
+                <SelectItem value="view">{m.view()}</SelectItem>
+                <SelectItem value="comment">{m.comment()}</SelectItem>
+                <SelectItem value="edit">{m.edit()}</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
         </div>
         <div className="flex items-center space-x-2">
           <RadioGroupItem value="private" id="private" />
-          <label htmlFor="private">Private</label>
+          <label htmlFor="private">{m.privateVisibility()}</label>
         </div>
       </RadioGroup>
     </div>

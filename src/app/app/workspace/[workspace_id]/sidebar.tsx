@@ -11,6 +11,7 @@ import { useMediaQuery } from "usehooks-ts";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
+import * as m from "@/paraglide/messages";
 
 import { ChevronsLeft, ChevronsRight, House } from "lucide-react";
 import Link from "next/link";
@@ -154,7 +155,7 @@ const Sidebar = ({
             </PanelTrigger>
             <PanelBody>
               <PanelHeader>
-                <h2 className="my-0">Settings</h2>
+                <h2 className="my-0">{m.settings()}</h2>
               </PanelHeader>
               <WorkspaceSettings workspace={workspace} />
             </PanelBody>

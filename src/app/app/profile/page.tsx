@@ -21,6 +21,7 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import * as m from "@/paraglide/messages";
 
 export const metadata: Metadata = {
   title: "Nonote | Profile",
@@ -35,13 +36,13 @@ export default async function Profile() {
     <section className="mt-20">
       <div className="container">
         <div className="rounded-md bg-muted my-3 p-3 flex items-center gap-1">
-          Username: {user.username}
+          {m.username()}: {user.username}
         </div>
         <div className="rounded-md bg-muted my-3 p-3 flex items-center gap-1">
-          Name: {user.fullname}
+          {m.name()}: {user.fullname}
         </div>
         <div className="rounded-md bg-muted my-2 p-3 flex items-center gap-1">
-          Email:{" "}
+          {m.email()}:{" "}
           {user.isVerified ? (
             <TooltipProvider>
               <Tooltip delayDuration={300}>
@@ -61,7 +62,7 @@ export default async function Profile() {
                 </TooltipTrigger>
                 <TooltipContent>
                   <Link href="/auth/verify" className="underline text-blue-600">
-                    Please verify your account
+                    {m.pleaseVerifyYourAccount()}
                   </Link>
                 </TooltipContent>
               </Tooltip>
@@ -70,21 +71,21 @@ export default async function Profile() {
           {user.email}
         </div>
         <div className="px-6 mt-4 pb-6 py-2 border-2 border-red-400 rounded-lg flex flex-col gap-3">
-          <h3>Danger Zone</h3>
+          <h3>{m.dangerZone()}</h3>
           <div className="danger-zone-action-slot">
-            Are you sure to sign out?
+            {m.signOutConfirmation()}
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant="destructive">Sign out</Button>
+                <Button variant="destructive">{m.signOut()}</Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader className="text-red-600">
                   <DialogTitle className="mt-0">Danger Action</DialogTitle>
                 </DialogHeader>
-                <p>Are you sure to sign out?</p>
-                <DialogFooter>
+                <p>{m.signOutConfirmation()}</p>
+                <DialogFooter className="flex gap-1">
                   <DialogClose>
-                    <Button variant="outline">Close</Button>
+                    <Button variant="outline">{m.close()}</Button>
                   </DialogClose>
                   <SignOut />
                 </DialogFooter>
@@ -92,19 +93,19 @@ export default async function Profile() {
             </Dialog>
           </div>
           <div className="danger-zone-action-slot">
-            You cannot undo deleting your account!
+            {m.deleteAccountDescription()}
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant="destructive">Delete Account</Button>
+                <Button variant="destructive">{m.deleteAccount()}</Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader className="text-red-600">
                   <DialogTitle className="mt-0">Danger Action</DialogTitle>
                 </DialogHeader>
-                <p>If you deleted your account, you cannot get it back!</p>
-                <DialogFooter>
+                <p>{m.deleteAccountConfirmation()}</p>
+                <DialogFooter className="flex gap-1">
                   <DialogClose>
-                    <Button variant="outline">Close</Button>
+                    <Button variant="outline">{m.close()}</Button>
                   </DialogClose>
                   <DeleteAccount />
                 </DialogFooter>

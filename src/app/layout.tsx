@@ -1,4 +1,4 @@
-import { inter } from "@/lib/fonts";
+import { inter, rubik } from "@/lib/fonts";
 import Nav from "@/app/nav";
 import { validateRequest } from "@/db/auth";
 import { Metadata } from "next";
@@ -14,6 +14,7 @@ import {
   setLanguageTag,
 } from "@/paraglide/runtime";
 import { cookies } from "next/headers";
+import dir from "@/lib/dir";
 
 export const metadata: Metadata = {
   title: "Nonote | Homepage",
@@ -35,12 +36,11 @@ export default async function RootLayout({
       setLanguageTag(tag);
     }
   });
-  console.log(languageTag());
 
   return (
     <html lang={languageTag()} suppressHydrationWarning>
       <body
-        className={`${inter} ${languageTag() == "ar" ? "rtl" : "ltr"} ${languageTag()}`}
+        className={`${languageTag() == "ar" ? rubik : inter} ${dir()} ${languageTag()}`}
       >
         <ThemeProvider
           attribute="class"
@@ -48,7 +48,7 @@ export default async function RootLayout({
           defaultTheme="system"
           enableSystem
         >
-          <Nav session={session} />
+          <Nav session={session} lang={languageTag()} />
           {children}
           <Toaster />
         </ThemeProvider>

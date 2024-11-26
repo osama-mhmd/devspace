@@ -3,31 +3,31 @@ import * as v from "valibot";
 export const registerFields = v.object({
   email: v.pipe(
     v.string(),
-    v.nonEmpty("Please enter your email"),
-    v.email("Invalid email address"),
+    v.nonEmpty("plzEnterEMail"),
+    v.email("emailMustBeValid"),
   ),
   password: v.pipe(
     v.string(),
-    v.nonEmpty("Please enter your password"),
-    v.minLength(8),
+    v.nonEmpty("plzEnterPassword"),
+    v.minLength(8, "passwordMustBe8CharactersOrMore"),
   ),
   password_repeat: v.pipe(
     v.string(),
-    v.nonEmpty("Please rewrite your password"),
-    v.minLength(8),
+    v.nonEmpty("plzRewritePassword"),
+    v.minLength(8, "passwordMustBe8CharactersOrMore"),
   ),
   user_name: v.pipe(
     v.string(),
-    v.nonEmpty("Please enter your username"),
-    v.minLength(4, "Username must exceed 4 letters"),
-    v.maxLength(31, "Username cannot exceed 31 letters"),
+    v.nonEmpty("plzEnterUsername"),
+    v.minLength(4, "usernameMustExceed4Letters"),
+    v.maxLength(31, "usernameCannotExceed31Letters"),
     v.regex(
       /^[a-z0-9-_]+$/,
-      "Username only contains lowercase letters, numbers, hyphen, and underscore",
+      "usernameOnlyContainsLowercaseLettersNumbersHyphenAndUnderscore",
     ),
   ),
-  first_name: v.pipe(v.string(), v.nonEmpty("Please enter your first name")),
-  last_name: v.pipe(v.string(), v.nonEmpty("Please enter your last name")),
+  first_name: v.pipe(v.string(), v.nonEmpty("plzEnterFirstName")),
+  last_name: v.pipe(v.string(), v.nonEmpty("plzEnterLastName")),
 });
 
 export type RegisterFields = v.InferInput<typeof registerFields>;
