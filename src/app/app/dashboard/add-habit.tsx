@@ -39,9 +39,9 @@ export default function AddHabit() {
     const result = await createHabit(data);
 
     if (!result) {
-      toast.error("Something went wrong");
+      toast.error(m.somethingWentWrong());
     } else {
-      toast.success("Habit created successfully");
+      toast.success(m.habitCreatedSuccessfully());
       window.location.reload(); // TODO: delete this and make it instead a live preview
     }
   }

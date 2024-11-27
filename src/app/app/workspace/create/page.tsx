@@ -6,6 +6,7 @@ import createWorkspace from "@/db/actions/workspaces/create";
 import { useForm } from "react-hook-form";
 import * as m from "@/paraglide/messages";
 import { Error } from "@/app/auth/login/page";
+import { languageTag } from "@/paraglide/runtime";
 
 export default function Create() {
   const {
@@ -16,7 +17,7 @@ export default function Create() {
   } = useForm<{ name: string; description: string }>();
 
   const onsubmit = async (data: { name: string; description: string }) => {
-    const err = await createWorkspace(data);
+    const err = await createWorkspace(data, languageTag());
 
     if (err) {
       if (err.message == "invalid-code")

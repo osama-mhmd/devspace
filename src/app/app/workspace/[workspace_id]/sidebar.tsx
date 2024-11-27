@@ -175,7 +175,10 @@ const Sidebar = ({
         <div
           onMouseDown={handleMouseDown}
           onClick={resetWidth}
-          className={`absolute ${dir() == "ltr" ? "right" : "left"}-0 top-0 h-full w-1 cursor-ew-resize bg-primary/10 opacity-0 transition group-hover/sidebar:opacity-100`}
+          className={cn(
+            "absolute top-0 h-full w-1 cursor-ew-resize bg-primary/10 opacity-0 transition group-hover/sidebar:opacity-100",
+            dir() == "ltr" ? "right-0" : "left-0",
+          )}
         ></div>
       </aside>
       <div

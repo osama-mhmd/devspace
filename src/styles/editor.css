@@ -2,6 +2,10 @@
   outline-width: 0;
 }
 
+pre {
+  direction: ltr;
+}
+
 .tiptap *.is-empty::before {
   color: #adb5bd;
   content: attr(data-placeholder);
@@ -14,7 +18,7 @@
   content: "اكتب هنا..." !important;
 }
 
-.is-empty::before {
+.ar .tiptap .is-empty::before {
   float: right !important;
 }
 
@@ -38,15 +42,11 @@ ul[data-type="taskList"] > li {
 }
 
 ul[data-type="taskList"] > li label input[type="checkbox"] {
-  width: 1rem;
-  height: 1rem;
-  margin-top: 0.25rem;
-  position: relative;
-  appearance: none;
+  @apply appearance-none relative mt-1 size-4;
 }
 
 ul[data-type="taskList"] > li label input[type="checkbox"]::after {
-  @apply content-[""] absolute top-0 left-0 w-full h-full border border-white dark:border-border rounded-sm;
+  @apply content-[""] absolute top-0 left-0 w-full h-full border border-gray-600 dark:border-border rounded-sm;
 }
 
 ul[data-type="taskList"] > li label input[type="checkbox"]:checked::after {
