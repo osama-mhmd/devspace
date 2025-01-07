@@ -10,7 +10,7 @@ import { newPassword } from "@/db/actions/users/new-password";
 import { NewPasswordResult as Result } from "@/types/result";
 import { toast } from "sonner";
 import * as m from "@/paraglide/messages";
-import { Error } from "../login/page";
+import Error from "../error-field";
 
 const forgetPasswordFields = pick(registerFields, ["user_name"]);
 export type ForgetPasswordFields = InferInput<typeof forgetPasswordFields>;

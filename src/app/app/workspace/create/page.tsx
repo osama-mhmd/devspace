@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import createWorkspace from "@/db/actions/workspaces/create";
 import { useForm } from "react-hook-form";
 import * as m from "@/paraglide/messages";
-import { Error } from "@/app/auth/login/page";
+import Error from "@/app/auth/error-field";
 import { languageTag } from "@/paraglide/runtime";
 
 export default function Create() {

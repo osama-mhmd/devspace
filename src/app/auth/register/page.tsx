@@ -8,7 +8,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { registerFields, type RegisterFields } from "./schema";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { toast } from "sonner";
-import { Error } from "../login/page";
+import Error from "../error-field";
 import * as m from "@/paraglide/messages";
 
 export default function Register() {

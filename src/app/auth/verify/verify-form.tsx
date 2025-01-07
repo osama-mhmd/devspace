@@ -6,7 +6,7 @@ import { verify } from "@/db/actions/users/verify-email";
 import { ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import * as m from "@/paraglide/messages";
-import { Error } from "../login/page";
+import Error from "../error-field";
 
 export default function VerifyForm({ text }: { text: string | ReactNode }) {
   const {

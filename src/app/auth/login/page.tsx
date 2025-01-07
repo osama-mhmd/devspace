@@ -5,13 +5,14 @@ import { Input } from "@/components/ui/input";
 import GithubIcon from "@/components/icons/github";
 import Link from "next/link";
 
-import { FieldError, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { registerFields } from "../register/schema";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { InferInput, pick } from "valibot";
 import { login } from "@/db/actions/users/login";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Error from "../error-field";
 import * as m from "@/paraglide/messages";
 
 const loginFields = pick(registerFields, ["user_name", "password"]);
@@ -82,11 +83,4 @@ export default function Login({
       </div>
     </section>
   );
-}
-
-export function Error({ error }: { error: FieldError | undefined }) {
-  // TODO: make this better
-  if (!error) return;
-  // @ts-ignore
-  return <p className="error">{m[error.message]()}</p>;
 }

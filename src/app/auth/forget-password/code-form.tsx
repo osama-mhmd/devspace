@@ -13,7 +13,7 @@ import Result from "@/types/result";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import * as m from "@/paraglide/messages";
-import { Error } from "../login/page";
+import Error from "../error-field";
 
 const forgetPasswordFields = v.object({
   code: v.pipe(
