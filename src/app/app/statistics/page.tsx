@@ -1,20 +1,36 @@
-import GithubIcon from "@/components/icons/github";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import getPomodoros from "@/db/actions/pomodoros/get";
 
-export default function Statistics() {
+export default async function Statistics() {
+  const pomodoros = await getPomodoros();
+
+  if (!pomodoros) return "Something went wrong!";
+
+  const totalSeconds = pomodoros.reduce((acc, cur) => acc + cur.duration, 0);
+
+  const stats = {
+    timeLabels: pomodoros.map((el) => {
+      return el.date.getDate();
+    }),
+    tasksOverTime: pomodoros.map((el) => {
+      return el.duration;
+    }),
+  };
+
   return (
     <section className="mt-16">
       <div className="container text-center">
-        <h3 className="text-2xl">Statistics</h3>
-        <p className="text-muted-foreground flex items-center flex-col gap-2 -translate-y-2">
-          <i>Track your progress, stay tuned</i>
-          <Button className="flex items-center gap-1" asChild>
-            <Link href="https://github.com/osama-mhmd/nonote" target="_blank">
-              Contribute <GithubIcon />
-            </Link>
-          </Button>
-        </p>
+        <div className="flex justify-evenly mb-8">
+          <div>
+            <h3>Total Pomodoros</h3>
+            <p>{pomodoros.length}</p>
+          </div>
+          <div>
+            <h3>Total time spent</h3>
+            <p>
+              {Math.floor(totalSeconds / 3600)}h {(totalSeconds / 60) % 60}m
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );

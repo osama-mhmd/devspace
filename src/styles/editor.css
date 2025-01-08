@@ -99,7 +99,7 @@ span[comment_id] {
   flex-grow: 1;
 }
 
-ul[data-type="taskList"] li[data-checked="true"] {
+ul[data-type="taskList"] li[data-checked="true"] > div > p {
   @apply line-through text-gray-600 dark:text-gray-400;
 }
 
