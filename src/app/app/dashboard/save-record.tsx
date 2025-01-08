@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import saveRecord from "@/db/actions/habits/save-record";
 import { toast } from "sonner";
+import * as m from "@/paraglide/messages";
 
 export default function SaveRecord({ habitId }: { habitId: string }) {
   const makeRecord = async (id: string) => {
@@ -14,5 +15,5 @@ export default function SaveRecord({ habitId }: { habitId: string }) {
     } else toast.error("Something went wrong"); // TODO: implement live preview
   };
 
-  return <Button onClick={() => makeRecord(habitId)}>Save Record</Button>;
+  return <Button onClick={() => makeRecord(habitId)}>{m.saveRecord()}</Button>;
 }

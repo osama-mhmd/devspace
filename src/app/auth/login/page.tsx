@@ -12,6 +12,8 @@ import { InferInput, pick } from "valibot";
 import { login } from "@/db/actions/users/login";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Error from "../error-field";
+import * as m from "@/paraglide/messages";
 
 const loginFields = pick(registerFields, ["user_name", "password"]);
 export type LoginFields = InferInput<typeof loginFields>;
@@ -35,7 +37,8 @@ export default function Login({
     if (result.ok) {
       router.push(redirectTo ?? "/app");
     } else {
-      toast.error(result.message);
+      // @ts-ignore <- TODO: Fix this
+      toast.error(m[result.message]());
     }
   }
 
@@ -46,39 +49,35 @@ export default function Login({
           onSubmit={handleSubmit(async (data) => await onsubmit(data))}
           className="flex flex-col gap-2 w-full max-w-96"
         >
-          <h2 className="text-center mb-3">Login</h2>
+          <h2 className="text-center mb-3">{m.login()}</h2>
           <Input
             type="text"
-            placeholder="Username"
+            placeholder={m.username()}
             {...register("user_name")}
           />
-          {errors.user_name && (
-            <p className="error">{errors.user_name.message}</p>
-          )}
+          <Error error={errors.user_name} />
           <Input
             type="password"
-            placeholder="Password"
+            placeholder={m.password()}
             {...register("password")}
           />
-          {errors.password && (
-            <p className="error">{errors.password.message}</p>
-          )}
+          <Error error={errors.password} />
           <Link href="/auth/forget-password" className="mb-2 link">
-            Forget password?
+            {m.forgetPassword()}
           </Link>
           <Button type="submit" loading={isSubmitting}>
-            Login
+            {m.login()}
           </Button>
           <Link
             href={"/auth/register" + `?redirectTo=${redirectTo ?? ""}`}
             className="link"
           >
-            Don{"'"}t have an account? Create Account
+            {m.dontHaveAnAccount()}
           </Link>
         </form>
         <div className="grid w-full max-w-96 [&>*>svg]:me-1">
           <Button variant="outline">
-            <GithubIcon /> Sign in with github
+            <GithubIcon /> {m.signInWithGithub()}
           </Button>
         </div>
       </div>

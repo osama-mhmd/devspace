@@ -3,6 +3,7 @@ import Link from "next/link";
 import { merienda } from "@/lib/fonts";
 import { validateRequest } from "@/db/auth";
 import { Circle, Star } from "lucide-react";
+import * as m from "@/paraglide/messages";
 
 export default async function Home() {
   const { session } = await validateRequest();
@@ -16,23 +17,22 @@ export default async function Home() {
           developers note taking app
         </h1>
         <p className="text-muted-foreground max-w-prose mt-2">
-          Everyday you see a new note taking app appears, but they all don{"'"}t
-          fit you. Don{"'"}t worry, this app will fit you
+          {m.nonoteDescription()}
         </p>
         <div className="flex flex-wrap items-center gap-2">
           {!session && (
             <>
               <Button variant="outline" asChild>
-                <Link href="/auth/login">Login</Link>
+                <Link href="/auth/login">{m.login()}</Link>
               </Button>
               <Button asChild>
-                <Link href="/auth/register">Create account</Link>
+                <Link href="/auth/register">{m.createAccount()}</Link>
               </Button>
             </>
           )}
           {session && (
             <Button asChild>
-              <Link href="/app">App</Link>
+              <Link href="/app">{m.app()}</Link>
             </Button>
           )}
           <Button variant="link" className="underline flex gap-2">
@@ -43,7 +43,7 @@ export default async function Home() {
                 className="-z-10 absolute top-0 left-0 w-full h-full"
               />
             </span>{" "}
-            Star us on Github
+            {m.starOnGithub()}
           </Button>
         </div>
         <div></div>

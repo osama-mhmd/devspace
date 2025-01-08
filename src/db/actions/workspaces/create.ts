@@ -10,12 +10,16 @@ import {
   defaultDocumentContent,
   defaultDocumentTitle,
 } from "../documents/_config";
+import { AvailableLanguageTag } from "@/paraglide/runtime";
 
 export type Err = {
   message: string;
 };
 
-export default async function createWorkspace(data: any): Promise<Err | never> {
+export default async function createWorkspace(
+  data: any,
+  lang = "en" as AvailableLanguageTag,
+): Promise<Err | never> {
   const { user } = await validateRequest();
 
   if (!user)
@@ -53,8 +57,8 @@ export default async function createWorkspace(data: any): Promise<Err | never> {
   const result = await createDocument(
     workspaceId,
     undefined,
-    defaultDocumentContent,
-    defaultDocumentTitle,
+    defaultDocumentContent[lang],
+    defaultDocumentTitle[lang],
   );
 
   if (!result.ok)

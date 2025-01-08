@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { isWithinExpirationDate } from "oslo";
 import VerifyForm from "./verify-form";
 import { newVerify } from "@/db/utils/new-verify";
+import * as m from "@/paraglide/messages";
 
 export const metadata: Metadata = {
   title: "Nonote | Verify your email",
@@ -25,7 +26,7 @@ export default async function Verify() {
 
   if (user.isVerified) redirect("/app");
 
-  const emailSentMessage = `We have sent an email to "${user.email}". Please check out your inbox... Please note that the verification email may take a few minutes to arrive.`;
+  const emailSentMessage = m.emailSentMessage({ email: user.email });
 
   if (user.emailVerified == "false") {
     message = emailSentMessage;
@@ -36,7 +37,7 @@ export default async function Verify() {
     if (isWithinExpirationDate(new Date(expiresAt))) {
       // TODO: this way should be changed
       // might be changed for something like whatsapp where you can resend the code every 30 second
-      message = "We have already sent an email";
+      message = m.alreadySentAnEmail();
     } else {
       // send another email
       message = emailSentMessage;

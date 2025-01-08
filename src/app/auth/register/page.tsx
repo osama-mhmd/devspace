@@ -8,6 +8,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { registerFields, type RegisterFields } from "./schema";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { toast } from "sonner";
+import Error from "../error-field";
+import * as m from "@/paraglide/messages";
 
 export default function Register() {
   const {
@@ -22,16 +24,17 @@ export default function Register() {
   ) => {
     if (data.password != data.password_repeat) {
       setError("password_repeat", {
-        message: "Passwords must match!",
+        message: "passwordsMustMatch",
       });
     } else {
       const result = await signup(data);
 
       if (!result.ok) {
-        if (result.message == "users_email_unique")
-          setError("email", { message: "Email already exists" });
-        if (result.message == "users_username_unique")
-          setError("user_name", { message: "Username already exists" });
+        if (
+          result.message == "users_email_unique" ||
+          result.message == "users_username_unique"
+        )
+          setError("user_name", { message: result.message });
         if (result.message == "timeout") toast.error("Connection time out");
       }
     }
@@ -44,54 +47,44 @@ export default function Register() {
           onSubmit={handleSubmit(async (data) => await onSumbit(data))}
           className="flex flex-col gap-2 w-96"
         >
-          <h2 className="text-center mb-3">Register</h2>
+          <h2 className="text-center mb-3">{m.register()}</h2>
           <Input
             type="text"
-            placeholder="First name"
+            placeholder={m.firstName()}
             {...register("first_name")}
           />
-          {errors.first_name && (
-            <p className="error">{errors.first_name.message}</p>
-          )}
+          <Error error={errors.first_name} />
           <Input
             type="text"
-            placeholder="Last name"
+            placeholder={m.lastName()}
             {...register("last_name")}
           />
-          {errors.last_name && (
-            <p className="error">{errors.last_name.message}</p>
-          )}
+          <Error error={errors.last_name} />
           <Input
             type="text"
-            placeholder="Username"
+            placeholder={m.username()}
             {...register("user_name")}
           />
-          {errors.user_name && (
-            <p className="error">{errors.user_name.message}</p>
-          )}
-          <Input type="email" placeholder="Email" {...register("email")} />
-          {errors.email && <p className="error">{errors.email.message}</p>}
+          <Error error={errors.user_name} />
+          <Input type="email" placeholder={m.email()} {...register("email")} />
+          <Error error={errors.email} />
           <Input
             type="password"
-            placeholder="Password"
+            placeholder={m.password()}
             {...register("password")}
           />
-          {errors.password && (
-            <p className="error">{errors.password.message}</p>
-          )}
+          <Error error={errors.password} />
           <Input
             type="password"
-            placeholder="Repeat password"
+            placeholder={m.repeatPassword()}
             {...register("password_repeat")}
           />
-          {errors.password_repeat && (
-            <p className="error">{errors.password_repeat.message}</p>
-          )}
+          <Error error={errors.password_repeat} />
           <Button type="submit" loading={isSubmitting}>
-            Register
+            {m.register()}
           </Button>
           <Link href="/auth/login" className="link">
-            Already have an account? Login
+            {m.alreadyHaveAnAccount()}
           </Link>
         </form>
       </div>

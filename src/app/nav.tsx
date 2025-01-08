@@ -4,7 +4,7 @@ import { Button } from "../components/ui/button";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import GithubIcon from "../components/icons/github";
-import { ArrowRight, Globe, List } from "lucide-react";
+import { ArrowLeft, ArrowRight, Globe, List } from "lucide-react";
 import { merienda } from "@/lib/fonts";
 import { Session } from "lucia";
 import { ThemeToggle } from "@/components/change-theme";
@@ -20,19 +20,24 @@ import {
   languageTag,
   setLanguageTag,
 } from "@/paraglide/runtime";
+import dir, { Direction } from "@/lib/dir";
+import * as m from "@/paraglide/messages";
 
-export default function Nav({ session }: { session: Session | null }) {
+export default function Nav({
+  session,
+  lang,
+}: {
+  session: Session | null;
+  lang: AvailableLanguageTag;
+}) {
   const pathname = usePathname();
-
-  const s = document.cookie.match(/lang=(\w+)/);
-
-  if (s) setLanguageTag(s[1] as AvailableLanguageTag);
-  // else set
+  setLanguageTag(lang);
 
   const shouldNotRender = /^\/app\/?(.*)$/.test(pathname);
 
   function changeLanguage(val: AvailableLanguageTag) {
-    document.cookie = `lang=${val}`;
+    document.cookie = `lang=${val}; path=/`;
+    console.log(val);
     window.location.reload();
   }
 
@@ -49,13 +54,18 @@ export default function Nav({ session }: { session: Session | null }) {
             {session && (
               <Button asChild variant="link">
                 <Link href="/app" className="flex items-center gap-1">
-                  App <ArrowRight width={15} />
+                  {m.app()}{" "}
+                  {dir() == "ltr" ? (
+                    <ArrowRight width={15} />
+                  ) : (
+                    <ArrowLeft width={15} />
+                  )}
                 </Link>
               </Button>
             )}
             {!session && (
               <Button asChild variant="link">
-                <Link href="/auth/register">Create account</Link>
+                <Link href="/auth/register">{m.createAccount()}</Link>
               </Button>
             )}
           </li>
@@ -66,7 +76,7 @@ export default function Nav({ session }: { session: Session | null }) {
                 className="flex gap-1"
                 target="_blank"
               >
-                <GithubIcon /> View source code
+                <GithubIcon /> {m.viewSourceCode()}
               </Link>
             </Button>
           </li>
@@ -74,7 +84,11 @@ export default function Nav({ session }: { session: Session | null }) {
             <ThemeToggle />
           </li>
           <li>
-            <Select defaultValue={languageTag()} onValueChange={changeLanguage}>
+            <Select
+              dir={dir() as Direction}
+              defaultValue={languageTag()}
+              onValueChange={changeLanguage}
+            >
               <SelectTrigger className="flex items-center gap-1.5">
                 <span className="capitalize">{languageTag()}</span> <Globe />
               </SelectTrigger>

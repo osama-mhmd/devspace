@@ -69,6 +69,10 @@
   }
 }
 
+.rtl {
+  direction: rtl;
+}
+
 /* Default values */
 h1,
 h2,
@@ -183,6 +187,14 @@ code * {
 
 .danger-zone-action-slot {
   @apply py-4 sm:py-2 px-4 border flex-col sm:flex-row gap-4 border-red-200 rounded-lg flex justify-between items-center;
+}
+
+.ar ol[data-sonner-toaster="true"] > li {
+  direction: rtl;
+}
+.ar ol[data-sonner-toaster="true"] > li > div[data-icon] {
+  margin-left: var(--toast-icon-margin-end);
+  margin-right: var(--toast-icon-margin-start);
 }
 
 li[data-type="error"] {

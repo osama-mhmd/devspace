@@ -22,6 +22,8 @@ import {
 import createHabit from "@/db/actions/habits/create";
 import { toast } from "sonner";
 import { PlusCircle } from "lucide-react";
+import * as m from "@/paraglide/messages";
+import dir, { Direction } from "@/lib/dir";
 
 export default function AddHabit() {
   const {
@@ -37,9 +39,9 @@ export default function AddHabit() {
     const result = await createHabit(data);
 
     if (!result) {
-      toast.error("Something went wrong");
+      toast.error(m.somethingWentWrong());
     } else {
-      toast.success("Habit created successfully");
+      toast.success(m.habitCreatedSuccessfully());
       window.location.reload(); // TODO: delete this and make it instead a live preview
     }
   }
@@ -53,17 +55,18 @@ export default function AddHabit() {
       </PanelTrigger>
       <PanelBody>
         <PanelHeader>
-          <h3 className="my-0">Create a habit</h3>
+          <h3 className="my-0">{m.createAHabit()}</h3>
         </PanelHeader>
         <form
           onSubmit={handleSubmit(async (data) => await onsubmit(data))}
           className="flex flex-col gap-2 w-full"
         >
-          <Input type="text" placeholder="Name" {...register("name")} />
+          <Input type="text" placeholder={m.name()} {...register("name")} />
           {errors.name && <p className="error">{errors.name.message}</p>}
-          <Input type="text" placeholder="Quote" {...register("quote")} />
+          <Input type="text" placeholder={m.quote()} {...register("quote")} />
           {errors.quote && <p className="error">{errors.quote.message}</p>}
           <Select
+            dir={dir() as Direction}
             onValueChange={
               (val) =>
                 setValue("frequency", val as "daily" | "weakly" | "monthly") // I Know This is weird
@@ -71,13 +74,13 @@ export default function AddHabit() {
             {...register("frequency")}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select the frequency" />
+              <SelectValue placeholder={m.selectTheFrequency()} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="daily">Daily</SelectItem>
-                <SelectItem value="weakly">Weakly</SelectItem>
-                <SelectItem value="monthly">Monthly</SelectItem>
+                <SelectItem value="daily">{m.daily()}</SelectItem>
+                <SelectItem value="weakly">{m.weekly()}</SelectItem>
+                <SelectItem value="monthly">{m.monthly()}</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -85,7 +88,7 @@ export default function AddHabit() {
             <p className="error">{errors.frequency.message}</p>
           )}
           <Button type="submit" loading={isSubmitting}>
-            Add
+            {m.add()}
           </Button>
         </form>
       </PanelBody>

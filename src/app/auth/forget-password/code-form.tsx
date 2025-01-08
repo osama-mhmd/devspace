@@ -12,13 +12,15 @@ import {
 import Result from "@/types/result";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import * as m from "@/paraglide/messages";
+import Error from "../error-field";
 
 const forgetPasswordFields = v.object({
   code: v.pipe(
     v.string(),
-    v.nonEmpty("Please enter your code"),
-    v.minLength(8),
-    v.maxLength(8),
+    v.nonEmpty("plzEnterCode"),
+    v.minLength(8, "codeMustBe8Digits"),
+    v.maxLength(8, "codeMustBe8Digits"),
   ),
 });
 export type ForgetPasswordFields = v.InferInput<typeof forgetPasswordFields>;
@@ -40,7 +42,7 @@ export default function CodeForm({ username }: { username: string }) {
       const token = await getTokenHash(data.code);
 
       if (token == "invalid-code") {
-        toast.error("Invalid code");
+        toast.error(m.invalidCode());
 
         return;
       }
@@ -48,14 +50,14 @@ export default function CodeForm({ username }: { username: string }) {
       router.push("/auth/forget-password/" + token);
     }
     if (result == Result.InvalidCode) {
-      toast.error("Invalid code");
+      toast.error(m.invalidCode());
     }
     if (result == Result.ExpiredCode) {
-      toast.error("Expired code");
+      toast.error(m.expiredCode());
     }
     if (result == Result.UserNotFound) {
       // this will not happen, but just in case
-      toast.error("User not found");
+      toast.error(m.userNotFound());
     }
   }
 
@@ -64,12 +66,12 @@ export default function CodeForm({ username }: { username: string }) {
       onSubmit={handleSubmit(async (data) => await onsubmit(data))}
       className="flex flex-col gap-2 w-full max-w-96"
     >
-      <h2 className="text-center mb-3">Reset Password</h2>
-      <Input type="text" placeholder="Username" disabled value={username} />
-      <Input type="text" placeholder="Code" {...register("code")} />
-      {errors.code && <p className="error">{errors.code.message}</p>}
+      <h2 className="text-center mb-3">{m.resetPassword()}</h2>
+      <Input type="text" placeholder={m.username()} disabled value={username} />
+      <Input type="text" placeholder={m.code()} {...register("code")} />
+      <Error error={errors.code} />
       <Button type="submit" loading={isSubmitting}>
-        Reset
+        {m.reset()}
       </Button>
     </form>
   );
