@@ -2,12 +2,24 @@
   outline-width: 0;
 }
 
+pre {
+  direction: ltr;
+}
+
 .tiptap *.is-empty::before {
   color: #adb5bd;
   content: attr(data-placeholder);
   float: left;
   height: 0;
   pointer-events: none;
+}
+
+.ar .tiptap .is-empty::before {
+  content: "اكتب هنا..." !important;
+}
+
+.ar .tiptap .is-empty::before {
+  float: right !important;
 }
 
 .tiptap *.is-empty.callout::before {
@@ -30,15 +42,11 @@ ul[data-type="taskList"] > li {
 }
 
 ul[data-type="taskList"] > li label input[type="checkbox"] {
-  width: 1rem;
-  height: 1rem;
-  margin-top: 0.25rem;
-  position: relative;
-  appearance: none;
+  @apply appearance-none relative mt-1 size-4;
 }
 
 ul[data-type="taskList"] > li label input[type="checkbox"]::after {
-  @apply content-[""] absolute top-0 left-0 w-full h-full border border-white dark:border-border rounded-sm;
+  @apply content-[""] absolute top-0 left-0 w-full h-full border border-gray-600 dark:border-border rounded-sm;
 }
 
 ul[data-type="taskList"] > li label input[type="checkbox"]:checked::after {
@@ -91,6 +99,18 @@ span[comment_id] {
   flex-grow: 1;
 }
 
-ul[data-type="taskList"] li[data-checked="true"] {
+ul[data-type="taskList"] li[data-checked="true"] > div > p {
   @apply line-through text-gray-600 dark:text-gray-400;
+}
+
+[data-type="kanban"] {
+  @apply flex;
+}
+
+[data-type="column"] {
+  @apply rounded-md bg-green-400 dark:bg-green-700 flex-1 flex flex-col gap-2 p-2;
+}
+
+[data-type="task"] {
+  @apply rounded-md bg-blue-400 dark:bg-blue-700 flex-1 flex flex-col gap-2 p-2;
 }

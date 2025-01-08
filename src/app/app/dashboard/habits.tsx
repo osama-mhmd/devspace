@@ -12,13 +12,14 @@ import getRecords from "@/db/actions/habits/get-records";
 import HabitLink from "./habit-link";
 import { CircleCheck, Flame, Target } from "lucide-react";
 import { cn } from "@/lib/utils";
+import * as m from "@/paraglide/messages";
 
 export default async function Habits({ habits }: { habits: Habit[] }) {
   const today = new Date();
 
   return (
     <div className="bg-green-200 dark:bg-green-900/30">
-      <h2 className="my-0">Habits 🔥</h2>
+      <h2 className="my-0">{m.habits()} 🔥</h2>
       <div className="flex *:w-full flex-col gap-2">
         {habits.map(async (habit, index) => {
           const records = await getRecords(habit.id);
@@ -85,7 +86,7 @@ export default async function Habits({ habits }: { habits: Habit[] }) {
                         size={80}
                         className="mx-auto mb-4 text-green-500"
                       />
-                      Done Today 💪, Keep Going 🔥
+                      {m.habitDone()}
                     </p>
                   ) : (
                     <div>
@@ -98,7 +99,7 @@ export default async function Habits({ habits }: { habits: Habit[] }) {
             </Panel>
           );
         })}
-        {!habits.length && <i>No habits</i>}
+        {!habits.length && <i>{m.noHabits()}</i>}
         <AddHabit />
       </div>
     </div>

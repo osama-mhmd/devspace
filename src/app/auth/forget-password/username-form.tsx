@@ -9,6 +9,8 @@ import { valibotResolver } from "@hookform/resolvers/valibot";
 import { newPassword } from "@/db/actions/users/new-password";
 import { NewPasswordResult as Result } from "@/types/result";
 import { toast } from "sonner";
+import * as m from "@/paraglide/messages";
+import Error from "../error-field";
 
 const forgetPasswordFields = pick(registerFields, ["user_name"]);
 export type ForgetPasswordFields = InferInput<typeof forgetPasswordFields>;
@@ -30,20 +32,18 @@ export default function UsernameForm({
     const result = await newPassword(data.user_name);
 
     if (result == Result.UserNotFound) {
-      toast.error("User not found");
+      toast.error(m.userNotFound());
 
       return;
     }
     if (result == Result.Success) {
-      toast.success("Email sent, please check out your inbox");
+      toast.success(m.emailSent());
     }
     if (result == Result.SentAnotherOne) {
-      toast.success("We have sent another email, please check out your inbox");
+      toast.success(m.sentAnotherEmail());
     }
     if (result == Result.AlreadySent) {
-      toast.success(
-        "We have already sent an email, please check out your inbox",
-      );
+      toast.success(m.alreadySentAnEmail());
     }
 
     stater(data.user_name);
@@ -54,11 +54,15 @@ export default function UsernameForm({
       onSubmit={handleSubmit(async (data) => await onsubmit(data))}
       className="flex flex-col gap-2 w-full max-w-96"
     >
-      <h2 className="text-center mb-3">Reset Password</h2>
-      <Input type="text" placeholder="Username" {...register("user_name")} />
-      {errors.user_name && <p className="error">{errors.user_name.message}</p>}
+      <h2 className="text-center mb-3">{m.resetPassword()}</h2>
+      <Input
+        type="text"
+        placeholder={m.username()}
+        {...register("user_name")}
+      />
+      <Error error={errors.user_name} />
       <Button type="submit" loading={isSubmitting}>
-        Reset
+        {m.reset()}
       </Button>
     </form>
   );

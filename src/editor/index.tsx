@@ -29,6 +29,8 @@ import Link from "@tiptap/extension-link";
 import { toast } from "sonner";
 import Callout from "./extensions/callout";
 import CommentList from "./components/comment-list";
+import { Column, Kanban, Task } from "./extensions/kanban";
+import * as m from "@/paraglide/messages";
 
 async function updateDocument(
   document_id: string,
@@ -55,6 +57,14 @@ interface EditorSchema {
   permission: Permission;
   workspace_id: string;
   user: User;
+}
+
+import "@tiptap/core";
+
+declare module "@tiptap/core" {
+  interface Commands {
+    addTask: (taskText: string) => void;
+  }
 }
 
 const Editor = ({
@@ -190,6 +200,10 @@ const Editor = ({
           };
         },
       }),
+      // KanbanView,
+      Column,
+      Task,
+      Kanban,
       Link.configure({
         defaultProtocol: "https",
       }),
@@ -246,11 +260,29 @@ const Editor = ({
     if (!result) toast.error("You cannot comment 😞");
   }
 
+  useEffect(() => {
+    document.addEventListener("click", (event) => {
+      const target = event.target as HTMLButtonElement;
+
+      if (!target) return;
+
+      if (target.classList.contains("add-task-btn")) {
+        const columnIndex = target.getAttribute("data-column-index");
+        // @ts-ignore
+        documentEditor?.commands.addTask(columnIndex, "New Task");
+      }
+
+      // if (target.classList.contains("add-column-btn")) {
+      //   documentEditor?.commands.addColumn();
+      // }
+    });
+  });
+
   if (isLoading) return <Loading />;
 
   return (
     <div className="relative max-w-4xl mx-auto px-4 mt-8 pb-14">
-      <div className="absolute top-4 right-4">
+      <div className="absolute top-4 end-4">
         {!saving && (
           <motion.div
             initial={{ y: -10, opacity: 0 }}
@@ -258,11 +290,11 @@ const Editor = ({
           >
             <Button
               variant={"ghost"}
-              className="flex gap-1 mb-3"
+              className="flex capitalize gap-1 mb-3"
               disabled={true}
             >
               <RefreshCw width={20} height={20} />
-              Synced
+              {m.synced()}
             </Button>
           </motion.div>
         )}
@@ -273,11 +305,11 @@ const Editor = ({
           >
             <Button
               variant={"ghost"}
-              className="flex gap-2 mb-3 items-center"
+              className="flex capitalize gap-2 mb-3 items-center"
               disabled={true}
             >
               <span className="spinner"></span>
-              Syncing
+              {m.syncing()}
             </Button>
           </motion.div>
         )}

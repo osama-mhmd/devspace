@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Trash, Trash2 } from "lucide-react";
 import { deleteUser } from "@/db/actions/users/delete";
 import { useState } from "react";
+import { deleteAccount } from "@/paraglide/messages";
 
 export default function DeleteAccount() {
   const [isLoading, setLoadingState] = useState(false);
@@ -20,7 +21,7 @@ export default function DeleteAccount() {
       loading={isLoading}
       onClick={async () => await onclick()}
     >
-      Delete Account <Trash2 strokeWidth={1.5} className="ms-2" />
+      {deleteAccount()} <Trash2 strokeWidth={1.5} className="ms-2" />
     </Button>
   );
 }

@@ -34,6 +34,22 @@ export function PanelTrigger({
   );
 }
 
+export function PanelClose({
+  children,
+  className,
+}: HaveChild & { className?: string }) {
+  const visibilityContext = useContext(VisibilityContext);
+
+  return (
+    <div
+      onClick={() => visibilityContext?.setVisibility(false)}
+      className={className}
+    >
+      {children}
+    </div>
+  );
+}
+
 export function PanelBody({ children }: HaveChild) {
   const visibilityContext = useContext(VisibilityContext);
 
@@ -72,8 +88,11 @@ export function PanelHeader({ children }: HaveChild) {
   );
 }
 
-export function Panel({ children }: HaveChild) {
-  const [visible, setVisibility] = useState(false);
+export function Panel({
+  children,
+  defaultValue = false,
+}: HaveChild & { defaultValue?: boolean }) {
+  const [visible, setVisibility] = useState(defaultValue);
 
   return (
     <VisibilityContext.Provider

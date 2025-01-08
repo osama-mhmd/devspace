@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import createWorkspace from "@/db/actions/workspaces/create";
 import { useForm } from "react-hook-form";
+import * as m from "@/paraglide/messages";
+import Error from "@/app/auth/error-field";
+import { languageTag } from "@/paraglide/runtime";
 
 export default function Create() {
   const {
@@ -14,7 +17,7 @@ export default function Create() {
   } = useForm<{ name: string; description: string }>();
 
   const onsubmit = async (data: { name: string; description: string }) => {
-    const err = await createWorkspace(data);
+    const err = await createWorkspace(data, languageTag());
 
     if (err) {
       if (err.message == "invalid-code")
@@ -31,19 +34,19 @@ export default function Create() {
           onSubmit={handleSubmit(async (data) => await onsubmit(data))}
           className="flex flex-col gap-2 w-96"
         >
-          <h3 className="text-center mb-3">Create workspace</h3>
+          <h3 className="text-center mb-3">{m.createWorkspace()}</h3>
           <Input
-            placeholder="Name"
+            placeholder={m.name()}
             {...register("name", {
-              required: "Please enter the name",
+              required: "plzEnterName",
             })}
           />
+          <Error error={errors.name} />
           <Input
-            placeholder="Description (optional)"
+            placeholder={m.descriptionAsPlaceholder()}
             {...register("description")}
           />
-          {errors.name && <span className="error">{errors.name.message}</span>}
-          <Button loading={isSubmitting}>Create</Button>
+          <Button loading={isSubmitting}>{m.create()}</Button>
         </form>
       </div>
     </section>

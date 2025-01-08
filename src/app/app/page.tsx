@@ -6,6 +6,7 @@ import {
 } from "@/db/actions/workspaces/get-workspaces";
 import { Bolt, PlusCircle } from "lucide-react";
 import Link from "next/link";
+import * as m from "@/paraglide/messages";
 
 export default async function App() {
   let Workspaces;
@@ -19,13 +20,13 @@ export default async function App() {
   if (workspaces.length == 0) {
     Workspaces = (
       <div className="text-center">
-        <h3 className="text-2xl mb-3">No workspaces yet 😞</h3>
+        <h3 className="text-2xl mb-3">{m.noWorkspacesYet()}</h3>
         <Button asChild>
           <Link
             href="/app/workspace/create"
             className="flex items-center gap-2"
           >
-            Create your first one <PlusCircle />
+            {m.createYourFirstOne()} <PlusCircle />
           </Link>
         </Button>
       </div>
@@ -33,7 +34,7 @@ export default async function App() {
   } else {
     Workspaces = (
       <div>
-        <h3>Workspaces</h3>
+        <h3>{m.workspaces()}</h3>
         <div className="grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-2 my-2">
           {workspaces.map((workspace, index) => {
             return (
@@ -52,7 +53,7 @@ export default async function App() {
                 ></div>
                 <h3 className="text-lg px-6 py-2 mb-0">{workspace.name}</h3>
                 <p className="px-6 pb-6">
-                  {workspace?.description ?? <i>No description</i>}
+                  {workspace?.description ?? <i>{m.noDescription()}</i>}
                 </p>
               </Link>
             );

@@ -17,7 +17,7 @@ export interface Result {
 export async function login(data: LoginFields): Promise<Result> {
   const defaultReturn = {
     ok: false,
-    message: "Invalid username or password",
+    message: "invalidUsernameOrPassword",
   };
 
   const username = data.user_name;
@@ -29,7 +29,7 @@ export async function login(data: LoginFields): Promise<Result> {
   ) {
     return {
       ...defaultReturn,
-      message: "Invalid username",
+      message: "invalidUsername",
     };
   }
   const password = data.password;
@@ -40,7 +40,7 @@ export async function login(data: LoginFields): Promise<Result> {
   ) {
     return {
       ...defaultReturn,
-      message: "Invalid password",
+      message: "invalidPassword",
     };
   }
 
@@ -73,6 +73,6 @@ export async function login(data: LoginFields): Promise<Result> {
 
   return {
     ok: true,
-    message: "Loged successfully",
+    message: "successLoging",
   };
 }
