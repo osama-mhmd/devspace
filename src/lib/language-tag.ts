@@ -2,6 +2,6 @@
 
 import { cookies } from "next/headers";
 
-export default function languageTag() {
-  const lang = cookies().get("lang")?.value;
+export default async function languageTag() {
+  const lang = (await cookies()).get("lang")?.value;
 }

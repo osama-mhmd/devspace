@@ -1,7 +1,7 @@
 import { validateRequest } from "@/db/auth";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { isWithinExpirationDate } from "oslo";
+import { isWithinExpirationDate } from "@/db/utils/utils";
 import VerifyForm from "./verify-form";
 import { newVerify } from "@/db/utils/new-verify";
 import * as m from "@/paraglide/messages";

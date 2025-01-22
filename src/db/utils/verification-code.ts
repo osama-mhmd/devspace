@@ -1,14 +1,16 @@
-import { TimeSpan, createDate } from "oslo";
-import { generateRandomString, alphabet } from "oslo/crypto";
-import { isWithinExpirationDate } from "oslo";
 import type { User } from "lucia";
+import {
+  createExpirationDate,
+  isWithinExpirationDate,
+  generate8DigitsRandomString,
+} from "./utils";
 
 export function generateEmailVerificationCode(): {
   verificationCode: string;
   expiresAt: string;
 } {
-  const verificationCode = generateRandomString(8, alphabet("0-9"));
-  const expiresAtDate = createDate(new TimeSpan(15, "m")); // 15 minutes
+  const verificationCode = generate8DigitsRandomString();
+  const expiresAtDate = createExpirationDate();
   const expiresAt = expiresAtDate.toJSON();
 
   return {

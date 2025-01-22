@@ -10,8 +10,13 @@ const nextConfig = {
     return config;
   },
   experimental: {
-    serverComponentsExternalPackages: ["@node-rs/argon2"],
+    turbo: {
+      rules: {
+        exclude: ["pg-native", "cloudflare:sockets"],
+      },
+    },
   },
+  serverExternalPackages: ["@node-rs/argon2"],
   images: {
     remotePatterns: [
       {

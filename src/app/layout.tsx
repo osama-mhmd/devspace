@@ -29,7 +29,7 @@ export default async function RootLayout({
 }>) {
   const { session } = await validateRequest();
 
-  const cookieLang = cookies().get("lang")?.value;
+  const cookieLang = (await cookies()).get("lang")?.value;
 
   availableLanguageTags.forEach((tag) => {
     if (tag == cookieLang) {
