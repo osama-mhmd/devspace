@@ -211,7 +211,7 @@ li[data-type="success"] {
 }
 
 .main-nav {
-  position: sticky;
+  position: fixed;
   width: 100%;
   padding: 15px 30px;
   backdrop-filter: blur(10px);

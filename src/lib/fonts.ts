@@ -1,4 +1,4 @@
-import { Inter, Merienda, Rubik } from "next/font/google";
+import { Inter, Merienda, Rubik, Lilita_One } from "next/font/google";
 
 const interFont = Inter({
   subsets: ["latin"],
@@ -15,7 +15,14 @@ const rubikFont = Rubik({
   display: "swap",
   adjustFontFallback: false,
 });
+const lilitaOne = Lilita_One({
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+  adjustFontFallback: false,
+});
 
 export const merienda = meriendaFont.className;
 export const inter = interFont.className;
 export const rubik = rubikFont.className;
+export const lilita = lilitaOne.className;
