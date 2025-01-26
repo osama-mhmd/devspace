@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Nonote | Not found",
+  title: "Not found",
 };
 
 export default function NotFound() {

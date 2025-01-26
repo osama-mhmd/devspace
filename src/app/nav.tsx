@@ -45,7 +45,7 @@ export default function Nav({
     <nav className="main-nav">
       <div className="container py-2 px-6 flex items-center justify-between">
         <Link href="/" className={"font-bold " + merienda}>
-          Nonote
+          DevSpace
         </Link>
         {/* TODO: navbar on small screens */}
         <ul className="[&>li]:hidden [&>li]:sm:block flex gap-3 py-2 sm:py-0 items-center px-0 list-none">
@@ -72,7 +72,7 @@ export default function Nav({
           <li>
             <Button asChild variant="link">
               <Link
-                href="https://github.com/osama-mhmd/nonote"
+                href="https://github.com/osama-mhmd/devspace"
                 className="flex gap-1"
                 target="_blank"
               >

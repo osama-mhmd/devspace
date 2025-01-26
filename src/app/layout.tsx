@@ -17,7 +17,10 @@ import { cookies } from "next/headers";
 import dir from "@/lib/dir";
 
 export const metadata: Metadata = {
-  title: "Nonote | Homepage",
+  title: {
+    template: "%s | DevSpace",
+    default: "Homepage | DevSpace",
+  },
   description:
     "Everyday you see a new note taking app appears, but they all don't fit you. Don't worry, this app will fit you",
 };

@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/button";
 import * as m from "@/paraglide/messages";
 
 export const metadata: Metadata = {
-  title: "Nonote | Profile",
+  title: "Profile",
 };
 
 export default async function Profile() {

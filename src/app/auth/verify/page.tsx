@@ -7,7 +7,7 @@ import { newVerify } from "@/db/utils/new-verify";
 import * as m from "@/paraglide/messages";
 
 export const metadata: Metadata = {
-  title: "Nonote | Verify your email",
+  title: "Verify your email",
 };
 
 export default async function Verify() {
