@@ -11,24 +11,23 @@ import { valibotResolver } from "@hookform/resolvers/valibot";
 import { InferInput, pick } from "valibot";
 import { login } from "@/db/actions/users/login";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Error from "../error-field";
 import * as m from "@/paraglide/messages";
 
 const loginFields = pick(registerFields, ["user_name", "password"]);
 export type LoginFields = InferInput<typeof loginFields>;
 
-export default function Login({
-  searchParams: { redirectTo },
-}: {
-  searchParams: { redirectTo: string };
-}) {
+export default function Login() {
   const {
     register,
     formState: { errors, isSubmitting },
     handleSubmit,
   } = useForm<LoginFields>({ resolver: valibotResolver(loginFields) });
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo");
 
   async function onsubmit(data: LoginFields) {
     const result = await login(data);
