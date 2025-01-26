@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/*
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -57,52 +56,6 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-  }
-}
-*/
-@layer base {
-  :root {
-    --background: 197.1 34.5% 15.7%;
-    /* --foreground: 154.6, 71.7%, 62.5%; */
-    --foreground: 210 33.3% 96.5%;
-    --radius: 0.5rem;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    /* --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%; */
-    --primary: 154.6 71.7% 62.5%;
-    --primary-foreground: 197.1, 34.5%, 15.7%;
-    --primary-hover: 154.6, 71.7%, 55%;
-
-    /* Secondary Button */
-    --secondary: 197.1, 34.5%, 15.7%;
-    --secondary-foreground: 210, 33.3%, 96.5%;
-    --secondary-hover: 197.1, 34.5%, 12%;
-
-    /* Destructive Button */
-    --destructive: 0, 100%, 70.6%;
-    --destructive-foreground: 210, 33.3%, 96.5%;
-    --destructive-hover: 0, 100%, 65%; /* Slightly darker for hover */
-
-    /* Outline Button */
-    --outline-foreground: 197.1, 34.5%, 15.7%;
-    --outline-border: 197.1, 34.5%, 15.7%;
-    --outline-hover-foreground: 210, 33.3%, 96.5%;
-    --outline-hover-background: 197.1, 34.5%, 15.7%;
   }
 }
 
@@ -238,6 +191,9 @@ code * {
   @apply py-4 sm:py-2 px-4 border flex-col sm:flex-row gap-4 border-red-200 rounded-lg flex justify-between items-center;
 }
 
+.ar {
+  @apply font-rubik;
+}
 .ar ol[data-sonner-toaster="true"] > li {
   direction: rtl;
 }
@@ -260,7 +216,7 @@ li[data-type="success"] {
 }
 
 .main-nav {
-  position: fixed;
+  position: sticky;
   width: 100%;
   padding: 15px 30px;
   backdrop-filter: blur(10px);
@@ -273,4 +229,8 @@ li[data-type="success"] {
 
 .app-nav {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.lilita {
+  @apply font-lilita tracking-wider text-xl;
 }

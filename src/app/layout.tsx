@@ -1,4 +1,4 @@
-import { inter, rubik } from "@/lib/fonts";
+import { inter, lilita, rubik } from "@/lib/fonts";
 import Nav from "@/app/nav";
 import { validateRequest } from "@/db/auth";
 import { Metadata } from "next";
@@ -43,7 +43,7 @@ export default async function RootLayout({
   return (
     <html lang={languageTag()} suppressHydrationWarning>
       <body
-        className={`${languageTag() == "ar" ? rubik : inter} ${dir()} ${languageTag()}`}
+        className={`${rubik} ${inter} ${lilita} ${dir()} ${languageTag()} font-inter`}
       >
         <ThemeProvider
           attribute="class"

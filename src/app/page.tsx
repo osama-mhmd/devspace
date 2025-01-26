@@ -6,23 +6,20 @@ import { Circle, Star } from "lucide-react";
 import * as m from "@/paraglide/messages";
 import { Rocket } from "@/components/icons";
 import Image from "next/image";
+import From1To2 from "./from-1-to-2";
 
 export default async function Home() {
   const { session } = await validateRequest();
 
   return (
-    <main className="flex flex-col pt-32 h-screen">
+    <main className="flex flex-col pt-10 h-screen">
       <section>
         <div className="container flex justify-evenly gap-4">
           <div className="flex flex-col max-w-md">
-            <h1
-              className={
-                "text-5xl flex items-center gap-2 sm:text-7xl mb-0 " + lilita
-              }
-            >
+            <h1 className="text-5xl flex items-center gap-2 sm:text-7xl mb-0 font-lilita">
               DevSpace <Rocket />
             </h1>
-            <p className={"text-muted-foreground text-2xl my-4 " + lilita}>
+            <p className="text-muted-foreground text-2xl my-4 font-lilita">
               {m.appDescription()}
             </p>
             <div className="flex flex-wrap items-center gap-2">
@@ -41,10 +38,7 @@ export default async function Home() {
                   <Link href="/app">{m.app()}</Link>
                 </Button>
               )}
-              <Button
-                variant="link"
-                className="underline flex gap-2 text-[#5be4aa]"
-              >
+              <Button variant="link" className="underline flex gap-2">
                 <span className="relative">
                   <Star
                     fill="hsl(var(--background))"
@@ -68,13 +62,7 @@ export default async function Home() {
           />
         </div>
       </section>
-      <Image
-        width={50}
-        height={50}
-        className="w-full h-56 object-cover"
-        alt="design"
-        src="/from-1-to-2.svg"
-      />
+      <From1To2 />
       <section className="bg-[#152227]">
         <div className="container"></div>
       </section>

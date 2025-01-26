@@ -3,7 +3,8 @@ import { Slot, Slottable } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
-import { ArrowBigRight, ArrowRight } from "lucide-react";
+import { ArrowBigRight, ArrowLeft, ArrowRight } from "lucide-react";
+import dir from "@/lib/dir";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
@@ -59,6 +60,7 @@ const Button = ({
   ...props
 }: ButtonProps) => {
   const Comp = asChild ? Slot : "button";
+
   return (
     <Comp
       className={cn(buttonVariants({ variant, size, className, arrow }))}
@@ -71,12 +73,18 @@ const Button = ({
       ) : (
         <Slottable>{children}</Slottable>
       )}
-      {arrow && (
-        <ArrowRight
-          className="transition-transform group-hover:translate-x-0.5"
-          size={20}
-        />
-      )}
+      {arrow &&
+        (dir() == "ltr" ? (
+          <ArrowRight
+            width={15}
+            className="transition-transform group-hover:translate-x-0.5"
+          />
+        ) : (
+          <ArrowLeft
+            width={15}
+            className="transition-transform group-hover:-translate-x-0.5"
+          />
+        ))}
     </Comp>
   );
 };

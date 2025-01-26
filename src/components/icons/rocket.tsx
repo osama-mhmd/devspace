@@ -1,9 +1,9 @@
-export default function Rocket() {
+export default function Rocket({ size = 64 }: { size?: number }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={64}
-      height={64}
+      width={size}
+      height={size}
       viewBox="0 0 32 32"
     >
       <g fill="none">
