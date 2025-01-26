@@ -1,8 +1,9 @@
 import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
+import { Slot, Slottable } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
+import { ArrowBigRight, ArrowRight } from "lucide-react";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
@@ -25,10 +26,15 @@ const buttonVariants = cva(
         lg: "h-11 rounded-md px-8",
         icon: "h-10 w-10",
       },
+      arrow: {
+        default: "",
+        has: "gap-2 group",
+      },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
+      arrow: "default",
     },
   },
 );
@@ -38,34 +44,42 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   loading?: boolean;
+  ref?: React.ForwardedRef<HTMLButtonElement>;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      className,
-      loading = false,
-      variant,
-      size,
-      asChild = false,
-      children,
-      ...props
-    },
-    ref,
-  ) => {
-    const Comp = asChild ? Slot : "button";
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        disabled={loading}
-        {...props}
-      >
-        {loading ? <span className="spinner"></span> : children}
-      </Comp>
-    );
-  },
-);
+const Button = ({
+  className,
+  loading = false,
+  variant,
+  size,
+  asChild = false,
+  arrow,
+  children,
+  ref,
+  ...props
+}: ButtonProps) => {
+  const Comp = asChild ? Slot : "button";
+  return (
+    <Comp
+      className={cn(buttonVariants({ variant, size, className, arrow }))}
+      ref={ref}
+      disabled={loading}
+      {...props}
+    >
+      {loading ? (
+        <span className="spinner"></span>
+      ) : (
+        <Slottable>{children}</Slottable>
+      )}
+      {arrow && (
+        <ArrowRight
+          className="transition-transform group-hover:translate-x-0.5"
+          size={20}
+        />
+      )}
+    </Comp>
+  );
+};
 Button.displayName = "Button";
 
 export { Button, buttonVariants };
