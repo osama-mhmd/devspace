@@ -234,3 +234,18 @@ li[data-type="success"] {
 .lilita {
   @apply font-lilita tracking-wider text-xl;
 }
+
+.features-grid {
+  @apply space-y-4 grid font-lilita text-2xl text-muted-foreground grid-cols-2 gap-4 [&>div]:flex [&>div]:justify-end [&>article>h3]:my-0 [&>article>h3]:text-primary py-12;
+}
+.features-grid > article:nth-child(odd) {
+  @apply text-end;
+}
+.features-grid > div:nth-child(even) {
+  @apply !justify-start;
+}
+
+.blurry-bg {
+  background-image: url(/test.png);
+  background-size: cover;
+}

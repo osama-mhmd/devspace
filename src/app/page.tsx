@@ -42,7 +42,7 @@ export default async function Home() {
                 <span className="relative">
                   <Star
                     fill="hsl(var(--background))"
-                    className="p-0.5 z-20 relative"
+                    className="p-0.5 z-[2] relative"
                   />
                   <Circle
                     fill="hsl(var(--primary))"
@@ -63,8 +63,72 @@ export default async function Home() {
         </div>
       </section>
       <From1To2 />
-      <section className="bg-[#152227]">
-        <div className="container"></div>
+      <section className="bg-muted dark:bg-muted/50">
+        <div className="container">
+          <h1 className="text-center mx-auto font-lilita max-w-prose text-balance">
+            Join Our Community And Enjoy A Niche Productivty Tool For Developers
+          </h1>
+          <div className="features-grid">
+            <div>
+              <Image
+                src="/landing-features-ai.jpg"
+                width={250}
+                height={250}
+                alt="AI"
+                className="rounded-xl"
+              />
+            </div>
+            <article>
+              <h3>AI</h3>
+              <div>
+                Let AI:
+                <ul>
+                  <li>Evaluate tasks (points, subtasks, duration)</li>
+                  <li>Suggest features</li>
+                  <li>Evaluate projects ideas before putting effort into it</li>
+                </ul>
+              </div>
+            </article>
+            <article>
+              <h3>All in one place</h3>
+              <p>
+                Without leaving the app, your notes are organized. You can
+                capture, track habits, write daily standup, write daily log. Let
+                DevSpace manage your projects, tasks, and even plans.
+              </p>
+            </article>
+            <div>
+              <Image
+                src="/landing-features-all-in-one.png"
+                width={250}
+                height={250}
+                alt="All in one"
+                className="rounded-xl"
+              />
+            </div>
+            <div>
+              <Image
+                src="/landing-features-niche-product.png"
+                width={250}
+                height={250}
+                alt="All in one"
+                className="rounded-xl"
+              />
+            </div>
+            <article>
+              <h3>A niche product</h3>
+              <p>
+                Enjoy using a product customized for you. If you have any
+                issues, or features, feel free to report about it.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section className="blurry-bg p-6">
+        <h1 className="text-center font-lilita">
+          Don{"'"}t waste your time and start using DevSpace today.
+        </h1>
       </section>
     </main>
   );

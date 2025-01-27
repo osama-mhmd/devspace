@@ -12,11 +12,11 @@ export default function From1To2() {
     setLoaded(true);
   }, []);
 
-  if (!isLoaded) return;
+  if (!isLoaded) return <div className="py-28"></div>;
 
   return (
     <>
-      {theme == "dark" && (
+      {theme == "dark" ? (
         <Image
           width={50}
           height={50}
@@ -24,8 +24,7 @@ export default function From1To2() {
           alt="design"
           src="/from-1-to-2.svg"
         />
-      )}
-      {theme == "light" && (
+      ) : (
         <Image
           width={50}
           height={50}
