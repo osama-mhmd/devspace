@@ -30,7 +30,7 @@ export default function From1To2() {
           height={50}
           className="w-full h-56 object-cover"
           alt="design"
-          src="/from-1-to-2-dark.svg"
+          src="/from-1-to-2-light.svg"
         />
       )}
     </>

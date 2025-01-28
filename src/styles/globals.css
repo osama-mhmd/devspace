@@ -246,6 +246,9 @@ li[data-type="success"] {
 }
 
 .blurry-bg {
-  background-image: url(/test.png);
+  background-image: url(/landing-third-section-light.png);
   background-size: cover;
+}
+.dark .blurry-bg {
+  background-image: url(/landing-third-section.png);
 }
