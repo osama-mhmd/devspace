@@ -26,10 +26,10 @@ export default async function Home() {
               {!session && (
                 <>
                   <Button variant="outline" asChild>
-                    <Link href="/auth/login">See pricing</Link>
+                    <Link href="/auth/login">Login</Link>
                   </Button>
                   <Button asChild arrow="has">
-                    <Link href="/auth/register">Try it for free</Link>
+                    <Link href="/auth/register">Sign up for free</Link>
                   </Button>
                 </>
               )}
@@ -70,58 +70,65 @@ export default async function Home() {
           </h1>
           <div className="features-grid">
             <div>
-              <Image
-                src="/landing-features-ai.jpg"
-                width={250}
-                height={250}
-                alt="AI"
-                className="rounded-xl"
-              />
-            </div>
-            <article>
-              <h3>AI</h3>
               <div>
-                Let AI:
-                <ul>
-                  <li>Evaluate tasks (points, subtasks, duration)</li>
-                  <li>Suggest features</li>
-                  <li>Evaluate projects ideas before putting effort into it</li>
-                </ul>
+                <Image
+                  src="/landing-features-all-in-one.png"
+                  width={400}
+                  height={400}
+                  alt="All in one"
+                />
               </div>
-            </article>
-            <article>
-              <h3>All in one place</h3>
-              <p>
-                Without leaving the app, your notes are organized. You can
-                capture, track habits, write daily standup, write daily log. Let
-                DevSpace manage your projects, tasks, and even plans.
-              </p>
-            </article>
-            <div>
-              <Image
-                src="/landing-features-all-in-one.png"
-                width={250}
-                height={250}
-                alt="All in one"
-                className="rounded-xl"
-              />
+              <article>
+                <h3>All in one place</h3>
+                <p>
+                  Without leaving the app, your notes are organized. You can
+                  capture, track habits, write daily standup, write daily log.
+                  Let DevSpace manage your projects, tasks, and even plans.
+                </p>
+              </article>
             </div>
             <div>
-              <Image
-                src="/landing-features-niche-product.png"
-                width={250}
-                height={250}
-                alt="All in one"
-                className="rounded-xl"
-              />
+              <div>
+                <Image
+                  src="/landing-features-ai.jpg"
+                  width={400}
+                  height={400}
+                  alt="AI"
+                />
+              </div>
+              <article>
+                <h3>All in one place</h3>
+                <div>
+                  Let AI:
+                  <ul>
+                    <li>Evaluate tasks (points, subtasks, duration)</li>
+
+                    <li>Suggest features</li>
+
+                    <li>
+                      Evaluate projects ideas before putting effort into it
+                    </li>
+                  </ul>
+                </div>
+              </article>
             </div>
-            <article>
-              <h3>A niche product</h3>
-              <p>
-                Enjoy using a product customized for you. If you have any
-                issues, or features, feel free to report about it.
-              </p>
-            </article>
+            <div>
+              <div>
+                <Image
+                  src="/landing-features-niche-product.png"
+                  width={400}
+                  height={400}
+                  alt="All in one"
+                />
+              </div>
+              <article>
+                <h3>A niche product</h3>
+                <p>
+                  Enjoy using a product customized for you. If you have any
+                  issues, or features, feel free to report about it.
+                </p>
+              </article>
+            </div>
           </div>
         </div>
       </section>

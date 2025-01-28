@@ -235,14 +235,30 @@ li[data-type="success"] {
   @apply font-lilita tracking-wider text-xl;
 }
 
-.features-grid {
-  @apply space-y-4 grid font-lilita text-2xl text-muted-foreground grid-cols-2 gap-4 [&>div]:flex [&>div]:justify-end [&>article>h3]:my-0 [&>article>h3]:text-primary py-12;
+.features-grid > div {
+  @apply font-lilita flex md:gap-4 text-2xl flex-col md:flex-row bg-muted/25 transition hover:bg-muted/50 px-4 my-12 border-l-8 border-primary rounded-lg;
 }
-.features-grid > article:nth-child(odd) {
-  @apply text-end;
+.features-grid h3 {
+  @apply text-primary pb-2;
 }
-.features-grid > div:nth-child(even) {
-  @apply !justify-start;
+.features-grid p,
+.features-grid article > div {
+  @apply max-w-prose text-balance;
+}
+.features-grid article {
+  @apply md:pt-24;
+}
+.features-grid ul {
+  @apply pl-8;
+}
+.features-grid img {
+  @apply z-10 relative;
+}
+.features-grid > div > div {
+  @apply relative w-fit h-fit flex-shrink-0;
+}
+.features-grid > div > div::after {
+  @apply content-empty w-[calc(100%-2rem)] h-16 bg-primary/50 absolute bottom-8 left-4;
 }
 
 .blurry-bg {
