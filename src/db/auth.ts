@@ -9,7 +9,8 @@ export const validateRequest = cache(
   async (): Promise<
     { user: User; session: Session } | { user: null; session: null }
   > => {
-    const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
+    const sessionId =
+      (await cookies()).get(lucia.sessionCookieName)?.value ?? null;
     if (!sessionId) {
       return {
         user: null,
@@ -22,7 +23,7 @@ export const validateRequest = cache(
     try {
       if (result.session && result.session.fresh) {
         const sessionCookie = lucia.createSessionCookie(result.session.id);
-        cookies().set(
+        (await cookies()).set(
           sessionCookie.name,
           sessionCookie.value,
           sessionCookie.attributes,
@@ -30,7 +31,7 @@ export const validateRequest = cache(
       }
       if (!result.session) {
         const sessionCookie = lucia.createBlankSessionCookie();
-        cookies().set(
+        (await cookies()).set(
           sessionCookie.name,
           sessionCookie.value,
           sessionCookie.attributes,

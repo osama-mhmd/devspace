@@ -18,9 +18,9 @@ const resetPasswordFields = pick(registerFields, [
 export type ResetPasswordFields = InferInput<typeof resetPasswordFields>;
 
 export default function ResetPassword({
-  params: { token },
+  params,
 }: {
-  params: { token: string };
+  params: Promise<{ token: string }>;
 }) {
   const {
     register,
@@ -37,7 +37,7 @@ export default function ResetPassword({
       return;
     }
 
-    const result = await changePassword(token, data.password);
+    const result = await changePassword((await params).token, data.password);
 
     if (result == ChangePasswordResult.InvalidPassword) {
       toast.error("Invalid password");

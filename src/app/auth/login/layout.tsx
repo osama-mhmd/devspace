@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "Nonote | Login",
+  title: "Login",
 };
 
 export default async function NotAuthedLayer({

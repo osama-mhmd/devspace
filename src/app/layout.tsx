@@ -1,13 +1,13 @@
-import { inter, rubik } from "@/lib/fonts";
+import { inter, lilita, rubik } from "@/lib/fonts";
 import Nav from "@/app/nav";
 import { validateRequest } from "@/db/auth";
 import { Metadata } from "next";
 import { Toaster } from "sonner";
+import Footer from "./footer";
 
 import "@/styles/globals.css";
 import { ThemeProvider } from "./theme-provider";
 
-import * as m from "@/paraglide/messages";
 import {
   availableLanguageTags,
   languageTag,
@@ -17,7 +17,10 @@ import { cookies } from "next/headers";
 import dir from "@/lib/dir";
 
 export const metadata: Metadata = {
-  title: "Nonote | Homepage",
+  title: {
+    template: "%s | DevSpace",
+    default: "Homepage | DevSpace",
+  },
   description:
     "Everyday you see a new note taking app appears, but they all don't fit you. Don't worry, this app will fit you",
 };
@@ -29,7 +32,7 @@ export default async function RootLayout({
 }>) {
   const { session } = await validateRequest();
 
-  const cookieLang = cookies().get("lang")?.value;
+  const cookieLang = (await cookies()).get("lang")?.value;
 
   availableLanguageTags.forEach((tag) => {
     if (tag == cookieLang) {
@@ -40,7 +43,7 @@ export default async function RootLayout({
   return (
     <html lang={languageTag()} suppressHydrationWarning>
       <body
-        className={`${languageTag() == "ar" ? rubik : inter} ${dir()} ${languageTag()}`}
+        className={`${rubik} ${inter} ${lilita} ${dir()} ${languageTag()} font-inter`}
       >
         <ThemeProvider
           attribute="class"
@@ -50,6 +53,7 @@ export default async function RootLayout({
         >
           <Nav session={session} lang={languageTag()} />
           {children}
+          <Footer />
           <Toaster />
         </ThemeProvider>
       </body>

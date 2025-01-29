@@ -4,7 +4,7 @@ import db from "../..";
 import { resetPasswordTokens, userTable } from "../../schemas";
 import { eq } from "drizzle-orm";
 import { createResetPasswordToken } from "../../utils/password-token";
-import { isWithinExpirationDate } from "oslo";
+import { isWithinExpirationDate } from "@/db/utils/utils";
 import sendMail from "../../utils/send-mail";
 import { NewPasswordResult as Result } from "../../../types/result";
 import { hash } from "@node-rs/argon2";
@@ -95,7 +95,7 @@ export async function changePassword(
   await lucia.invalidateUserSessions(user[0].id);
   const sessionCookie = lucia.createBlankSessionCookie();
 
-  cookies().set(
+  (await cookies()).set(
     sessionCookie.name,
     sessionCookie.value,
     sessionCookie.attributes,

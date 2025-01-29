@@ -1,4 +1,4 @@
-<h1 align="center">Nonote</h1>
+<h1 align="center">DevSpace</h1>
 
 - [Why](#why)
 - [Techonologies](#technologies)
@@ -8,7 +8,7 @@
 
 ---
 
-**Join our workspace**: https://nonote.vercel.app/app/workspace/l47qfeumtyl27fnj
+**Join our workspace**: https://devspace-app.vercel.app/app/workspace/l47qfeumtyl27fnj
 
 **Join our discord**: https://discord.com/invite/VnB4wgBNAw
 
@@ -24,7 +24,7 @@ Actually, it differs a lot from them, for these features:
 
 - **🔓 Open source**: And particularly in the field, you rarely found an open source note taking app
 
-These are the core features that seperate nonote from any note taking app
+These are the core features that seperate DevSpace from any note taking app
 
 ## Technologies
 

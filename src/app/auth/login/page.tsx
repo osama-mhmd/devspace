@@ -11,24 +11,24 @@ import { valibotResolver } from "@hookform/resolvers/valibot";
 import { InferInput, pick } from "valibot";
 import { login } from "@/db/actions/users/login";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Error from "../error-field";
 import * as m from "@/paraglide/messages";
+import FormFooter from "../register/form-footer";
 
 const loginFields = pick(registerFields, ["user_name", "password"]);
 export type LoginFields = InferInput<typeof loginFields>;
 
-export default function Login({
-  searchParams: { redirectTo },
-}: {
-  searchParams: { redirectTo: string };
-}) {
+export default function Login() {
   const {
     register,
     formState: { errors, isSubmitting },
     handleSubmit,
   } = useForm<LoginFields>({ resolver: valibotResolver(loginFields) });
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo");
 
   async function onsubmit(data: LoginFields) {
     const result = await login(data);
@@ -43,13 +43,13 @@ export default function Login({
   }
 
   return (
-    <section className="mt-6 sm:mt-12">
-      <div className="container flex items-center flex-col gap-6 justify-center">
+    <section className="pt-32 sm:pt-36 bg-gradient-to-br dark:from-orange-800 from-orange-200 to-blue-200 dark:to-blue-800 min-h-screen pb-12">
+      <div className="container flex items-center flex-col gap-3 justify-center">
         <form
           onSubmit={handleSubmit(async (data) => await onsubmit(data))}
-          className="flex flex-col gap-2 w-full max-w-96"
+          className="flex flex-col gap-2 w-full max-w-96 bg-muted/50 p-6 rounded-lg"
         >
-          <h2 className="text-center mb-3">{m.login()}</h2>
+          <h2 className="text-center mb-3 mt-0">{m.login()}</h2>
           <Input
             type="text"
             placeholder={m.username()}
@@ -74,12 +74,13 @@ export default function Login({
           >
             {m.dontHaveAnAccount()}
           </Link>
+          <div className="grid w-full max-w-96 mt-2 [&>*>svg]:me-1">
+            <Button variant="outline">
+              <GithubIcon /> {m.signInWithGithub()}
+            </Button>
+          </div>
         </form>
-        <div className="grid w-full max-w-96 [&>*>svg]:me-1">
-          <Button variant="outline">
-            <GithubIcon /> {m.signInWithGithub()}
-          </Button>
-        </div>
+        <FormFooter />
       </div>
     </section>
   );

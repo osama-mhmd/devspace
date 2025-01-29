@@ -1,12 +1,11 @@
 "use server";
 
-import { TimeSpan, createDate, isWithinExpirationDate } from "oslo";
-import { alphabet, generateRandomString } from "oslo/crypto";
+import { isWithinExpirationDate, createExpirationDate } from "@/db/utils/utils";
 import db from "..";
 import { resetPasswordTokens, userTable } from "../schemas";
 import { eq } from "drizzle-orm";
-import { sha256 } from "oslo/crypto";
-import { encodeHex } from "oslo/encoding";
+import { sha256 } from "@oslojs/crypto/sha2";
+import { encodeHexLowerCase as encodeHex } from "@oslojs/encoding";
 import { generateIdFromEntropySize } from "lucia";
 
 export async function createResetPasswordToken(
@@ -15,22 +14,26 @@ export async function createResetPasswordToken(
   await db
     .delete(resetPasswordTokens)
     .where(eq(resetPasswordTokens.user_id, userId));
-  const code = generateRandomString(8, alphabet("0-9"));
+
+  const code = generate8DigitsRandomString();
 
   const tokenId = generateIdFromEntropySize(25); // 40 character
-  const tokenHash = encodeHex(await sha256(new TextEncoder().encode(tokenId)));
+
+  // THE NEXT LINE WAS `AWAITED`, AND I REMOVED IT, MAKE SURE THE BEHAVIOUR NOT CHANGED
+  const tokenHash = encodeHex(sha256(new TextEncoder().encode(tokenId)));
 
   await db.insert(resetPasswordTokens).values({
     token_code: code,
     token_hash: tokenHash,
     user_id: userId,
-    expires_at: createDate(new TimeSpan(2, "h")),
+    expires_at: createExpirationDate(60), // expires after two hours
   });
 
   return code;
 }
 
 import Result from "../../types/result";
+import { generate8DigitsRandomString } from "./utils";
 
 export async function verifyResetPasswordTokenCode(
   inputCode: string,

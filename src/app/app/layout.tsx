@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 import AppNavbar from "./app-navbar";
 
 export const metadata: Metadata = {
-  title: "Nonote | App",
+  title: "App",
 };
 
 export default function Layout({ children }: { children: ReactNode }) {

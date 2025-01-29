@@ -22,7 +22,7 @@ export default function Guide() {
           Unlike notion and the other apps, that gives you a lot of options and
           ends up with a lot of myth. But actually we are using these apps to
           simplify our life not to make it more complex. As a result, we created
-          &#34;nonote&#34;. It provides a:
+          &#34;DevSpace&#34;. It provides a:
         </p>
         <ul>
           <li>

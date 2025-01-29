@@ -1,6 +1,6 @@
 "use client";
 
-import { merienda } from "@/lib/fonts";
+import { Rocket } from "@/components/icons";
 import { ChartPie, LayoutDashboard, UserCircle } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -15,8 +15,8 @@ export default function AppNavbar() {
   return shouldNotRender ? null : (
     <nav className="py-4 bg-muted app-nav">
       <div className="container py-2 px-6 flex items-center justify-between">
-        <Link href="/app" className={"font-bold " + merienda}>
-          Nonote App
+        <Link href="/app" className="lilita contain-icons">
+          DS <Rocket size={25} /> App
         </Link>
         <ul className="flex gap-3 py-2 sm:py-0 items-center px-0 list-none *:transition">
           <li className="hover:scale-125 hover:-translate-y-1">

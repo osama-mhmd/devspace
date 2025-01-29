@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import GithubIcon from "../components/icons/github";
 import { ArrowLeft, ArrowRight, Globe, List } from "lucide-react";
-import { merienda } from "@/lib/fonts";
 import { Session } from "lucia";
 import { ThemeToggle } from "@/components/change-theme";
 import {
@@ -22,6 +21,7 @@ import {
 } from "@/paraglide/runtime";
 import dir, { Direction } from "@/lib/dir";
 import * as m from "@/paraglide/messages";
+import { Rocket } from "@/components/icons";
 
 export default function Nav({
   session,
@@ -44,22 +44,17 @@ export default function Nav({
   return shouldNotRender ? null : (
     <nav className="main-nav">
       <div className="container py-2 px-6 flex items-center justify-between">
-        <Link href="/" className={"font-bold " + merienda}>
-          Nonote
+        <Link href="/" className="lilita contain-icons">
+          DS <Rocket size={25} />
         </Link>
         {/* TODO: navbar on small screens */}
         <ul className="[&>li]:hidden [&>li]:sm:block flex gap-3 py-2 sm:py-0 items-center px-0 list-none">
           <List className="block sm:hidden cursor-pointer" />
           <li>
             {session && (
-              <Button asChild variant="link">
-                <Link href="/app" className="flex items-center gap-1">
-                  {m.app()}{" "}
-                  {dir() == "ltr" ? (
-                    <ArrowRight width={15} />
-                  ) : (
-                    <ArrowLeft width={15} />
-                  )}
+              <Button asChild variant="link" arrow="has">
+                <Link href="/app" className="contain-icons">
+                  {m.app()}
                 </Link>
               </Button>
             )}
@@ -72,7 +67,7 @@ export default function Nav({
           <li>
             <Button asChild variant="link">
               <Link
-                href="https://github.com/osama-mhmd/nonote"
+                href="https://github.com/osama-mhmd/devspace"
                 className="flex gap-1"
                 target="_blank"
               >

@@ -6,9 +6,9 @@ export default async function ForgetPasswordLayout({
   params,
 }: {
   children: ReactNode;
-  params: { token: string };
+  params: Promise<{ token: string }>;
 }) {
-  const isCorrectToken = await verifyTokenHash(params.token);
+  const isCorrectToken = await verifyTokenHash((await params).token);
 
   if (!isCorrectToken) {
     return (

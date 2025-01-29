@@ -21,7 +21,7 @@ export async function deleteUser() {
 
   const sessionCookie = lucia.createBlankSessionCookie();
 
-  cookies().set(
+  (await cookies()).set(
     sessionCookie.name,
     sessionCookie.value,
     sessionCookie.attributes,

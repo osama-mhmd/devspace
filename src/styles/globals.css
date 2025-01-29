@@ -104,7 +104,9 @@ h2 {
   margin-left: 0;
   margin-right: 0;
 }
-
+.geg path {
+  fill: #5be4aa;
+}
 h3 {
   font-size: 1.17em;
   margin-top: 1em;
@@ -189,6 +191,9 @@ code * {
   @apply py-4 sm:py-2 px-4 border flex-col sm:flex-row gap-4 border-red-200 rounded-lg flex justify-between items-center;
 }
 
+.ar {
+  @apply font-rubik;
+}
 .ar ol[data-sonner-toaster="true"] > li {
   direction: rtl;
 }
@@ -211,17 +216,70 @@ li[data-type="success"] {
 }
 
 .main-nav {
-  position: sticky;
+  position: fixed;
   width: 100%;
   padding: 15px 30px;
   backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.1);
+  /* background-color: rgba(255, 255, 255, 0.1); */
   z-index: 20;
   top: 0;
   /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
-  @apply shadow-md;
+  @apply bg-muted dark:bg-muted;
 }
 
 .app-nav {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.lilita {
+  @apply font-lilita tracking-wider text-xl;
+}
+
+.features-grid {
+  @apply grid grid-cols-1 items-center py-12 gap-2;
+}
+.features-grid > div {
+  @apply font-lilita flex md:gap-4 text-xl flex-col md:flex-row dark:bg-muted/25 bg-white transition dark:hover:bg-muted/50 px-4 border-l-8 border-primary rounded-lg;
+}
+.features-grid h3 {
+  @apply text-primary pb-2;
+}
+.features-grid p,
+.features-grid article > div {
+  @apply max-w-prose text-balance;
+}
+.features-grid article {
+  @apply md:pt-12;
+}
+.features-grid ul {
+  @apply pl-8;
+}
+.features-grid img {
+  @apply z-10 relative;
+}
+.features-grid > div > div {
+  @apply relative w-fit h-fit flex-shrink-0;
+}
+.features-grid > div > div::after {
+  @apply content-empty w-[calc(100%-2rem)] h-16 bg-primary/50 absolute bottom-8 left-4;
+}
+
+.blurry-bg {
+  background-image: url(/landing-third-section-light.png);
+  background-size: cover;
+}
+.dark .blurry-bg {
+  background-image: url(/landing-third-section.png);
+}
+.plans > div {
+  @apply border p-4 px-6 rounded-lg max-w-md w-full flex flex-col gap-4;
+}
+.plans ul {
+  @apply list-none pl-2;
+}
+.plans > div.recommended {
+  @apply relative bg-gradient-to-tr from-primary/30 to-muted;
+}
+.plans > div.recommended::before {
+  @apply content-["Recommended"] absolute -top-3 right-4 px-4 py-1 text-sm rounded-full bg-gradient-to-br from-blue-300 dark:from-blue-600 to-green-300 dark:to-green-800;
 }
