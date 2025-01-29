@@ -10,6 +10,7 @@ import { valibotResolver } from "@hookform/resolvers/valibot";
 import { toast } from "sonner";
 import Error from "../error-field";
 import * as m from "@/paraglide/messages";
+import FormFooter from "./form-footer";
 
 export default function Register() {
   const {
@@ -41,13 +42,13 @@ export default function Register() {
   };
 
   return (
-    <section className="mt-6 sm:mt-12">
-      <div className="container flex items-center justify-center">
+    <section className="pt-32 sm:pt-36 bg-gradient-to-br dark:from-orange-800 from-orange-200 to-blue-200 dark:to-blue-800 min-h-screen pb-12">
+      <div className="container flex flex-col gap-3 items-center justify-center">
         <form
           onSubmit={handleSubmit(async (data) => await onSumbit(data))}
-          className="flex flex-col gap-2 w-96"
+          className="flex flex-col gap-2 w-96 bg-muted/50 p-6 rounded-lg"
         >
-          <h2 className="text-center mb-3">{m.register()}</h2>
+          <h2 className="text-center mt-0 mb-3">{m.register()}</h2>
           <Input
             type="text"
             placeholder={m.firstName()}
@@ -87,6 +88,7 @@ export default function Register() {
             {m.alreadyHaveAnAccount()}
           </Link>
         </form>
+        <FormFooter />
       </div>
     </section>
   );
