@@ -1,20 +1,38 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
+import { redirect } from "next/navigation";
 
 const plans = [
   {
-    name: "Pro",
+    name: "free",
+    features: [
+      "Project manager organized for different management techinques.",
+      "Capture and notes DB.",
+      "Habits tracker.",
+      "Limited pro bundle. 5 AI requests per day.",
+    ],
+    action: () => {
+      redirect("/auth/login");
+    },
+  },
+  {
+    name: "pro",
     description:
       "Don't throw your effort in the trash! Take Codra! Your assistance.",
     features: [
+      "Free bundle included",
       "Features suggestions.",
       "Tasks, sub-tasks, and achievement points.",
       "Codra as assistance! From project bootstraping to project lunching.",
     ],
+    flag: "popular",
     monthCost: 10,
+    action: () => {},
   },
   {
-    name: "Ultimate",
+    name: "ultimate",
     description:
       "You are no longer the only contributor to your project. Say welcome to Codra!",
     features: [
@@ -24,7 +42,6 @@ const plans = [
       "Top priority when answering feed.",
     ],
     additionalInfo: "This bundle is not avaliable right now.",
-    flag: "recommended",
     avaliable: false,
   },
 ];
@@ -35,14 +52,16 @@ export default function Pricing() {
       <section>
         <div className="container">
           <h1 className="text-center py-2 pb-6">Pricing</h1>
-          <div className="plans justify-center items-center sm:items-start flex flex-col sm:flex-row gap-4">
+          <div className="plans justify-center items-center lg:items-start flex flex-col lg:flex-row gap-4">
             {plans.map((plan) => {
               return (
                 <div key={plan.name} className={plan.flag}>
-                  <h2 className="flex justify-between mt-1 mb-0">
-                    {plan.name}{" "}
+                  <h2 className="mt-1 mb-0">
+                    <span className="capitalize">{plan.name}</span>{" "}
                     {plan.monthCost && (
-                      <span className="text-lg">{plan.monthCost}$/month</span>
+                      <span className="text-lg text-muted-foreground">
+                        {plan.monthCost}$/month
+                      </span>
                     )}
                   </h2>
                   {plan.description && (
@@ -68,6 +87,7 @@ export default function Pricing() {
                   <Button
                     variant={plan.flag ? "default" : "secondary"}
                     arrow="has"
+                    onClick={plan.action}
                     disabled={plan.avaliable == false}
                   >
                     Get started

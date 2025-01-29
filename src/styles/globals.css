@@ -277,9 +277,9 @@ li[data-type="success"] {
 .plans ul {
   @apply list-none pl-2;
 }
-.plans > div.recommended {
+.plans > div.popular {
   @apply relative bg-gradient-to-tr from-primary/30 to-muted;
 }
-.plans > div.recommended::before {
-  @apply content-["Recommended"] absolute -top-3 right-4 px-4 py-1 text-sm rounded-full bg-gradient-to-br from-blue-300 dark:from-blue-600 to-green-300 dark:to-green-800;
+.plans > div.popular::before {
+  @apply content-["Popular"] absolute -top-3 right-4 px-4 py-1 text-sm rounded-full bg-gradient-to-br from-blue-300 dark:from-blue-600 to-green-300 dark:to-green-800;
 }
