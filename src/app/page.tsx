@@ -72,8 +72,8 @@ export default async function Home() {
               <div>
                 <Image
                   src="/landing-features-all-in-one.png"
-                  width={400}
-                  height={400}
+                  width={300}
+                  height={300}
                   alt="All in one"
                 />
               </div>
@@ -89,9 +89,9 @@ export default async function Home() {
             <div>
               <div>
                 <Image
-                  src="/landing-features-ai.jpg"
-                  width={400}
-                  height={400}
+                  src="/landing-features-ai.png"
+                  width={300}
+                  height={300}
                   alt="AI"
                 />
               </div>
@@ -115,8 +115,8 @@ export default async function Home() {
               <div>
                 <Image
                   src="/landing-features-niche-product.png"
-                  width={400}
-                  height={400}
+                  width={300}
+                  height={300}
                   alt="All in one"
                 />
               </div>
