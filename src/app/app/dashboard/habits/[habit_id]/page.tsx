@@ -3,17 +3,20 @@ import Calendar from "react-calendar";
 // import "react-calendar/dist/Calendar.css";
 import "@/styles/calendar.css";
 import getRecords from "@/db/actions/habits/get-records";
+import { LooseValue } from "react-calendar/dist/cjs/shared/types";
 
 export default async function Habit({
   params,
 }: {
-  params: { habit_id: string };
+  params: Promise<{ habit_id: string }>;
 }) {
-  const habit = await getHabit(params.habit_id);
+  const habitId = (await params).habit_id;
+
+  const habit = await getHabit(habitId);
 
   if (!habit) return "Something went wrong";
 
-  const records = await getRecords(params.habit_id);
+  const records = await getRecords(habitId);
 
   const dates = records
     ? records.map((el) => {
@@ -27,8 +30,11 @@ export default async function Habit({
       <div className="container">
         <h2>{habit.name}</h2>
         <p>{habit.quote}</p>
-        {/* @ts-ignore */}
-        <Calendar calendarType="islamic" minDetail="month" value={dates} />
+        <Calendar
+          calendarType="islamic"
+          minDetail="month"
+          value={dates as LooseValue}
+        />
       </div>
     </section>
   );

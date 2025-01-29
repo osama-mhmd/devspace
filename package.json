@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide && next build",
+    "build": "pnpm run postinstall && next build",
     "start": "next start",
-    "lint": "next lint",
-    "prettier:write": "pnpm exec prettier . --write",
-    "prettier:check": "npx prettier . --check",
+    "lint": "next lint --fix",
+    "prettier:write": "prettier . --write",
+    "prettier:check": "prettier . --check",
     "db:migrate": "drizzle-kit generate",
     "db:run:migration": "node --env-file=.env ./src/db/migrations/migrate.js",
     "prepare": "husky install",
@@ -54,7 +54,7 @@
     "postgres": "^3.4.4",
     "react": "^19.0.0",
     "react-calendar": "^5.0.0",
-    "react-dom": "^18",
+    "react-dom": "^19.0.0",
     "react-hook-form": "^7.53.0",
     "slate": "^0.103.0",
     "slate-react": "^0.109.0",
@@ -87,7 +87,7 @@
     "vitest": "^2.1.1"
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": "eslint --fix",
+    "*.{js,ts,tsx}": "next lint --fix",
     "*.*": "prettier --write"
   }
 }

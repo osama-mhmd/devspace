@@ -5,12 +5,18 @@ import createDocument from "@/db/actions/documents/create";
 import AppLayout from "./app-layout";
 import { validateRequest } from "@/db/auth";
 
-const Space = ({ params }: { params: { workspace_id: string } }) => {
-  return permissionLayer(params.workspace_id, async (permission) => {
-    let rootDocument = await getRootDocument(params.workspace_id);
+const Space = async ({
+  params,
+}: {
+  params: Promise<{ workspace_id: string }>;
+}) => {
+  const workspace_id = (await params).workspace_id;
+
+  return permissionLayer(workspace_id, async (permission) => {
+    const rootDocument = await getRootDocument(workspace_id);
 
     if (!rootDocument) {
-      const process = await createDocument(params.workspace_id);
+      await createDocument(workspace_id);
       // if (!process.ok) alert(process.message);
 
       return <p>We are so sorry, please refresh the page</p>;
@@ -19,11 +25,11 @@ const Space = ({ params }: { params: { workspace_id: string } }) => {
     const { user } = await validateRequest();
 
     return (
-      <AppLayout permission={permission} workspace_id={params.workspace_id}>
+      <AppLayout permission={permission} workspace_id={workspace_id}>
         <Editor
           permission={permission}
           document={rootDocument}
-          workspace_id={params.workspace_id}
+          workspace_id={workspace_id}
           user={user!}
         />
       </AppLayout>
