@@ -216,15 +216,15 @@ li[data-type="success"] {
 }
 
 .main-nav {
-  position: sticky;
+  position: fixed;
   width: 100%;
   padding: 15px 30px;
   backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.1);
+  /* background-color: rgba(255, 255, 255, 0.1); */
   z-index: 20;
   top: 0;
   /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
-  @apply shadow-md;
+  @apply bg-muted dark:bg-muted;
 }
 
 .app-nav {
@@ -235,8 +235,11 @@ li[data-type="success"] {
   @apply font-lilita tracking-wider text-xl;
 }
 
+.features-grid {
+  @apply grid grid-cols-1 items-center py-12 gap-2;
+}
 .features-grid > div {
-  @apply font-lilita flex md:gap-4 text-2xl flex-col md:flex-row bg-muted/25 transition hover:bg-muted/50 px-4 my-12 border-l-8 border-primary rounded-lg;
+  @apply font-lilita flex md:gap-4 text-xl flex-col md:flex-row dark:bg-muted/25 bg-white transition dark:hover:bg-muted/50 px-4 border-l-8 border-primary rounded-lg;
 }
 .features-grid h3 {
   @apply text-primary pb-2;
@@ -246,7 +249,7 @@ li[data-type="success"] {
   @apply max-w-prose text-balance;
 }
 .features-grid article {
-  @apply md:pt-24;
+  @apply md:pt-12;
 }
 .features-grid ul {
   @apply pl-8;

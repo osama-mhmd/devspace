@@ -87,7 +87,7 @@
     "vitest": "^2.1.1"
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": "next lint --fix",
+    "*.{ts,tsx}": "next lint --fix --file",
     "*.*": "prettier --write"
   }
 }
