@@ -3,11 +3,11 @@ import Nav from "@/app/nav";
 import { validateRequest } from "@/db/auth";
 import { Metadata } from "next";
 import { Toaster } from "sonner";
+import Footer from "./footer";
 
 import "@/styles/globals.css";
 import { ThemeProvider } from "./theme-provider";
 
-import * as m from "@/paraglide/messages";
 import {
   availableLanguageTags,
   languageTag,
@@ -53,6 +53,7 @@ export default async function RootLayout({
         >
           <Nav session={session} lang={languageTag()} />
           {children}
+          <Footer />
           <Toaster />
         </ThemeProvider>
       </body>

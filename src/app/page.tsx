@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { lilita } from "@/lib/fonts";
 import { validateRequest } from "@/db/auth";
 import { Circle, Star } from "lucide-react";
 import * as m from "@/paraglide/messages";
@@ -12,7 +11,7 @@ export default async function Home() {
   const { session } = await validateRequest();
 
   return (
-    <main className="flex flex-col pt-10 h-screen">
+    <main className="flex flex-col pt-32">
       <section>
         <div className="container flex justify-evenly gap-4">
           <div className="flex flex-col max-w-md">
