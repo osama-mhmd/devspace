@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { validateRequest } from "@/db/auth";
-import { Circle, Star } from "lucide-react";
 import * as m from "@/paraglide/messages";
 import { Rocket } from "@/components/icons";
 import Image from "next/image";
@@ -37,19 +36,6 @@ export default async function Home() {
                   <Link href="/app">{m.app()}</Link>
                 </Button>
               )}
-              <Button variant="link" className="underline flex gap-2">
-                <span className="relative">
-                  <Star
-                    fill="hsl(var(--background))"
-                    className="p-0.5 z-[2] relative"
-                  />
-                  <Circle
-                    fill="hsl(var(--primary))"
-                    className="absolute top-0 left-0 w-full h-full"
-                  />
-                </span>{" "}
-                {m.starOnGithub()}
-              </Button>
             </div>
           </div>
           <Image
