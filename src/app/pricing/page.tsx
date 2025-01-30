@@ -2,7 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
-import { redirect } from "next/navigation";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { useRouter } from "next/navigation";
 
 const plans = [
   {
@@ -13,8 +14,8 @@ const plans = [
       "Habits tracker.",
       "Limited pro bundle. 5 AI requests per day.",
     ],
-    action: () => {
-      redirect("/auth/login");
+    action: (router: AppRouterInstance) => {
+      router.push("/auth/login");
     },
   },
   {
@@ -47,6 +48,8 @@ const plans = [
 ];
 
 export default function Pricing() {
+  const router = useRouter();
+
   return (
     <main className="py-24">
       <section>
@@ -87,7 +90,7 @@ export default function Pricing() {
                   <Button
                     variant={plan.flag ? "default" : "secondary"}
                     arrow="has"
-                    onClick={plan.action}
+                    onClick={() => plan.action && plan.action(router)}
                     disabled={plan.avaliable == false}
                   >
                     Get started
