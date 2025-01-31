@@ -1,1 +1,0 @@
-ALTER TABLE "workspace_documents" ADD COLUMN "comments" text;

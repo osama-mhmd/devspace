@@ -2,11 +2,10 @@ import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const userTable = pgTable("users", {
   id: text("id").primaryKey(),
-  fullName: text("full_name").notNull(),
-  userName: text("username").notNull().unique(),
+  name: text("name").notNull(),
+  username: text("username").notNull().unique(),
   email: text("email").notNull().unique(),
-  hashedPassword: text("hashed_password").notNull(),
-  emailVerified: text("emailVerified").notNull(),
+  avatar: text("avatar"),
 });
 
 export const sessionTable = pgTable("session", {

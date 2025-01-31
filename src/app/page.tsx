@@ -5,6 +5,7 @@ import * as m from "@/paraglide/messages";
 import { Rocket } from "@/components/icons";
 import Image from "next/image";
 import From1To2 from "./from-1-to-2";
+import CallAuthorize from "@/components/authorize";
 
 export default async function Home() {
   const { session } = await validateRequest();
@@ -23,12 +24,8 @@ export default async function Home() {
             <div className="flex flex-wrap items-center gap-2">
               {!session && (
                 <>
-                  <Button variant="outline" asChild>
-                    <Link href="/auth/login">Login</Link>
-                  </Button>
-                  <Button asChild arrow="has">
-                    <Link href="/auth/register">Sign up for free</Link>
-                  </Button>
+                  <CallAuthorize variant="outline">Login</CallAuthorize>
+                  <CallAuthorize arrow="has">Sign up for free</CallAuthorize>
                 </>
               )}
               {session && (
