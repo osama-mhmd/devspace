@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { validateRequest } from "@/db/auth";
-import { Circle, Star } from "lucide-react";
 import * as m from "@/paraglide/messages";
 import { Rocket } from "@/components/icons";
 import Image from "next/image";
 import From1To2 from "./from-1-to-2";
+import CallAuthorize from "@/components/authorize";
 
 export default async function Home() {
   const { session } = await validateRequest();
@@ -24,12 +24,8 @@ export default async function Home() {
             <div className="flex flex-wrap items-center gap-2">
               {!session && (
                 <>
-                  <Button variant="outline" asChild>
-                    <Link href="/auth/login">Login</Link>
-                  </Button>
-                  <Button asChild arrow="has">
-                    <Link href="/auth/register">Sign up for free</Link>
-                  </Button>
+                  <CallAuthorize variant="outline">Login</CallAuthorize>
+                  <CallAuthorize arrow="has">Sign up for free</CallAuthorize>
                 </>
               )}
               {session && (
@@ -37,19 +33,6 @@ export default async function Home() {
                   <Link href="/app">{m.app()}</Link>
                 </Button>
               )}
-              <Button variant="link" className="underline flex gap-2">
-                <span className="relative">
-                  <Star
-                    fill="hsl(var(--background))"
-                    className="p-0.5 z-[2] relative"
-                  />
-                  <Circle
-                    fill="hsl(var(--primary))"
-                    className="absolute top-0 left-0 w-full h-full"
-                  />
-                </span>{" "}
-                {m.starOnGithub()}
-              </Button>
             </div>
           </div>
           <Image

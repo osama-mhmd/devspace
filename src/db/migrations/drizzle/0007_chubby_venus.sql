@@ -1,1 +1,0 @@
-ALTER TABLE "reset_password_tokens" ADD COLUMN "token_hash" text NOT NULL;

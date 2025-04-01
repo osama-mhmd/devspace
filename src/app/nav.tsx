@@ -22,6 +22,8 @@ import {
 import dir, { Direction } from "@/lib/dir";
 import * as m from "@/paraglide/messages";
 import { Rocket } from "@/components/icons";
+import authorize from "@/components/authorize";
+import CallAuthorize from "@/components/authorize";
 
 export default function Nav({
   session,
@@ -42,14 +44,19 @@ export default function Nav({
   }
 
   return shouldNotRender ? null : (
-    <nav className="main-nav">
-      <div className="container py-2 px-6 flex items-center justify-between">
+    <nav className="flex justify-center">
+      <div className="main-nav container mt-4 rounded-full py-2 px-6 flex items-center justify-between">
         <Link href="/" className="lilita contain-icons">
           DS <Rocket size={25} />
         </Link>
         {/* TODO: navbar on small screens */}
         <ul className="[&>li]:hidden [&>li]:sm:block flex gap-3 py-2 sm:py-0 items-center px-0 list-none">
           <List className="block sm:hidden cursor-pointer" />
+          <li>
+            <Button asChild variant="link">
+              <Link href="/pricing">Pricing</Link>
+            </Button>
+          </li>
           <li>
             {session && (
               <Button asChild variant="link" arrow="has">
@@ -59,21 +66,11 @@ export default function Nav({
               </Button>
             )}
             {!session && (
-              <Button asChild variant="link">
-                <Link href="/auth/register">{m.createAccount()}</Link>
-              </Button>
+              <CallAuthorize variant="link">
+                Login
+                {/* <Link href="/auth/register">{m.createAccount()}</Link> */}
+              </CallAuthorize>
             )}
-          </li>
-          <li>
-            <Button asChild variant="link">
-              <Link
-                href="https://github.com/osama-mhmd/devspace"
-                className="flex gap-1"
-                target="_blank"
-              >
-                <GithubIcon /> {m.viewSourceCode()}
-              </Link>
-            </Button>
           </li>
           <li>
             <ThemeToggle />

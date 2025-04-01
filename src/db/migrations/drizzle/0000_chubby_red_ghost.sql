@@ -6,11 +6,10 @@ CREATE TABLE IF NOT EXISTS "session" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
 	"id" text PRIMARY KEY NOT NULL,
-	"full_name" text NOT NULL,
+	"name" text NOT NULL,
 	"username" text NOT NULL,
 	"email" text NOT NULL,
-	"hashed_password" text NOT NULL,
-	"plan" text,
+	"avatar" text,
 	CONSTRAINT "users_username_unique" UNIQUE("username"),
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );

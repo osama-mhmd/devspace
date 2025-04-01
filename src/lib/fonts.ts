@@ -23,3 +23,7 @@ const lilitaOne = Lilita_One({
 export const inter = interFont.variable;
 export const rubik = rubikFont.variable;
 export const lilita = lilitaOne.variable;
+
+// export const inter = "";
+// export const rubik = "";
+// export const lilita = "";
