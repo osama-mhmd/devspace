@@ -8,6 +8,13 @@
       "when": 1738306638955,
       "tag": "0000_chubby_red_ghost",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1746010943007,
+      "tag": "0001_large_tony_stark",
+      "breakpoints": true
     }
   ]
 }
