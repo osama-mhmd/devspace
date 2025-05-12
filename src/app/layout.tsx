@@ -52,8 +52,10 @@ export default async function RootLayout({
           enableSystem
         >
           <Nav session={session} lang={languageTag()} />
-          {children}
-          <Footer />
+          <div className="flex flex-col justify-between min-h-screen">
+            {children}
+            <Footer />
+          </div>
           <Toaster />
         </ThemeProvider>
       </body>

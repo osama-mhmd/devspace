@@ -11,9 +11,9 @@ export default async function Home() {
   const { session } = await validateRequest();
 
   return (
-    <main className="flex flex-col pt-32">
+    <main className="flex flex-col">
       <section>
-        <div className="container flex justify-evenly gap-4">
+        <div className="container flex justify-evenly gap-4 mt-4">
           <div className="flex flex-col max-w-md">
             <h1 className="text-5xl flex items-center gap-2 sm:text-7xl mb-0 font-lilita">
               DevSpace <Rocket />
