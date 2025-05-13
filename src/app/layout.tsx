@@ -15,6 +15,7 @@ import {
 } from "@/paraglide/runtime";
 import { cookies } from "next/headers";
 import dir from "@/lib/dir";
+import QCP from "./query-client-provider";
 
 export const metadata: Metadata = {
   title: {
@@ -51,12 +52,14 @@ export default async function RootLayout({
           defaultTheme="system"
           enableSystem
         >
-          <Nav session={session} lang={languageTag()} />
-          <div className="flex flex-col justify-between min-h-screen">
-            {children}
-            <Footer />
-          </div>
-          <Toaster />
+          <QCP>
+            <Nav session={session} lang={languageTag()} />
+            <div className="flex flex-col justify-between min-h-screen">
+              {children}
+              <Footer />
+            </div>
+            <Toaster />
+          </QCP>
         </ThemeProvider>
       </body>
     </html>

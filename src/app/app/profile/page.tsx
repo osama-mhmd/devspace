@@ -84,7 +84,7 @@ export default async function Profile() {
                 </DialogHeader>
                 <p>{m.signOutConfirmation()}</p>
                 <DialogFooter className="flex gap-1">
-                  <DialogClose>
+                  <DialogClose asChild>
                     <Button variant="outline">{m.close()}</Button>
                   </DialogClose>
                   <SignOut />
@@ -104,7 +104,7 @@ export default async function Profile() {
                 </DialogHeader>
                 <p>{m.deleteAccountConfirmation()}</p>
                 <DialogFooter className="flex gap-1">
-                  <DialogClose>
+                  <DialogClose asChild>
                     <Button variant="outline">{m.close()}</Button>
                   </DialogClose>
                   <DeleteAccount />
