@@ -3,7 +3,6 @@ import Nav from "@/app/nav";
 import { validateRequest } from "@/db/auth";
 import { Metadata } from "next";
 import { Toaster } from "sonner";
-import Footer from "./footer";
 
 import "@/styles/globals.css";
 import { ThemeProvider } from "./theme-provider";
@@ -54,10 +53,7 @@ export default async function RootLayout({
         >
           <QCP>
             <Nav session={session} lang={languageTag()} />
-            <div className="flex flex-col justify-between min-h-screen">
-              {children}
-              <Footer />
-            </div>
+            {children}
             <Toaster />
           </QCP>
         </ThemeProvider>

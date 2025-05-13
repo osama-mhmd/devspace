@@ -3,8 +3,7 @@
 import { Button } from "../components/ui/button";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import GithubIcon from "../components/icons/github";
-import { ArrowLeft, ArrowRight, Globe, List } from "lucide-react";
+import { Globe, List } from "lucide-react";
 import { Session } from "lucia";
 import { ThemeToggle } from "@/components/change-theme";
 import {
@@ -22,7 +21,6 @@ import {
 import dir, { Direction } from "@/lib/dir";
 import * as m from "@/paraglide/messages";
 import { Rocket } from "@/components/icons";
-import authorize from "@/components/authorize";
 import CallAuthorize from "@/components/authorize";
 
 export default function Nav({

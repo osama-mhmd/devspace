@@ -6,6 +6,7 @@ import { Rocket } from "@/components/icons";
 import Image from "next/image";
 import From1To2 from "./from-1-to-2";
 import CallAuthorize from "@/components/authorize";
+import Footer from "./footer";
 
 export default async function Home() {
   const { session } = await validateRequest();
@@ -119,6 +120,7 @@ export default async function Home() {
           Don{"'"}t waste your time and start using DevSpace today.
         </h1>
       </section>
+      <Footer />
     </main>
   );
 }
