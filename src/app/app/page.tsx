@@ -1,10 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { validateRequest } from "@/db/auth";
 import {
   getWorkspaces,
   getWorkspacesPerUser,
 } from "@/db/actions/workspaces/get-workspaces";
-import { Bolt, PlusCircle } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import * as m from "@/paraglide/messages";
 
@@ -70,7 +69,7 @@ export default async function App() {
   }
 
   return (
-    <section className="mt-12">
+    <section>
       <div className="container">{Workspaces}</div>
     </section>
   );

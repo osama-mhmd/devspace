@@ -71,14 +71,6 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        enter: {
-          from: {
-            transform: "translateY(-40px);",
-          },
-          to: {
-            transform: "translateY(0);",
-          },
-        },
         fadeIn: {
           from: { opacity: "0" },
           to: { opacity: "1" },

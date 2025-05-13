@@ -4,6 +4,7 @@ import Editor from "@/editor";
 import createDocument from "@/db/actions/documents/create";
 import AppLayout from "./app-layout";
 import { validateRequest } from "@/db/auth";
+import Survey from "./survey";
 
 const Space = async ({
   params,
@@ -25,14 +26,17 @@ const Space = async ({
     const { user } = await validateRequest();
 
     return (
-      <AppLayout permission={permission} workspace_id={workspace_id}>
-        <Editor
-          permission={permission}
-          document={rootDocument}
-          workspace_id={workspace_id}
-          user={user!}
-        />
-      </AppLayout>
+      <>
+        <AppLayout permission={permission} workspace_id={workspace_id}>
+          <Editor
+            permission={permission}
+            document={rootDocument}
+            workspace_id={workspace_id}
+            user={user!}
+          />
+        </AppLayout>
+        <Survey />
+      </>
     );
   });
 };

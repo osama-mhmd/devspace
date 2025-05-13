@@ -28,6 +28,7 @@
     "@radix-ui/react-select": "^2.1.1",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
+    "@tanstack/react-query": "^5.76.0",
     "@tiptap/core": "^2.7.2",
     "@tiptap/extension-heading": "^2.6.6",
     "@tiptap/extension-highlight": "^2.7.2",
@@ -48,7 +49,7 @@
     "lodash": "^4.17.21",
     "lucia": "^3.2.2",
     "lucide-react": "^0.427.0",
-    "next": "15.1.0",
+    "next": "^15.2.3",
     "next-themes": "^0.3.0",
     "nodemailer": "^6.9.15",
     "postgres": "^3.4.4",
@@ -84,7 +85,7 @@
     "tailwindcss": "^3.4.1",
     "tsx": "^4.19.0",
     "typescript": "^5",
-    "vitest": "^2.1.1"
+    "vitest": "^2.1.9"
   },
   "lint-staged": {
     "*.{ts,tsx}": "next lint --fix --file",

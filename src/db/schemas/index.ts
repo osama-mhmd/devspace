@@ -1,4 +1,4 @@
-import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 export const userTable = pgTable("users", {
   id: text("id").primaryKey(),
@@ -59,4 +59,14 @@ export const pomodorosTable = pgTable("pomodoros", {
   duration: integer("duration").notNull().default(0), // in seconds
   tag: text("tag").notNull(), // e.g. work, study
   date: timestamp("date").notNull(),
+});
+
+export const surveysTable = pgTable("surveys", {
+  id: serial("id").primaryKey(),
+  user_id: text("user_id")
+    .references(() => userTable.id)
+    .notNull(),
+  survey_code: text("survey_code").notNull(),
+  data: text("data").notNull(),
+  submitted_at: timestamp("submitted_at").notNull().defaultNow(),
 });

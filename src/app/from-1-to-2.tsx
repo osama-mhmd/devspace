@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 export default function From1To2() {
   const [isLoaded, setLoaded] = useState(false);
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useTheme();
 
   useEffect(() => {
     setLoaded(true);

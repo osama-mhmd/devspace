@@ -33,7 +33,7 @@ export default async function Profile() {
   if (!session) redirect("/auth/login");
 
   return (
-    <section className="mt-20">
+    <section>
       <div className="container">
         <div className="rounded-md bg-muted my-3 p-3 flex items-center gap-1">
           {m.username()}: {user.username}
@@ -84,7 +84,7 @@ export default async function Profile() {
                 </DialogHeader>
                 <p>{m.signOutConfirmation()}</p>
                 <DialogFooter className="flex gap-1">
-                  <DialogClose>
+                  <DialogClose asChild>
                     <Button variant="outline">{m.close()}</Button>
                   </DialogClose>
                   <SignOut />
@@ -104,7 +104,7 @@ export default async function Profile() {
                 </DialogHeader>
                 <p>{m.deleteAccountConfirmation()}</p>
                 <DialogFooter className="flex gap-1">
-                  <DialogClose>
+                  <DialogClose asChild>
                     <Button variant="outline">{m.close()}</Button>
                   </DialogClose>
                   <DeleteAccount />
