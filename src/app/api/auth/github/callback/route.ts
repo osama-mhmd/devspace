@@ -19,6 +19,7 @@ type Email = {
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");
+  const redirectTo = searchParams.get("state"); // passed from /api/auth/github
 
   if (!code) {
     return NextResponse.json(
@@ -100,7 +101,9 @@ export async function GET(req: Request) {
       sessionCookie.attributes,
     );
 
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/app`);
+    return NextResponse.redirect(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/${redirectTo}`,
+    );
   } catch (error) {
     console.error("OAuth Error:", error);
     return NextResponse.json({ error: "OAuth failed" }, { status: 500 });

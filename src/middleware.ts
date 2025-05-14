@@ -5,7 +5,7 @@ export async function middleware(req: NextRequest) {
 
   if (!authCookie?.value) {
     const redirectUrl = req.nextUrl.clone();
-    redirectUrl.pathname = "/auth/login";
+    redirectUrl.pathname = "/api/auth/github";
     redirectUrl.search = `?redirectTo=${encodeURIComponent(req.nextUrl.pathname)}`;
     return NextResponse.redirect(redirectUrl);
   }

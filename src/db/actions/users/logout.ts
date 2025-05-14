@@ -24,5 +24,5 @@ export async function logout() {
     sessionCookie.attributes,
   );
 
-  redirect("/auth/login");
+  redirect("/");
 }

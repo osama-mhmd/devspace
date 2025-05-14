@@ -29,5 +29,5 @@ export async function deleteUser() {
 
   await db.delete(userTable).where(eq(userTable.id, user.id));
 
-  redirect("/auth/login");
+  redirect("/app");
 }

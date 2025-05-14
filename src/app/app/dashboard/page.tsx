@@ -10,7 +10,7 @@ export default async function Dashboard() {
   const { user } = await validateRequest();
 
   // just in case
-  if (!user) redirect("/auth/login");
+  if (!user) redirect("/app");
 
   const habits = await getHabits();
 
