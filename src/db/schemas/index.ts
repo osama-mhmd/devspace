@@ -1,4 +1,12 @@
-import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  integer,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  unique,
+} from "drizzle-orm/pg-core";
 
 export const userTable = pgTable("users", {
   id: text("id").primaryKey(),
@@ -19,46 +27,64 @@ export const sessionTable = pgTable("session", {
   }).notNull(),
 });
 
-export const workspaceTable = pgTable("workspaces", {
+export const spacesTable = pgTable("spaces", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   description: text("description"),
   image: text("image"),
-  // "public-comment" | "public-edit" | "public-view" | "private"
-  visibility: text("visibility").notNull(),
-  viewed_by: text("viewed_by").array().notNull().default([]),
+  type: text("type").$type<"personal" | "organization">().notNull(),
   created_at: timestamp("created_at").notNull().defaultNow(),
-  last_updated_at: timestamp("last_updated_at").notNull().defaultNow(),
+  shared: boolean("shared"),
 });
 
-export const usersPermissions = pgTable("users_permissions", {
-  user_id: text("user_id").notNull(),
-  workpsace_id: text("workpsace_id").notNull(),
-  permission: text("permission").notNull(),
-});
+export const spacesPermissions = pgTable(
+  "spaces_permissions",
+  {
+    user_id: text("user_id")
+      .references(() => userTable.id)
+      .notNull(),
+    space_id: text("space_id")
+      .references(() => spacesTable.id)
+      .notNull(),
+    role: text("role").$type<"admin" | "member">().notNull(),
+    invited_by: text("invited_by")
+      .references(() => userTable.id)
+      .notNull(),
+    created_at: timestamp("created_at").notNull().defaultNow(),
+    last_visit: timestamp("last_visit"),
+  },
+  (tb) => ({
+    userSpaceUnique: unique().on(tb.user_id, tb.space_id),
+  }),
+);
 
-export const workspaceDocuments = pgTable("workspace_documents", {
-  workspace_id: text("workspace_id").notNull(),
-  id: text("id").primaryKey().notNull(),
-  title: text("title").default(""),
-  content: text("content").default(""),
-  comments: text("comments"),
-  parent_id: text("parent_id").notNull(), // why this is not null?
-});
-
-export const resetPasswordTokens = pgTable("reset_password_tokens", {
-  user_id: text("user_id").notNull(),
-  token_code: text("token_code").primaryKey().notNull(),
-  token_hash: text("token_hash").notNull(),
-  expires_at: timestamp("expires_at").notNull(),
+export const projectsTable = pgTable("projects", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  space_id: text("space_id")
+    .references(() => spacesTable.id)
+    .notNull(),
+  github_link: text("github_link")
+    .$type<`https://github.com/${string}/${string}`>()
+    .notNull(),
+  preview_link: text("preview_link"),
+  imported_by: text("imported_by")
+    .references(() => userTable.id)
+    .notNull(),
+  created_at: timestamp("created_at").notNull().defaultNow(),
+  updated_at: timestamp("updated_at"),
 });
 
 export const pomodorosTable = pgTable("pomodoros", {
   id: text("id").primaryKey(),
-  user_id: text("user_id").notNull(),
+  user_id: text("user_id")
+    .references(() => userTable.id)
+    .notNull(),
+  project_id: text("project_id").references(() => projectsTable.id),
+  space_id: text("space_id").references(() => spacesTable.id),
   duration: integer("duration").notNull().default(0), // in seconds
-  tag: text("tag").notNull(), // e.g. work, study
-  date: timestamp("date").notNull(),
+  created_at: timestamp("date").notNull().defaultNow(),
 });
 
 export const surveysTable = pgTable("surveys", {
