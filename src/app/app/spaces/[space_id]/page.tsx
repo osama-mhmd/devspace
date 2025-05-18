@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import permissionLayer from "./permission-layer";
 import Survey from "./survey";
 
@@ -6,10 +7,9 @@ const Space = async ({ params }: { params: Promise<{ space_id: string }> }) => {
 
   return permissionLayer(space_id, async () => {
     return (
-      <>
-        Space
+      <Fragment>
         <Survey />
-      </>
+      </Fragment>
     );
   });
 };
