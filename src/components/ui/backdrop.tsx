@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 import { ReactNode } from "react";
 
 const variants = {
@@ -22,15 +23,19 @@ export default function BackDrop({
   style?: keyof typeof styles;
 }) {
   return (
-    <div
+    <motion.div
       className={cn(
-        "animate-fadeIn fixed px-3 top-0 left-0 w-screen h-screen z-[25] flex flex-col items-center",
+        "fixed px-3 top-0 left-0 w-screen h-screen z-[25] flex flex-col items-center",
         variants[variant ?? "default"],
         styles[style ?? "default"],
       )}
       onClick={closePanel}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }

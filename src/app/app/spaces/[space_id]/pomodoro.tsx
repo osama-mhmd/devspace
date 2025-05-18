@@ -9,8 +9,7 @@ import {
 } from "@/components/ui/panel";
 import createPomodoro from "@/db/actions/pomodoros/create";
 import updatePomodoro from "@/db/actions/pomodoros/update";
-import { Pause, Play } from "lucide-react";
-import Image from "next/image";
+import { AlarmClock, Pause, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -38,7 +37,7 @@ export default function Pomodoro({
     type: (["work", "break"].includes(lastPomodoro.type ?? "")
       ? lastPomodoro.type
       : "work") as "work" | "break",
-    paused: false,
+    paused: lastPomodoro.time ? false : true,
   });
 
   const minutesLeft = `${Math.floor(pomodoroProps.time / 60)}`.padStart(2, "0");
@@ -121,15 +120,9 @@ export default function Pomodoro({
     <Panel>
       <PanelTrigger>
         <div className="fixed z-[23] top-2 right-2 rtl:left-2">
-          <Button variant="secondary">
-            {minutesLeft}:{secondsLeft}{" "}
-            <Image
-              alt="pomodoro"
-              src="/pomodoro.png"
-              width={35}
-              height={35}
-              className="ms-2"
-            />
+          <Button variant="secondary" className="gap-2">
+            {minutesLeft}:{secondsLeft}
+            <AlarmClock size={18} className="mb-0.5" />
           </Button>
         </div>
       </PanelTrigger>

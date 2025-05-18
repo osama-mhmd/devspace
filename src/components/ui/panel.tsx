@@ -59,7 +59,7 @@ export function PanelBody({ children }: HaveChild) {
         <BackDrop closePanel={() => visibilityContext?.setVisibility(false)}>
           <motion.div
             onClick={(e) => e.stopPropagation()}
-            className="bg-card rounded-md p-4 w-full max-w-2xl"
+            className="bg-card rounded-md p-4 w-full max-w-2xl border"
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 20, opacity: 0 }}
