@@ -1,5 +1,5 @@
 {
-  "id": "79eb573d-c457-4867-b9a4-182439a053f5",
+  "id": "e256db5d-6124-4db1-8e01-f2541c7b3b79",
   "prevId": "858b38a6-71b6-4e2f-aebc-77a4ab405cd9",
   "version": "7",
   "dialect": "postgresql",
@@ -78,7 +78,10 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
     "public.projects": {
       "name": "projects",
@@ -162,7 +165,10 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
     "public.session": {
       "name": "session",
@@ -200,7 +206,10 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
     "public.spaces_permissions": {
       "name": "spaces_permissions",
@@ -228,7 +237,7 @@
           "name": "invited_by",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -281,7 +290,15 @@
           "nullsNotDistinct": false,
           "columns": ["user_id", "space_id"]
         }
-      }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "invited_by_check": {
+          "name": "invited_by_check",
+          "value": "\"spaces_permissions\".\"role\" = 'owner' OR \"spaces_permissions\".\"invited_by\" IS NOT NULL"
+        }
+      },
+      "isRLSEnabled": false
     },
     "public.spaces": {
       "name": "spaces",
@@ -334,7 +351,10 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
     "public.surveys": {
       "name": "surveys",
@@ -385,7 +405,10 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
     "public.users": {
       "name": "users",
@@ -436,7 +459,10 @@
           "nullsNotDistinct": false,
           "columns": ["email"]
         }
-      }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
     "public.habits_records": {
       "name": "habits_records",
@@ -458,7 +484,10 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
     "public.habits": {
       "name": "habits",
@@ -504,12 +533,18 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {},
   "schemas": {},
   "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
   "_meta": {
     "columns": {},
     "schemas": {},

@@ -1,5 +1,7 @@
+import { sql } from "drizzle-orm";
 import {
   boolean,
+  check,
   integer,
   pgTable,
   serial,
@@ -46,15 +48,17 @@ export const spacesPermissions = pgTable(
     space_id: text("space_id")
       .references(() => spacesTable.id)
       .notNull(),
-    role: text("role").$type<"admin" | "member">().notNull(),
-    invited_by: text("invited_by")
-      .references(() => userTable.id)
-      .notNull(),
+    role: text("role").$type<"owner" | "admin" | "member">().notNull(),
+    invited_by: text("invited_by").references(() => userTable.id),
     created_at: timestamp("created_at").notNull().defaultNow(),
     last_visit: timestamp("last_visit"),
   },
   (tb) => ({
     userSpaceUnique: unique().on(tb.user_id, tb.space_id),
+    invitedByCheck: check(
+      "invited_by_check",
+      sql`${tb.role} = 'owner' OR ${tb.invited_by} IS NOT NULL`,
+    ),
   }),
 );
 

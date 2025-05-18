@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Panel,
   PanelBody,
@@ -9,7 +8,6 @@ import {
   PanelHeader,
 } from "@/components/ui/panel";
 import Image from "next/image";
-import { useState } from "react";
 
 export default function SubscribeToPomodoro() {
   const setSubscribe = async (sub: boolean) => {

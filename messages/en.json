@@ -40,13 +40,13 @@
   "add": "Add",
   "createAccount": "Create account",
   "signIn": "Sign in",
-  "createWorkspace": "Create workspace",
+  "createSpace": "Create space",
   "create": "Create",
   "descriptionAsPlaceholder": "Description (optional)",
-  "workspaces": "Workspaces",
+  "spaces": "spaces",
   "noDescription": "No description",
   "createYourFirstOne": "Create your first one",
-  "noWorkspacesYet": "No workspaces yet 😞",
+  "noSpacesYet": "No spaces yet 😞",
   "close": "Close",
   "signOutConfirmation": "Are you sure to sign out?",
   "habitDone": "Done today 💪, Keep Going 🔥",
@@ -96,5 +96,6 @@
   "accountIsVerified": "Your account is verified",
   "emailSentMessage": "We have sent an email to {email}. Please check out your inbox... Please note that the verification email may take a few minutes to arrive.",
   "somethingWentWrong": "Something went wrong",
-  "habitCreatedSuccessfully": "Habit created successfully"
+  "habitCreatedSuccessfully": "Habit created successfully",
+  "plzSelectType": "Please select the type"
 }

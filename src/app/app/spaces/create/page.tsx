@@ -2,11 +2,17 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import createWorkspace from "@/db/actions/workspaces/create";
-import { useForm } from "react-hook-form";
+import createSpace from "@/db/actions/spaces/create";
+import { Controller, useForm } from "react-hook-form";
 import * as m from "@/paraglide/messages";
 import Error from "@/app/auth/error-field";
-import { languageTag } from "@/paraglide/runtime";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Create() {
   const {
@@ -14,10 +20,15 @@ export default function Create() {
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
-  } = useForm<{ name: string; description: string }>();
+    control,
+  } = useForm<{
+    name: string;
+    description: string;
+    type: "personal" | "organization";
+  }>();
 
   const onsubmit = async (data: { name: string; description: string }) => {
-    const err = await createWorkspace(data, languageTag());
+    const err = await createSpace(data, "personal");
 
     if (err) {
       if (err.message == "invalid-code")
@@ -34,7 +45,7 @@ export default function Create() {
           onSubmit={handleSubmit(async (data) => await onsubmit(data))}
           className="flex flex-col gap-2 w-96"
         >
-          <h3 className="text-center mb-3">{m.createWorkspace()}</h3>
+          <h3 className="text-center mb-3">{m.createSpace()}</h3>
           <Input
             placeholder={m.name()}
             {...register("name", {
@@ -46,6 +57,23 @@ export default function Create() {
             placeholder={m.descriptionAsPlaceholder()}
             {...register("description")}
           />
+          <Controller
+            name="type"
+            control={control}
+            rules={{ required: "plzSelectType" }}
+            render={({ field }) => (
+              <Select onValueChange={field.onChange} value={field.value}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="personal">Personal</SelectItem>
+                  <SelectItem value="organization">Organization</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          />
+          <Error error={errors.type} />
           <Button loading={isSubmitting}>{m.create()}</Button>
         </form>
       </div>

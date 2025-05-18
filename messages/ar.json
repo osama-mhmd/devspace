@@ -41,13 +41,13 @@
   "nonoteDescription": "كل يوم يظهر تطبيق جديد لتدوين ملحظاتك، لكنهم جميعا لا يناسبونك! لا تقلل، هذا التطبيق سيناسبك",
   "createAccount": "إنشاء حساب",
   "signIn": "تسجيل الدخول",
-  "createWorkspace": "إنشاء مساحة عمل",
+  "createSpace": "إنشاء مساحة",
   "create": "إنشاء",
   "descriptionAsPlaceholder": "الوصف (اختياري)",
-  "workspaces": "مساحات العمل",
+  "spaces": "مساحات",
   "noDescription": "لا يوجد وصف",
   "createYourFirstOne": "إنشاء أول مساحة عمل",
-  "noWorkspacesYet": "لا توجد مساحات عمل حتى الآن 😞",
+  "noSpacesYet": "لا توجد مساحات حتى الآن 😞",
   "close": "غلق",
   "signOutConfirmation": "هل أنت متأكد من أنك تريد تسجيل الخروج؟",
   "habitDone": "تم التنفيذ اليوم 💪, استمر في الاستمرار 🔥",
@@ -98,5 +98,6 @@
   "codeConsistsOf8Digits": "الكود يجب أن يتكون من 8 أرقام",
   "accountIsVerified": "حسابك مفعل",
   "somethingWentWrong": "حدث خطأ ما",
-  "habitCreatedSuccessfully": "تم إنشاء العادة بنجاح"
+  "habitCreatedSuccessfully": "تم إنشاء العادة بنجاح",
+  "plzSelectType": "برجاء تحديد النوع"
 }
