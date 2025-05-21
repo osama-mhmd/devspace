@@ -61,7 +61,7 @@ export async function GET(req: Request) {
     });
 
     const emails = await emailResponse.json();
-    console.log({ emails });
+
     const primaryEmail = emails.find(
       (email: Email) => email.primary && email.verified,
     )?.email;
@@ -73,12 +73,10 @@ export async function GET(req: Request) {
       );
     }
 
-    const users = await db
+    let [existingUser] = await db
       .select()
       .from(userTable)
       .where(eq(userTable.id, String(user.id)));
-
-    let existingUser = users[0];
 
     if (!existingUser) {
       existingUser = {
@@ -87,6 +85,7 @@ export async function GET(req: Request) {
         username: user.login,
         email: primaryEmail,
         avatar: user.avatar_url,
+        githubAccessToken: access_token,
       };
 
       await db.insert(userTable).values(existingUser);

@@ -8,9 +8,10 @@ import { eq } from "drizzle-orm";
 interface Pomodoro {
   id: string;
   user_id: string;
+  project_id: string | null;
+  space_id: string | null;
   duration: number;
-  tag: string;
-  date: Date;
+  created_at: Date;
 }
 
 export default async function getPomodoros(): Promise<false | Pomodoro[]> {

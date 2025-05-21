@@ -13,6 +13,7 @@ export const lucia = new Lucia(adapter, {
       name: attributes.name,
       username: attributes.username,
       email: attributes.email,
+      accessToken: attributes.githubAccessToken,
     };
   },
 });
@@ -29,4 +30,5 @@ interface DatabaseUserAttributes {
   name: string;
   username: string;
   email: string;
+  githubAccessToken: string;
 }

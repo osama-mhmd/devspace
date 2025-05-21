@@ -16,6 +16,7 @@ export const userTable = pgTable("users", {
   username: text("username").notNull().unique(),
   email: text("email").notNull().unique(),
   avatar: text("avatar"),
+  githubAccessToken: text("github_access_token").notNull(),
 });
 
 export const sessionTable = pgTable("session", {
@@ -62,6 +63,9 @@ export const spacesPermissions = pgTable(
   }),
 );
 
+export type GithubAPILink = `https://api.github.com/repos/${string}/${string}`;
+export type GithubLink = `https://github.com/${string}/${string}`;
+
 export const projectsTable = pgTable("projects", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
@@ -69,9 +73,8 @@ export const projectsTable = pgTable("projects", {
   space_id: text("space_id")
     .references(() => spacesTable.id)
     .notNull(),
-  github_link: text("github_link")
-    .$type<`https://github.com/${string}/${string}`>()
-    .notNull(),
+  repo_owner: text("repo_owner").notNull(),
+  repo_name: text("repo_name").notNull(),
   preview_link: text("preview_link"),
   imported_by: text("imported_by")
     .references(() => userTable.id)

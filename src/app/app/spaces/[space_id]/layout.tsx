@@ -6,9 +6,10 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const lastPomodoroType = (await cookies()).get("last-pomodoro.type")?.value;
-  const lastPomodoroId = (await cookies()).get("last-pomodoro.id")?.value;
-  const lastPomodoroTime = (await cookies()).get("last-pomodoro.time")?.value;
+  const cs = await cookies(); // cookie store
+  const lastPomodoroType = cs.get("last-pomodoro.type")?.value;
+  const lastPomodoroId = cs.get("last-pomodoro.id")?.value;
+  const lastPomodoroTime = cs.get("last-pomodoro.time")?.value;
 
   return (
     <>

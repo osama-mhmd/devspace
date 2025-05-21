@@ -88,7 +88,7 @@ export default function Survey() {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="mt-0">Survey</DialogTitle>
+          <DialogTitle>Survey</DialogTitle>
         </DialogHeader>
         <p>What do you feel about DevSpace? and the text editor?</p>
         <textarea

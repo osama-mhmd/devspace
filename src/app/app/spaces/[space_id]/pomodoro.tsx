@@ -102,7 +102,7 @@ export default function Pomodoro({
 
   useEffect(() => {
     if (!pomodoroProps.id && pomodoroProps.type == "work") {
-      createPomodoro("work").then((id) => {
+      createPomodoro().then((id) => {
         if (!id) {
           toast.error(
             "Something went wrong! You work will not be saved! Please refresh the page",

@@ -5,7 +5,7 @@ import { validateRequest } from "@/db/auth";
 import { pomodorosTable } from "@/db/schemas";
 import { generateIdFromEntropySize } from "lucia";
 
-export default async function createPomodoro(tag?: string) {
+export default async function createPomodoro() {
   const { user } = await validateRequest();
 
   if (!user) return false;
@@ -17,8 +17,6 @@ export default async function createPomodoro(tag?: string) {
     .values({
       user_id: user.id,
       id,
-      tag: tag ?? "work",
-      date: new Date(),
     })
     .catch((e) => {
       console.log(e);
