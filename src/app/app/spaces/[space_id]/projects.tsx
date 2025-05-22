@@ -14,7 +14,7 @@ import createProject from "@/db/actions/projects/create";
 import { ProjectToCreate as Project } from "@/db/actions/projects/create";
 import { getSpaceProjects } from "@/db/actions/projects/get";
 import { getUserRepos, Repo } from "@/db/actions/projects/import";
-import { cn } from "@/lib/utils";
+import { cn, timeAgo } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -110,9 +110,7 @@ export default function Projects({ spaceId }: { spaceId: string }) {
                     {project.updated_at && (
                       <div className="flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
-                        <span>
-                          {new Date(project.updated_at).toLocaleDateString()}
-                        </span>
+                        <span>Updated {timeAgo(project.updated_at)}</span>
                       </div>
                     )}
                     {project && (
