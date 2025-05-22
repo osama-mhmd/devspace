@@ -22,7 +22,14 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { FolderOpen, Calendar, Users, ArrowRight } from "lucide-react";
+import {
+  FolderOpen,
+  Calendar,
+  Users,
+  ArrowRight,
+  Search,
+  X,
+} from "lucide-react";
 import { toast } from "sonner";
 import { queryClient } from "@/app/query-client-provider";
 
@@ -44,6 +51,7 @@ export default function Projects({ spaceId }: { spaceId: string }) {
   });
   const [data, setData] = useState<Partial<Project>>({});
   const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const importRepo = async () => {
     if (!data.name?.trim()) {
@@ -56,6 +64,16 @@ export default function Projects({ spaceId }: { spaceId: string }) {
     setOpen(false);
     queryClient.invalidateQueries({ queryKey: ["projects", spaceId] });
   };
+
+  const clearSelection = () => {
+    setData({});
+  };
+
+  const filteredRepos = repos?.filter(
+    (repo) =>
+      repo.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      repo.description?.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   return (
     <div className="border p-4 rounded-md flex flex-col gap-4">
@@ -131,27 +149,63 @@ export default function Projects({ spaceId }: { spaceId: string }) {
           <DialogTitle>Import from GitHub</DialogTitle>
           <Steps>
             <Step nextDisabled={!data.repo_name} step={0} key={0}>
-              <div className="border rounded-md *:p-4 *:py-3 [&>*:not(:last-child)]:border-b">
-                {isLoading && (
-                  <div className="text-center">
-                    <span className="spinner"></span>
+              <div className="flex flex-col gap-3">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="text"
+                    placeholder="Search repositories..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+
+                {data.repo_name && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">
+                      Selected: {data.repo_name}
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={clearSelection}
+                      className="text-xs gap-1"
+                    >
+                      <X className="size-3 mt-[1px]" />
+                      Clear
+                    </Button>
                   </div>
                 )}
-                {error && (
-                  <div className="text-center text-red-600 dark:text-red-400">
-                    Error occured while fetching repos
-                  </div>
-                )}
-                {repos
-                  ?.sort(sortRepos)
-                  .slice(0, 4)
-                  .map((repo) => (
+
+                <div className="border rounded-md *:p-4 *:py-3 [&>*:not(:last-child)]:border-b max-h-64 overflow-y-auto">
+                  {isLoading && (
+                    <div className="text-center">
+                      <span className="spinner"></span>
+                    </div>
+                  )}
+                  {error && (
+                    <div className="text-center text-red-600 dark:text-red-400">
+                      Error occured while fetching repos
+                    </div>
+                  )}
+                  {filteredRepos &&
+                    filteredRepos.length === 0 &&
+                    !isLoading && (
+                      <div className="text-center text-muted-foreground">
+                        No repositories found
+                      </div>
+                    )}
+                  {filteredRepos?.sort(sortRepos).map((repo) => (
                     <div
                       key={repo.id}
-                      className={cn("flex justify-between items-center", {
-                        "bg-primary/10 text-primary":
-                          data.repo_name === repo.name,
-                      })}
+                      className={cn(
+                        "flex justify-between items-center cursor-pointer hover:bg-muted/50",
+                        {
+                          "bg-primary/10 text-primary":
+                            data.repo_name === repo.name,
+                        },
+                      )}
                       onClick={() => {
                         setData({
                           name: repo.name,
@@ -163,9 +217,15 @@ export default function Projects({ spaceId }: { spaceId: string }) {
                         });
                       }}
                     >
-                      <label htmlFor={repo.full_name}>{repo.full_name}</label>
+                      <label
+                        htmlFor={repo.full_name}
+                        className="cursor-pointer"
+                      >
+                        {repo.full_name}
+                      </label>
                     </div>
                   ))}
+                </div>
               </div>
             </Step>
             <Step step={1} key={1} nextString="Create" nextAction={importRepo}>
