@@ -18,6 +18,7 @@ export default function CallAuthorize({
   ...props
 }: ButtonProps) {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   return (
     <>
@@ -49,9 +50,13 @@ export default function CallAuthorize({
           </DialogHeader>
 
           <Button
-            onClick={() => (window.location.href = "/api/auth/github")}
+            onClick={() => {
+              setLoading(true);
+              window.location.href = "/api/auth/github";
+            }}
             variant="outline"
             className="w-full mt-2 flex gap-2 items-center justify-center"
+            loading={loading}
           >
             <span className="mb-0.5">
               <GithubIcon />
