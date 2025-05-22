@@ -18,7 +18,7 @@ import { cn, timeAgo } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
-import Link from "next/link";
+import NextLink from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -29,9 +29,13 @@ import {
   ArrowRight,
   Search,
   X,
+  SearchX,
 } from "lucide-react";
 import { toast } from "sonner";
 import { queryClient } from "@/app/query-client-provider";
+import { motion } from "framer-motion";
+
+const Link = motion(NextLink);
 
 const sortRepos = (a: Repo, b: Repo) =>
   +new Date(b.updated_at) - +new Date(a.updated_at);
@@ -52,6 +56,7 @@ export default function Projects({ spaceId }: { spaceId: string }) {
   const [data, setData] = useState<Partial<Project>>({});
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const importRepo = async () => {
     if (!data.name?.trim()) {
@@ -59,9 +64,13 @@ export default function Projects({ spaceId }: { spaceId: string }) {
       return;
     }
 
+    setLoading(true);
+
     await createProject({ ...(data as Project), name: data.name.trim() });
 
     setOpen(false);
+    setLoading(false);
+
     queryClient.invalidateQueries({ queryKey: ["projects", spaceId] });
   };
 
@@ -86,6 +95,8 @@ export default function Projects({ spaceId }: { spaceId: string }) {
             href={`/app/spaces/${spaceId}/projects/${project.id}`}
             key={project.id}
             className="group"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
           >
             <Card className="h-full transition-all duration-200 hover:shadow-md border-border/50 hover:border-border">
               <CardContent className="p-6">
@@ -190,7 +201,8 @@ export default function Projects({ spaceId }: { spaceId: string }) {
                   {filteredRepos &&
                     filteredRepos.length === 0 &&
                     !isLoading && (
-                      <div className="text-center text-muted-foreground">
+                      <div className="!py-12 text-center text-muted-foreground flex flex-col gap-2 items-center">
+                        <SearchX size={40} />
                         No repositories found
                       </div>
                     )}
@@ -226,7 +238,13 @@ export default function Projects({ spaceId }: { spaceId: string }) {
                 </div>
               </div>
             </Step>
-            <Step step={1} key={1} nextString="Create" nextAction={importRepo}>
+            <Step
+              step={1}
+              key={1}
+              nextString="Create"
+              nextLoading={loading}
+              nextAction={importRepo}
+            >
               <h4 className="my-0">Project Details</h4>
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-1">

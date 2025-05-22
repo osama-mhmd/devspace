@@ -25,6 +25,7 @@ export interface StepProps extends HTMLMotionProps<"div"> {
   nextString?: string;
   nextAction?: () => void;
   nextDisabled?: boolean;
+  nextLoading?: boolean;
   step: number;
 }
 
@@ -33,6 +34,7 @@ export function Step({
   nextString = "Next",
   nextAction,
   nextDisabled = false,
+  nextLoading,
   className,
   ...props
 }: StepProps) {
@@ -62,7 +64,11 @@ export function Step({
               Back
             </Button>
           )}
-          <Button disabled={nextDisabled} onClick={() => nextAction()}>
+          <Button
+            disabled={nextDisabled}
+            onClick={() => nextAction()}
+            loading={nextLoading}
+          >
             {nextString}
           </Button>
         </div>
