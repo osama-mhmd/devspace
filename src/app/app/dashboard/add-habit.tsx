@@ -55,7 +55,7 @@ export default function AddHabit() {
       </PanelTrigger>
       <PanelBody>
         <PanelHeader>
-          <h3 className="my-0">{m.createAHabit()}</h3>
+          <h3>{m.createAHabit()}</h3>
         </PanelHeader>
         <form
           onSubmit={handleSubmit(async (data) => await onsubmit(data))}

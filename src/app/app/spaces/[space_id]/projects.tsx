@@ -86,7 +86,7 @@ export default function Projects({ spaceId }: { spaceId: string }) {
 
   return (
     <div className="border p-4 rounded-md flex flex-col gap-4">
-      <h3 className="mt-0">Projects</h3>
+      <h3>Projects</h3>
       {projects && projects.length == 0 && <i>No projects</i>}
       {projectsLoading && <i>Fetching projects</i>}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -103,7 +103,7 @@ export default function Projects({ spaceId }: { spaceId: string }) {
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <FolderOpen className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                    <h3 className="my-0 font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                    <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
                       {project.name}
                     </h3>
                   </div>

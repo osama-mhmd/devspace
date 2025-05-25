@@ -81,14 +81,11 @@ h3,
 h4,
 h5,
 h6 {
-  @apply font-bold mb-1 block;
+  @apply font-bold block;
 }
 
 h1 {
   font-size: 2em;
-  margin-top: 0.67em;
-  margin-left: 0;
-  margin-right: 0;
 }
 
 .contain-icons {
@@ -101,41 +98,20 @@ h2.contain-icons > svg {
 
 h2 {
   font-size: 1.5em;
-  margin-top: 0.83em;
-  margin-left: 0;
-  margin-right: 0;
 }
 .geg path {
   fill: #5be4aa;
 }
 h3 {
   font-size: 1.17em;
-  margin-top: 1em;
-  margin-left: 0;
-  margin-right: 0;
-}
-
-h4 {
-  margin-top: 1.33em;
-  margin-bottom: 1.33em;
-  margin-left: 0;
-  margin-right: 0;
 }
 
 h5 {
   font-size: 0.83em;
-  margin-top: 1.67em;
-  margin-bottom: 1.67em;
-  margin-left: 0;
-  margin-right: 0;
 }
 
 h6 {
   font-size: 0.67em;
-  margin-top: 2.33em;
-  margin-bottom: 2.33em;
-  margin-left: 0;
-  margin-right: 0;
 }
 
 .link {

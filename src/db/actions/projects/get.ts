@@ -18,3 +18,16 @@ export async function getSpaceProjects(spaceId: string) {
 
   return projects;
 }
+
+export async function getProject(projectId: string) {
+  const { user } = await validateRequest();
+
+  if (!user) throw new Error("Unauthorized request");
+
+  const [project] = await db
+    .select()
+    .from(projectsTable)
+    .where(eq(projectsTable.id, projectId));
+
+  return project;
+}

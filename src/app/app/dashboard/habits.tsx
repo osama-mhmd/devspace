@@ -75,7 +75,7 @@ export default async function Habits({ habits }: { habits: Habit[] }) {
               </PanelTrigger>
               <PanelBody>
                 <PanelHeader>
-                  <h3 className="my-0">{habit.name}</h3>
+                  <h3>{habit.name}</h3>
                 </PanelHeader>
                 <p>{habit.quote}</p>
                 <div className="m-1 rounded-md bg-gray-200 dark:bg-gray-800 p-4 text-center">
