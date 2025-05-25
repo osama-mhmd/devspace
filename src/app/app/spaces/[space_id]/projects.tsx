@@ -147,12 +147,14 @@ export default function Projects({ spaceId }: { spaceId: string }) {
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <div className="flex items-center gap-1 border rounded-md p-4 justify-center cursor-pointer hover:bg-muted/30 transition">
-            Import from GitHub
-            <span className="mb-0.5">
-              <Github />
-            </span>
-          </div>
+          <Card className="cursor-pointer group">
+            <CardContent className="flex gap-1.5 items-center justify-center py-3 group-hover:text-primary transition">
+              Import from GitHub
+              <span className="mb-0.5">
+                <Github />
+              </span>
+            </CardContent>
+          </Card>
         </DialogTrigger>
         <DialogContent>
           <DialogTitle>Import from GitHub</DialogTitle>
