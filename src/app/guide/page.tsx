@@ -1,13 +1,13 @@
 import { Home } from "lucide-react";
 
-function Callout({ title, children }: { title: string; children: string }) {
-  return (
-    <div className="max-w-screen-md bg-cyan-600/20 p-4 rounded-md border border-cyan-600">
-      <h3 className="mb-3">💡 {title}</h3>
-      <p>{children}</p>
-    </div>
-  );
-}
+// function Callout({ title, children }: { title: string; children: string }) {
+//   return (
+//     <div className="max-w-screen-md bg-cyan-600/20 p-4 rounded-md border border-cyan-600">
+//       <h3 className="mb-3">💡 {title}</h3>
+//       <p>{children}</p>
+//     </div>
+//   );
+// }
 
 export default function Guide() {
   return (

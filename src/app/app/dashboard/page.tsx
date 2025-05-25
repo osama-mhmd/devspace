@@ -20,7 +20,7 @@ export default async function Dashboard() {
     <section>
       <div className="container my-12">
         <h1 className="mb-4">
-          {m.hello()}, <span className="text-blue-500">{user.fullname}</span>
+          {m.hello()}, <span className="text-blue-500">{user.name}</span>
         </h1>
         <div className="flex flex-col gap-1 *:rounded-md *:p-4 *:px-6 *:flex *:pb-6 *:flex-col *:gap-4">
           <Habits habits={habits as Habit[]} />

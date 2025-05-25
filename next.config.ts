@@ -10,11 +10,9 @@ const nextConfig: NextConfig = {
     );
     return config;
   },
-  experimental: {
-    turbo: {
-      rules: {
-        exclude: ["pg-native", "cloudflare:sockets"],
-      },
+  turbopack: {
+    rules: {
+      exclude: ["pg-native", "cloudflare:sockets"],
     },
   },
   serverExternalPackages: ["@node-rs/argon2"],

@@ -1,6 +1,5 @@
 import Habit from "@/types/habit";
 import AddHabit from "./add-habit";
-import Link from "next/link";
 import {
   Panel,
   PanelBody,
@@ -10,7 +9,7 @@ import {
 import SaveRecordButton from "./save-record";
 import getRecords from "@/db/actions/habits/get-records";
 import HabitLink from "./habit-link";
-import { CircleCheck, Flame, Target } from "lucide-react";
+import { CircleCheck, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
 import * as m from "@/paraglide/messages";
 

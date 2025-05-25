@@ -7,14 +7,14 @@ export default async function Statistics() {
 
   const totalSeconds = pomodoros.reduce((acc, cur) => acc + cur.duration, 0);
 
-  const stats = {
-    timeLabels: pomodoros.map((el) => {
-      return el.date.getDate();
-    }),
-    tasksOverTime: pomodoros.map((el) => {
-      return el.duration;
-    }),
-  };
+  // const stats = {
+  //   timeLabels: pomodoros.map((el) => {
+  //     return el.created_at.getDate();
+  //   }),
+  //   tasksOverTime: pomodoros.map((el) => {
+  //     return el.duration;
+  //   }),
+  // };
 
   return (
     <section className="mt-16">
