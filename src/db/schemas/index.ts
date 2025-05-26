@@ -2,7 +2,9 @@ import { sql } from "drizzle-orm";
 import {
   boolean,
   check,
+  foreignKey,
   integer,
+  pgEnum,
   pgTable,
   serial,
   text,
@@ -54,13 +56,13 @@ export const spacesPermissions = pgTable(
     created_at: timestamp("created_at").notNull().defaultNow(),
     last_visit: timestamp("last_visit"),
   },
-  (tb) => ({
-    userSpaceUnique: unique().on(tb.user_id, tb.space_id),
-    invitedByCheck: check(
+  (tb) => [
+    unique().on(tb.user_id, tb.space_id),
+    check(
       "invited_by_check",
       sql`${tb.role} = 'owner' OR ${tb.invited_by} IS NOT NULL`,
     ),
-  }),
+  ],
 );
 
 export type GithubAPILink = `https://api.github.com/repos/${string}/${string}`;
@@ -82,6 +84,38 @@ export const projectsTable = pgTable("projects", {
   created_at: timestamp("created_at").notNull().defaultNow(),
   updated_at: timestamp("updated_at"),
 });
+
+export const taskStatusEnum = pgEnum("task_status", [
+  "todo",
+  "in_progress",
+  "done",
+]);
+
+export const tasksTable = pgTable(
+  "tasks",
+  {
+    id: text("id").primaryKey(),
+    title: text("title").notNull(),
+    description: text("description"),
+    project_id: text("project_id")
+      .references(() => projectsTable.id)
+      .notNull(),
+    importance: integer("importance"),
+    points: integer("points"),
+    status: taskStatusEnum("status").default("todo"),
+    parent: text("parent"),
+    assigned_to: text("assigned_to").references(() => userTable.id),
+    created_at: timestamp("created_at").notNull().defaultNow(),
+    due_to: timestamp("due_to"),
+    updated_at: timestamp("updated_at"),
+  },
+  (tb) => [
+    foreignKey({
+      columns: [tb.parent],
+      foreignColumns: [tb.id],
+    }),
+  ],
+);
 
 export const pomodorosTable = pgTable("pomodoros", {
   id: text("id").primaryKey(),

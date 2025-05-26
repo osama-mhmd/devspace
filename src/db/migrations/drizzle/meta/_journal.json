@@ -43,6 +43,13 @@
       "when": 1747741329802,
       "tag": "0005_tough_power_pack",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1748253121435,
+      "tag": "0006_nostalgic_prism",
+      "breakpoints": true
     }
   ]
 }

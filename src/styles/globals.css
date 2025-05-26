@@ -260,3 +260,16 @@ li[data-type="success"] {
 .plans > div.popular::before {
   @apply content-["Popular"] absolute -top-3 right-4 px-4 py-1 text-sm rounded-full bg-gradient-to-br from-blue-300 dark:from-blue-600 to-green-300 dark:to-green-800;
 }
+
+.tasks-table-header th {
+  @apply px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider;
+}
+
+.tasks-table-columns {
+  @apply px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400;
+}
+.tasks-table-title-column {
+  @apply px-6 py-4 w-full border-none bg-transparent dark:bg-transparent focus:outline-none focus:ring-2 
+  focus:ring-indigo-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 
+  dark:placeholder-gray-500 transition-all;
+}
