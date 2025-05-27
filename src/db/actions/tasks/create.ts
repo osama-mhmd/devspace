@@ -33,8 +33,9 @@ export async function createTask(input: CreateTaskInput) {
 
     const project = await getProject(input.project_id);
 
-    if (!project)
+    if (!project) {
       throw new Error("There's no project with the 'ID' you provided");
+    }
 
     const { permission } = await $user(project.space_id);
 
@@ -44,7 +45,7 @@ export async function createTask(input: CreateTaskInput) {
 
     const [result] = await db
       .insert(tasksTable)
-      .values({ id, ...input })
+      .values({ ...input, id })
       .returning();
 
     return result;

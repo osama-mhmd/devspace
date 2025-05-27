@@ -22,7 +22,7 @@ export async function updateTask(
       .where(eq(tasksTable.id, input_id))
       .limit(1);
 
-    if (existingTask) {
+    if (!existingTask) {
       throw new Error("Task not found");
     }
 

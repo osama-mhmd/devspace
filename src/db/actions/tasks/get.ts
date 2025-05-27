@@ -12,7 +12,7 @@ export async function getTask(id: string, space_id: string) {
   if (user.permission == "no-access") throw new Error("Unauthorized Request");
 
   try {
-    return db
+    return await db
       .select()
       .from(tasksTable)
       .innerJoin(projectsTable, eq(tasksTable.project_id, projectsTable.id))
