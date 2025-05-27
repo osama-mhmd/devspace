@@ -16,9 +16,19 @@ export async function updateTask(
 
     if (user.permission == "no-access") throw new Error("Unauthorized Request");
 
+    const [existingTask] = await db
+      .select({ project_id: tasksTable.project_id })
+      .from(tasksTable)
+      .where(eq(tasksTable.id, input_id))
+      .limit(1);
+
+    if (existingTask) {
+      throw new Error("Task not found");
+    }
+
     const [result] = await db
       .update(tasksTable)
-      .set({ ...input })
+      .set({ ...input, updated_at: new Date() })
       .where(eq(tasksTable.id, input_id))
       .returning();
 

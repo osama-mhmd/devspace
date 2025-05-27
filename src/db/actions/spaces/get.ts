@@ -80,7 +80,16 @@ export async function getLastVisitedSpace(): Promise<string | null> {
   return lastVisitedSpace.id;
 }
 
-export async function getSpaceUsers(space_id: string) {
+export interface SpaceUser {
+  id: string;
+  name: string;
+  username: string;
+  email: string;
+  avatar: string | null;
+  role: "owner" | "admin" | "member";
+}
+
+export async function getSpaceUsers(space_id: string): Promise<SpaceUser[]> {
   const user = await $user(space_id);
 
   if (user.permission == "no-access") throw new Error("Unauthorized request");
@@ -96,7 +105,7 @@ export async function getSpaceUsers(space_id: string) {
     })
     .from(spacesPermissions)
     .where(eq(spacesPermissions.space_id, space_id))
-    .leftJoin(userTable, eq(spacesPermissions.user_id, userTable.id));
+    .innerJoin(userTable, eq(spacesPermissions.user_id, userTable.id));
 
   return users;
 }

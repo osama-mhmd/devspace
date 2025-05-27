@@ -8,14 +8,14 @@ import { generateIdFromEntropySize } from "lucia";
 export interface Project {
   id: string;
   name: string;
-  description?: string;
+  description: string | null;
   space_id: string;
   repo_owner: string;
   repo_name: string;
-  preview_link?: string;
+  preview_link: string | null;
   imported_by: string;
   created_at: Date;
-  updated_at?: Date;
+  updated_at: Date | null;
 }
 
 export interface ProjectToCreate

@@ -11,7 +11,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import { getSpace } from "@/db/actions/spaces/get";
+import { getSpace, getSpaceUsers } from "@/db/actions/spaces/get";
 
 export default async function Project({
   params,
@@ -24,6 +24,7 @@ export default async function Project({
     const project = await getProject(project_id);
     const projectTasks = await getProjectTasks(space_id, project_id);
     const space = await getSpace(space_id);
+    const spaceUsers = await getSpaceUsers(space_id);
 
     if (!project) {
       return (
@@ -57,6 +58,7 @@ export default async function Project({
             tasks={projectTasks}
             project_id={project_id}
             space_id={space_id}
+            spaceUsers={spaceUsers}
           />
         </div>
       </section>

@@ -7,10 +7,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getSpaceUsers } from "@/db/actions/spaces/get";
+import { SpaceUser } from "@/db/actions/spaces/get";
 import { createTask, Task } from "@/db/actions/tasks/create";
 import { updateTask } from "@/db/actions/tasks/update";
-import { useQuery } from "@tanstack/react-query";
 import debounce from "lodash.debounce";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -24,6 +23,7 @@ interface TasksTableProps {
   tasks: Task[];
   project_id: string;
   space_id: string;
+  spaceUsers: SpaceUser[];
 }
 
 const sortTasks = (a: Task, b: Task) =>
@@ -33,14 +33,10 @@ const TasksTable: React.FC<TasksTableProps> = ({
   tasks: _tasks,
   project_id,
   space_id,
+  spaceUsers: users,
 }) => {
   const [tasks, setTasks] = useState<Task[]>(_tasks);
   const [mode, setMode] = useState<"normal" | "delete" | "move">("normal");
-
-  const { data: users } = useQuery({
-    queryKey: ["users-of-space", project_id],
-    queryFn: async () => await getSpaceUsers(space_id),
-  });
 
   const addTask = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
@@ -86,28 +82,21 @@ const TasksTable: React.FC<TasksTableProps> = ({
       toast.error("Failed to save changes. Please try again.");
     }
   };
-
   const changeStatus = async (id: string, checked: boolean) => {
     const status = checked ? "done" : "todo";
+    const previousTasks = tasks;
 
     try {
       setTasks((prev) =>
-        prev.map((task) =>
-          task.id === id
-            ? {
-                ...task,
-                status,
-              }
-            : task,
-        ),
+        prev.map((task) => (task.id === id ? { ...task, status } : task)),
       );
 
       await updateTask(id, { status }, space_id);
     } catch {
+      setTasks(previousTasks);
       toast.error("Failed to save changes. Please try again.");
     }
   };
-
   const removeTask = async (task: Task) => {
     if (mode !== "delete") return;
 
@@ -163,6 +152,7 @@ const TasksTable: React.FC<TasksTableProps> = ({
                     "group transition-colors duration-150 ease-in-out hover:bg-gray-50 dark:hover:bg-gray-800",
                     {
                       "bg-gray-800/50": task.status === "done",
+                      "cursor-pointer": mode === "delete",
                     },
                   )}
                   onClick={() => removeTask(task)}
@@ -172,7 +162,7 @@ const TasksTable: React.FC<TasksTableProps> = ({
                       type="checkbox"
                       className="size-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded cursor-pointer hover:border-indigo-400 transition-colors"
                       onChange={(e) => changeStatus(task.id, e.target.checked)}
-                      defaultChecked={task.status == "done"}
+                      checked={task.status == "done"}
                     />
                   </td>
                   <td className="whitespace-nowrap">
@@ -205,9 +195,9 @@ const TasksTable: React.FC<TasksTableProps> = ({
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="unassigned">Unassigned</SelectItem>
-                        {users?.map((user) => (
+                        {users.map((user) => (
                           <SelectItem
-                            value={user.id!}
+                            value={user.id}
                             key={user.username}
                             className="pe-8"
                           >

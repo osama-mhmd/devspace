@@ -3,20 +3,22 @@
 import db from "@/db";
 import { tasksTable } from "@/db/schemas";
 import { generateIdFromEntropySize } from "lucia";
+import { getProject } from "../projects/get";
+import $user from "../spaces/permission";
 
 export interface Task {
   id: string;
   title: string;
-  description?: string;
+  description: string | null;
   project_id: string;
   created_at: Date;
-  updated_at?: Date;
-  importance?: number;
-  points?: number;
-  status?: "todo" | "in_progress" | "done";
-  parent?: string;
+  updated_at: Date | null;
+  importance: number | null;
+  points: number | null;
+  status: "todo" | "in_progress" | "done" | null;
+  parent: string | null;
   assigned_to: string | null;
-  due_to?: Date;
+  due_to: Date | null;
 }
 
 type CreateTaskInput = { title: string; project_id: string } & Partial<
@@ -25,9 +27,20 @@ type CreateTaskInput = { title: string; project_id: string } & Partial<
 
 export async function createTask(input: CreateTaskInput) {
   try {
-    const id = input.id ?? generateIdFromEntropySize(16);
+    if (!input.title || !input.project_id) {
+      throw new Error("Title and project_id are required");
+    }
 
-    console.log({ id, ...input });
+    const project = await getProject(input.project_id);
+
+    if (!project)
+      throw new Error("There's no project with the 'ID' you provided");
+
+    const { permission } = await $user(project.space_id);
+
+    if (permission == "no-access") throw new Error("Unauthorized request");
+
+    const id = input.id ?? generateIdFromEntropySize(16);
 
     const [result] = await db
       .insert(tasksTable)
