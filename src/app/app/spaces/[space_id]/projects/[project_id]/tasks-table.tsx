@@ -11,7 +11,7 @@ import { SpaceUser } from "@/db/actions/spaces/get";
 import { createTask, Task } from "@/db/actions/tasks/create";
 import { updateTask } from "@/db/actions/tasks/update";
 import debounce from "lodash.debounce";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -37,6 +37,27 @@ const TasksTable: React.FC<TasksTableProps> = ({
 }) => {
   const [tasks, setTasks] = useState<Task[]>(_tasks);
   const [mode, setMode] = useState<"normal" | "delete" | "move">("normal");
+
+  useEffect(() => {
+    const doAction = (e: KeyboardEvent) => {
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      )
+        return;
+
+      switch (e.key) {
+        case "d":
+        case "D":
+          setMode((prev) => (prev == "delete" ? "normal" : "delete"));
+          break;
+      }
+    };
+
+    document.addEventListener("keypress", doAction);
+
+    return () => document.removeEventListener("keypress", doAction);
+  }, []);
 
   const addTask = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
@@ -122,6 +143,7 @@ const TasksTable: React.FC<TasksTableProps> = ({
           variant="outline"
           className={cn("px-3", {
             "bg-accent text-accent-foreground": mode == "delete",
+            "hover:text-inherit hover:bg-inherit": mode !== "delete",
           })}
           onClick={() =>
             setMode((prev) => (prev == "delete" ? "normal" : "delete"))
@@ -152,7 +174,7 @@ const TasksTable: React.FC<TasksTableProps> = ({
                     "group transition-colors duration-150 ease-in-out hover:bg-gray-50 dark:hover:bg-gray-800",
                     {
                       "bg-gray-800/50": task.status === "done",
-                      "cursor-pointer": mode === "delete",
+                      "cursor-crosshair": mode === "delete",
                     },
                   )}
                   onClick={() => removeTask(task)}
@@ -160,7 +182,12 @@ const TasksTable: React.FC<TasksTableProps> = ({
                   <td className="flex h-14 items-center justify-center">
                     <input
                       type="checkbox"
-                      className="size-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded cursor-pointer hover:border-indigo-400 transition-colors"
+                      className={cn(
+                        "size-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded cursor-pointer hover:border-indigo-400 transition-colors",
+                        {
+                          "pointer-events-none": mode == "delete",
+                        },
+                      )}
                       onChange={(e) => changeStatus(task.id, e.target.checked)}
                       checked={task.status == "done"}
                     />
@@ -172,6 +199,7 @@ const TasksTable: React.FC<TasksTableProps> = ({
                       className={cn("tasks-table-title-column", {
                         "line-through !text-muted-foreground":
                           task.status === "done",
+                        "pointer-events-none": mode == "delete",
                       })}
                       disabled={task.status == "done"}
                       aria-label={`Edit task title: ${task.title}`}
@@ -190,7 +218,11 @@ const TasksTable: React.FC<TasksTableProps> = ({
                       onValueChange={(val) => changeAssignedTo(val, task.id)}
                       disabled={task.status == "done"}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger
+                        className={cn("", {
+                          "pointer-events-none": mode == "delete",
+                        })}
+                      >
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
