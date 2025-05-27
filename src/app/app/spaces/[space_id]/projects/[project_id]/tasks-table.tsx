@@ -1,11 +1,21 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { getSpaceUsers } from "@/db/actions/spaces/get";
 import { createTask, Task } from "@/db/actions/tasks/create";
 import { updateTask } from "@/db/actions/tasks/update";
+import { useQuery } from "@tanstack/react-query";
 import debounce from "lodash.debounce";
 import { useState } from "react";
 import { toast } from "sonner";
+import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 interface TasksTableProps {
   tasks: Task[];
@@ -19,6 +29,11 @@ const TasksTable: React.FC<TasksTableProps> = ({
   space_id,
 }) => {
   const [tasks, setTasks] = useState(_tasks);
+
+  const { data: users } = useQuery({
+    queryKey: ["users-of-space", project_id],
+    queryFn: async () => await getSpaceUsers(space_id),
+  });
 
   const addTask = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
@@ -53,15 +68,48 @@ const TasksTable: React.FC<TasksTableProps> = ({
     500,
   );
 
+  const changeAssignedTo = async (val: string, id: string) => {
+    try {
+      await updateTask(
+        id,
+        { assigned_to: val == "unassigned" ? null : val },
+        space_id,
+      );
+    } catch {
+      toast.error("Failed to save changes. Please try again.");
+    }
+  };
+
+  const changeStatus = async (id: string, checked: boolean) => {
+    const status = checked ? "done" : "todo";
+
+    try {
+      setTasks((prev) =>
+        prev.map((task) =>
+          task.id === id
+            ? {
+                ...task,
+                status,
+              }
+            : task,
+        ),
+      );
+
+      await updateTask(id, { status }, space_id);
+    } catch {
+      toast.error("Failed to save changes. Please try again.");
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-gray-900 shadow-xl rounded-lg overflow-hidden border border-gray-100 dark:border-gray-800 my-4">
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-800">
             <tr className="tasks-table-header">
+              <th scope="col" className="!px-4"></th>
               <th scope="col">Task Name 📝</th>
               <th scope="col">Description</th>
-              <th scope="col">Status</th>
               <th scope="col">Importance</th>
               <th scope="col">Points</th>
               <th scope="col">Assigned To</th>
@@ -72,28 +120,69 @@ const TasksTable: React.FC<TasksTableProps> = ({
             {tasks.map((task) => (
               <tr
                 key={task.id}
-                className="group transition-colors duration-150 ease-in-out hover:bg-gray-50 dark:hover:bg-gray-800"
+                className={cn(
+                  "group transition-colors duration-150 ease-in-out hover:bg-gray-50 dark:hover:bg-gray-800",
+                  {
+                    "bg-gray-800/50": task.status === "done",
+                  },
+                )}
               >
+                <td className="flex h-14 items-center justify-center">
+                  <input
+                    type="checkbox"
+                    className="size-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded cursor-pointer hover:border-indigo-400 transition-colors"
+                    onChange={(e) => changeStatus(task.id, e.target.checked)}
+                    defaultChecked={task.status == "done"}
+                  />
+                </td>
                 <td className="whitespace-nowrap">
                   <input
                     defaultValue={task.title}
                     onChange={(e) => changeTitle(e, task.id)}
-                    className="tasks-table-title-column"
+                    className={cn("tasks-table-title-column", {
+                      "line-through !text-muted-foreground":
+                        task.status === "done",
+                    })}
+                    disabled={task.status == "done"}
                     aria-label={`Edit task title: ${task.title}`}
                   />
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate">
                   {task.description || "-"}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <Badge>{task.status}</Badge>
-                </td>
                 <td className="tasks-table-columns">
                   {task.importance || "-"}
                 </td>
                 <td className="tasks-table-columns">{task.points || "-"}</td>
-                <td className="tasks-table-columns">
-                  {task.assigned_to || "-"}
+                <td className="tasks-table-columns !py-1">
+                  <Select
+                    defaultValue={task.assigned_to || "unassigned"}
+                    onValueChange={(val) => changeAssignedTo(val, task.id)}
+                    disabled={task.status == "done"}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="unassigned">Unassigned</SelectItem>
+                      {users?.map((user) => (
+                        <SelectItem
+                          value={user.id!}
+                          key={user.username}
+                          className="pe-8"
+                        >
+                          <Image
+                            width={20}
+                            height={20}
+                            src={user.avatar!}
+                            alt="avatar"
+                            className="inline rounded-full mb-0.5 me-1.5"
+                          />
+                          {user.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </td>
                 <td className="tasks-table-columns">-</td>
               </tr>

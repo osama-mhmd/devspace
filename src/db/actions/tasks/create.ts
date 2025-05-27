@@ -15,11 +15,13 @@ export interface Task {
   points?: number;
   status?: "todo" | "in_progress" | "done";
   parent?: string;
-  assigned_to?: string;
+  assigned_to: string | null;
   due_to?: Date;
 }
 
-type CreateTaskInput = Omit<Task, "id" | "created_at" | "updated_at">;
+type CreateTaskInput = { title: string; project_id: string } & Partial<
+  Omit<Task, "id" | "created_at" | "updated_at">
+>;
 
 export async function createTask(input: CreateTaskInput) {
   try {

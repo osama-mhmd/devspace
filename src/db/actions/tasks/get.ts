@@ -15,7 +15,6 @@ export async function getTask(id: string, space_id: string) {
     .select()
     .from(tasksTable)
     .where(eq(tasksTable.id, id))
-    .orderBy(tasksTable.created_at)
     .then((result) => result[0]);
 }
 
@@ -30,5 +29,6 @@ export async function getProjectTasks(
   return db
     .select()
     .from(tasksTable)
-    .where(eq(tasksTable.project_id, project_id)) as unknown as Task[];
+    .where(eq(tasksTable.project_id, project_id))
+    .orderBy(tasksTable.created_at) as unknown as Task[];
 }

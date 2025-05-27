@@ -2,8 +2,9 @@
 
 import db from "../..";
 import { validateRequest } from "../../auth";
-import { spacesPermissions, spacesTable } from "../../schemas";
+import { spacesPermissions, spacesTable, userTable } from "../../schemas";
 import { desc, eq, inArray } from "drizzle-orm";
+import $user from "./permission";
 
 export type Space = {
   id: string;
@@ -77,4 +78,25 @@ export async function getLastVisitedSpace(): Promise<string | null> {
   if (!lastVisitedSpace) return null;
 
   return lastVisitedSpace.id;
+}
+
+export async function getSpaceUsers(space_id: string) {
+  const user = await $user(space_id);
+
+  if (user.permission == "no-access") throw new Error("Unauthorized request");
+
+  const users = await db
+    .select({
+      id: userTable.id,
+      name: userTable.name,
+      username: userTable.username,
+      email: userTable.email,
+      avatar: userTable.avatar,
+      role: spacesPermissions.role,
+    })
+    .from(spacesPermissions)
+    .where(eq(spacesPermissions.space_id, space_id))
+    .leftJoin(userTable, eq(spacesPermissions.user_id, userTable.id));
+
+  return users;
 }
