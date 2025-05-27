@@ -16,6 +16,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
+import { deleteTask } from "@/db/actions/tasks/delete";
 
 interface TasksTableProps {
   tasks: Task[];
@@ -23,12 +26,16 @@ interface TasksTableProps {
   space_id: string;
 }
 
+const sortTasks = (a: Task, b: Task) =>
+  +new Date(a.created_at) - +new Date(b.created_at);
+
 const TasksTable: React.FC<TasksTableProps> = ({
   tasks: _tasks,
   project_id,
   space_id,
 }) => {
-  const [tasks, setTasks] = useState(_tasks);
+  const [tasks, setTasks] = useState<Task[]>(_tasks);
+  const [mode, setMode] = useState<"normal" | "delete" | "move">("normal");
 
   const { data: users } = useQuery({
     queryKey: ["users-of-space", project_id],
@@ -101,106 +108,140 @@ const TasksTable: React.FC<TasksTableProps> = ({
     }
   };
 
+  const removeTask = async (task: Task) => {
+    if (mode !== "delete") return;
+
+    setTasks((prev) => prev.filter((ts) => ts.id !== task.id));
+
+    await deleteTask(task.id, space_id);
+
+    toast("Task has been removed", {
+      action: {
+        label: "Undo",
+        onClick: () => {
+          setTasks((prev) => [...prev, task].sort(sortTasks));
+          createTask(task);
+        },
+      },
+    });
+  };
+
   return (
-    <div className="bg-white dark:bg-gray-900 shadow-xl rounded-lg overflow-hidden border border-gray-100 dark:border-gray-800 my-4">
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead className="bg-gray-50 dark:bg-gray-800">
-            <tr className="tasks-table-header">
-              <th scope="col" className="!px-4"></th>
-              <th scope="col">Task Name 📝</th>
-              <th scope="col">Description</th>
-              <th scope="col">Importance</th>
-              <th scope="col">Points</th>
-              <th scope="col">Assigned To</th>
-              <th scope="col">Due Date</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-            {tasks.map((task) => (
-              <tr
-                key={task.id}
-                className={cn(
-                  "group transition-colors duration-150 ease-in-out hover:bg-gray-50 dark:hover:bg-gray-800",
-                  {
-                    "bg-gray-800/50": task.status === "done",
-                  },
-                )}
-              >
-                <td className="flex h-14 items-center justify-center">
-                  <input
-                    type="checkbox"
-                    className="size-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded cursor-pointer hover:border-indigo-400 transition-colors"
-                    onChange={(e) => changeStatus(task.id, e.target.checked)}
-                    defaultChecked={task.status == "done"}
-                  />
-                </td>
-                <td className="whitespace-nowrap">
-                  <input
-                    defaultValue={task.title}
-                    onChange={(e) => changeTitle(e, task.id)}
-                    className={cn("tasks-table-title-column", {
-                      "line-through !text-muted-foreground":
-                        task.status === "done",
-                    })}
-                    disabled={task.status == "done"}
-                    aria-label={`Edit task title: ${task.title}`}
-                  />
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate">
-                  {task.description || "-"}
-                </td>
-                <td className="tasks-table-columns">
-                  {task.importance || "-"}
-                </td>
-                <td className="tasks-table-columns">{task.points || "-"}</td>
-                <td className="tasks-table-columns !py-1">
-                  <Select
-                    defaultValue={task.assigned_to || "unassigned"}
-                    onValueChange={(val) => changeAssignedTo(val, task.id)}
-                    disabled={task.status == "done"}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="unassigned">Unassigned</SelectItem>
-                      {users?.map((user) => (
-                        <SelectItem
-                          value={user.id!}
-                          key={user.username}
-                          className="pe-8"
-                        >
-                          <Image
-                            width={20}
-                            height={20}
-                            src={user.avatar!}
-                            alt="avatar"
-                            className="inline rounded-full mb-0.5 me-1.5"
-                          />
-                          {user.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </td>
-                <td className="tasks-table-columns">-</td>
-              </tr>
-            ))}
-            <tr>
-              <td colSpan={8}>
-                <input
-                  placeholder="+ Add a new task and press Enter..."
-                  onKeyDown={addTask}
-                  className="px-6 py-4 w-full border-none bg-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-600 dark:text-gray-400 placeholder-gray-400 dark:placeholder-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-150 ease-in-out rounded-b-md"
-                  aria-label="Add new task"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <section className="my-4">
+      <div className="flex justify-end mb-2">
+        <Button
+          variant="outline"
+          className={cn("px-3", {
+            "bg-accent text-accent-foreground": mode == "delete",
+          })}
+          onClick={() =>
+            setMode((prev) => (prev == "delete" ? "normal" : "delete"))
+          }
+        >
+          <Trash2 size={18} />
+        </Button>
       </div>
-    </div>
+      <div className="bg-white dark:bg-gray-900 shadow-xl rounded-lg overflow-hidden border border-gray-100 dark:border-gray-800">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-gray-50 dark:bg-gray-800">
+              <tr className="tasks-table-header">
+                <th scope="col" className="!px-4"></th>
+                <th scope="col">Task Name 📝</th>
+                <th scope="col">Description</th>
+                <th scope="col">Importance</th>
+                <th scope="col">Points</th>
+                <th scope="col">Assigned To</th>
+                <th scope="col">Due Date</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+              {tasks.map((task) => (
+                <tr
+                  key={task.id}
+                  className={cn(
+                    "group transition-colors duration-150 ease-in-out hover:bg-gray-50 dark:hover:bg-gray-800",
+                    {
+                      "bg-gray-800/50": task.status === "done",
+                    },
+                  )}
+                  onClick={() => removeTask(task)}
+                >
+                  <td className="flex h-14 items-center justify-center">
+                    <input
+                      type="checkbox"
+                      className="size-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded cursor-pointer hover:border-indigo-400 transition-colors"
+                      onChange={(e) => changeStatus(task.id, e.target.checked)}
+                      defaultChecked={task.status == "done"}
+                    />
+                  </td>
+                  <td className="whitespace-nowrap">
+                    <input
+                      defaultValue={task.title}
+                      onChange={(e) => changeTitle(e, task.id)}
+                      className={cn("tasks-table-title-column", {
+                        "line-through !text-muted-foreground":
+                          task.status === "done",
+                      })}
+                      disabled={task.status == "done"}
+                      aria-label={`Edit task title: ${task.title}`}
+                    />
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate">
+                    {task.description || "-"}
+                  </td>
+                  <td className="tasks-table-columns">
+                    {task.importance || "-"}
+                  </td>
+                  <td className="tasks-table-columns">{task.points || "-"}</td>
+                  <td className="tasks-table-columns !py-1">
+                    <Select
+                      defaultValue={task.assigned_to || "unassigned"}
+                      onValueChange={(val) => changeAssignedTo(val, task.id)}
+                      disabled={task.status == "done"}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="unassigned">Unassigned</SelectItem>
+                        {users?.map((user) => (
+                          <SelectItem
+                            value={user.id!}
+                            key={user.username}
+                            className="pe-8"
+                          >
+                            <Image
+                              width={20}
+                              height={20}
+                              src={user.avatar!}
+                              alt="avatar"
+                              className="inline rounded-full mb-0.5 me-1.5"
+                            />
+                            {user.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </td>
+                  <td className="tasks-table-columns">-</td>
+                </tr>
+              ))}
+              <tr>
+                <td colSpan={8}>
+                  <input
+                    placeholder="+ Add a new task and press Enter..."
+                    onKeyDown={addTask}
+                    className="px-6 py-4 w-full border-none bg-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-600 dark:text-gray-400 placeholder-gray-400 dark:placeholder-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-150 ease-in-out rounded-b-md"
+                    aria-label="Add new task"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
   );
 };
 

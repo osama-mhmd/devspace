@@ -20,12 +20,14 @@ export interface Task {
 }
 
 type CreateTaskInput = { title: string; project_id: string } & Partial<
-  Omit<Task, "id" | "created_at" | "updated_at">
+  Omit<Task, "created_at" | "updated_at">
 >;
 
 export async function createTask(input: CreateTaskInput) {
   try {
-    const id = generateIdFromEntropySize(16);
+    const id = input.id ?? generateIdFromEntropySize(16);
+
+    console.log({ id, ...input });
 
     const [result] = await db
       .insert(tasksTable)

@@ -183,6 +183,10 @@ li[data-type="error"] {
   @apply bg-red-500 text-white border-transparent;
 }
 
+li[data-sonner-toast] > button {
+  @apply !p-4;
+}
+
 li[data-type="success"] {
   @apply bg-green-500 border-green-500 text-white border-transparent;
 }
