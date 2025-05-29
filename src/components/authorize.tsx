@@ -35,7 +35,7 @@ export default function CallAuthorize({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-sm sm:rounded-2xl sm:border sm:p-6 bg-background shadow-xl">
           <DialogHeader>
-            <div className="mx-auto bg-primary/10 p-4 rounded-3xl">
+            <div className="mx-auto bg-primary/10 p-4 rounded-3xl mb-2">
               <RocketIcon />
             </div>
 

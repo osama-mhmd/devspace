@@ -1,49 +1,37 @@
 "use client";
 
+import { AI } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 
-const plans = [
+interface Plan {
+  name: string;
+  description?: string;
+  features: string[];
+  action?: (router: AppRouterInstance) => void;
+  cost?: string;
+  additionalInfo?: string;
+  avaliable?: boolean;
+  flag?: string;
+}
+
+const plans: Plan[] = [
   {
     name: "free",
-    features: [
-      "Project manager organized for different management techinques.",
-      "Capture and notes DB.",
-      "Habits tracker.",
-      "Limited pro bundle. 5 AI requests per day.",
-    ],
+    features: ["Core Functionality", "Unlimited Projects"],
     action: (router: AppRouterInstance) => {
       router.push("/auth/login");
     },
   },
   {
-    name: "pro",
-    description:
-      "Don't throw your effort in the trash! Take Codra! Your assistance.",
-    features: [
-      "Free bundle included",
-      "Features suggestions.",
-      "Tasks, sub-tasks, and achievement points.",
-      "Codra as assistance! From project bootstraping to project lunching.",
-    ],
-    flag: "popular",
-    monthCost: 10,
+    name: "plus",
+    description: "We really appreciate that",
+    features: ["Execlusive emojis/badges", "Feedback priority"],
+    flag: "DevSpace Supporter",
+    cost: "starts from 5$",
     action: () => {},
-  },
-  {
-    name: "ultimate",
-    description:
-      "You are no longer the only contributor to your project. Say welcome to Codra!",
-    features: [
-      "Pro bundle included.",
-      "Codra can contribute to your projects, and make PRs.",
-      "Codra can mentor you! Tests, exams, and periodic tests.",
-      "Top priority when answering feed.",
-    ],
-    additionalInfo: "This bundle is not avaliable right now.",
-    avaliable: false,
   },
 ];
 
@@ -51,19 +39,39 @@ export default function Pricing() {
   const router = useRouter();
 
   return (
-    <main className="py-24">
+    <main className="py-16">
+      <style jsx global>{`
+        body {
+          background-image: radial-gradient(#ffffff44 1px, #252525 1px);
+          background-size: 20px 20px;
+        }
+      `}</style>
       <section>
-        <div className="container">
+        <div className="container overflow-hidden">
           <h1 className="text-center py-2 pb-6">Pricing</h1>
+          <p className="text-center text-green-700 dark:text-green-400 max-w-prose mx-auto rounded-md mb-8">
+            DevSpace is an open-source tool and is <b>completely free</b> to
+            use. Supporting us is entirely optional, but we truly appreciate any
+            contributions.
+          </p>
           <div className="plans justify-center items-center lg:items-start flex flex-col lg:flex-row gap-4">
             {plans.map((plan) => {
               return (
-                <div key={plan.name} className={plan.flag}>
+                <div
+                  key={plan.name}
+                  className={plan.flag && "flag"}
+                  data-flag={plan.flag}
+                >
+                  {plan.flag && (
+                    <div className="absolute -top-1/4 -right-1/4 hidden sm:block">
+                      <AI />
+                    </div>
+                  )}
                   <h2 className="mt-1 mb-0">
                     <span className="capitalize">{plan.name}</span>{" "}
-                    {plan.monthCost && (
+                    {plan.cost && (
                       <span className="text-lg text-muted-foreground">
-                        {plan.monthCost}$/month
+                        {plan.cost}
                       </span>
                     )}
                   </h2>

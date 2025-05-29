@@ -165,7 +165,11 @@ code * {
 }
 
 .danger-zone-action-slot {
-  @apply py-4 sm:py-2 px-4 border flex-col sm:flex-row gap-4 border-red-200 rounded-lg flex justify-between items-center;
+  @apply py-4 sm:py-2 px-4 border flex-col sm:flex-row gap-4 rounded-lg flex justify-between items-center;
+}
+
+.profile-field {
+  @apply rounded-lg bg-gray-100 dark:bg-gray-700 p-4 flex items-center gap-3 transition-all duration-200 hover:bg-gray-200 dark:hover:bg-gray-600;
 }
 
 .ar {
@@ -194,18 +198,6 @@ li[data-type="success"] {
 .common-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-}
-
-.main-nav {
-  position: sticky;
-  width: 100%;
-  padding: 15px 30px;
-  backdrop-filter: blur(10px);
-  /* background-color: rgba(255, 255, 255, 0.1); */
-  z-index: 20;
-  top: 0;
-  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
-  @apply bg-muted dark:bg-muted;
 }
 
 .app-nav {
@@ -253,16 +245,13 @@ li[data-type="success"] {
   background-image: url(/landing-third-section.png);
 }
 .plans > div {
-  @apply border p-4 px-6 rounded-lg max-w-md w-full flex flex-col gap-4;
+  @apply border p-4 px-6 rounded-lg max-w-md w-full flex flex-col gap-4 bg-background;
 }
 .plans ul {
   @apply list-none pl-2;
 }
-.plans > div.popular {
-  @apply relative bg-gradient-to-tr from-primary/30 to-muted;
-}
-.plans > div.popular::before {
-  @apply content-["Popular"] absolute -top-3 right-4 px-4 py-1 text-sm rounded-full bg-gradient-to-br from-blue-300 dark:from-blue-600 to-green-300 dark:to-green-800;
+.plans > div.flag {
+  @apply relative bg-gradient-to-tr from-primary/5 to-primary/15;
 }
 
 .tasks-table-header th {

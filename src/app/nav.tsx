@@ -42,12 +42,11 @@ export default function Nav({
   }
 
   return shouldNotRender ? null : (
-    <nav className="flex justify-center">
-      <div className="main-nav container mt-4 rounded-full py-2 px-6 flex items-center justify-between">
+    <nav className="flex justify-center px-4">
+      <div className="bg-background border sticky top-0 w-full z-20 px-8 py-4 max-w-7xl shadow-2xl mt-4 rounded-full flex items-center justify-between">
         <Link href="/" className="lilita contain-icons">
           DS <Rocket size={25} />
         </Link>
-        {/* TODO: navbar on small screens */}
         <ul className="[&>li]:hidden [&>li]:sm:block flex gap-3 py-2 sm:py-0 items-center px-0 list-none">
           <List className="block sm:hidden cursor-pointer" />
           <li>
@@ -63,12 +62,7 @@ export default function Nav({
                 </Link>
               </Button>
             )}
-            {!session && (
-              <CallAuthorize variant="link">
-                Login
-                {/* <Link href="/auth/register">{m.createAccount()}</Link> */}
-              </CallAuthorize>
-            )}
+            {!session && <CallAuthorize variant="link">Login</CallAuthorize>}
           </li>
           <li>
             <ThemeToggle />
