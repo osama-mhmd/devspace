@@ -23,6 +23,8 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import getDocument from "@/db/actions/documents/get";
+import createDocument from "@/db/actions/documents/create";
 
 interface TasksTableProps {
   tasks: Task[];
@@ -41,6 +43,8 @@ const TasksTable: React.FC<TasksTableProps> = ({
   spaceUsers: users,
 }) => {
   const [tasks, setTasks] = useState<Task[]>(_tasks);
+  const [document, setDocument] = useState({});
+  const [documentVisible, setDocumentVisibility] = useState(false);
 
   const addTask = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
@@ -86,6 +90,7 @@ const TasksTable: React.FC<TasksTableProps> = ({
       toast.error("Failed to save changes. Please try again.");
     }
   };
+
   const changeStatus = async (id: string, checked: boolean) => {
     const status = checked ? "done" : "todo";
     const previousTasks = tasks;
@@ -101,6 +106,7 @@ const TasksTable: React.FC<TasksTableProps> = ({
       toast.error("Failed to save changes. Please try again.");
     }
   };
+
   const removeTask = async (task: Task) => {
     setTasks((prev) => prev.filter((ts) => ts.id !== task.id));
 
@@ -115,6 +121,22 @@ const TasksTable: React.FC<TasksTableProps> = ({
         },
       },
     });
+  };
+
+  const openDocument = async (task: Task) => {
+    let document = await getDocument("for_id", task.id, space_id);
+    if (!document) {
+      document = await createDocument({
+        space_id: space_id,
+        for_id: task.id,
+        title: task.title,
+        content: task.description,
+        for: "task",
+      });
+    }
+
+    setDocument(document);
+    setDocumentVisibility(true);
   };
 
   return (
@@ -213,7 +235,10 @@ const TasksTable: React.FC<TasksTableProps> = ({
                       <td className="tasks-table-columns">-</td>
                     </tr>
                   </ContextMenuTrigger>
-                  <ContextMenuContent>
+                  <ContextMenuContent className="min-w-52">
+                    <ContextMenuItem onClick={() => openDocument(task)}>
+                      Open as document
+                    </ContextMenuItem>
                     <ContextMenuItem
                       onClick={() => removeTask(task)}
                       className="text-red-400"
