@@ -10,30 +10,26 @@ export type Err = {
   message: string;
 };
 
-export default async function createSpace(
-  data: {
-    name: string;
-    description: string;
-  },
-  type: "personal" | "organization",
-): Promise<Err | never> {
+export default async function createSpace(data: {
+  name: string;
+  description?: string;
+  type: "personal" | "organization";
+}): Promise<Err | never> {
   const { user } = await validateRequest();
 
-  if (!user)
+  if (!user) {
     return {
       message: "unauthorized",
     };
+  }
+
+  data.name = data.name.trim() ?? `${user.name}'s Workspace`;
 
   const spaceId = generateIdFromEntropySize(10);
 
   const space = await db
     .insert(spacesTable)
-    .values({
-      id: spaceId,
-      name: data.name ?? "workspace",
-      description: data.description,
-      type,
-    })
+    .values({ id: spaceId, ...data })
     .catch((err) => {
       return {
         message: err.constraint_name,

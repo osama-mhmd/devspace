@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 export default async function App() {
   const lastVisitedSpace = await getLastVisitedSpace();
 
-  if (!lastVisitedSpace) redirect("/app/spaces");
+  if (!lastVisitedSpace) redirect("/app/spaces/create");
 
   redirect(`/app/spaces/${lastVisitedSpace}`);
 }
