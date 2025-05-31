@@ -15,6 +15,7 @@ import {
 import { cookies } from "next/headers";
 import dir from "@/lib/dir";
 import QCP from "./query-client-provider";
+import DevKit from "@/components/devkit";
 
 export const metadata: Metadata = {
   title: {
@@ -54,6 +55,7 @@ export default async function RootLayout({
           <QCP>
             <Nav session={session} lang={languageTag()} />
             {children}
+            <DevKit />
             <Toaster />
           </QCP>
         </ThemeProvider>
