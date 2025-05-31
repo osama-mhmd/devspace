@@ -1,4 +1,4 @@
-import { Inter, Merienda, Rubik, Lilita_One } from "next/font/google";
+import { Inter, Rubik, Lilita_One } from "next/font/google";
 
 const interFont = Inter({
   subsets: ["latin"],
