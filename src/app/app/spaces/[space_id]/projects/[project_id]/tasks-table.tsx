@@ -152,13 +152,13 @@ const TasksTable: React.FC<TasksTableProps> = ({
           <Trash2 size={18} />
         </Button>
       </div>
-      <div className="bg-white dark:bg-gray-900 shadow-xl rounded-lg overflow-hidden border border-gray-100 dark:border-gray-800">
+      <div className="shadow-xl overflow-hidden border border-gray-100 dark:border-gray-800">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className="bg-muted/30">
               <tr className="tasks-table-header">
-                <th scope="col" className="!px-4"></th>
-                <th scope="col">Task Name 📝</th>
+                <th scope="col" className="!pr-4"></th>
+                <th scope="col">Task</th>
                 <th scope="col">Description</th>
                 <th scope="col">Importance</th>
                 <th scope="col">Points</th>
@@ -166,20 +166,20 @@ const TasksTable: React.FC<TasksTableProps> = ({
                 <th scope="col">Due Date</th>
               </tr>
             </thead>
-            <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody className="bg-background divide-y divide-gray-200 dark:divide-gray-700">
               {tasks.map((task) => (
                 <tr
                   key={task.id}
                   className={cn(
-                    "group transition-colors duration-150 ease-in-out hover:bg-gray-50 dark:hover:bg-gray-800",
+                    "group transition-colors duration-150 ease-in-out hover:bg-muted/10",
                     {
-                      "bg-gray-800/50": task.status === "done",
+                      "opacity-50": task.status === "done",
                       "cursor-crosshair": mode === "delete",
                     },
                   )}
                   onClick={() => removeTask(task)}
                 >
-                  <td className="flex h-14 items-center justify-center">
+                  <td className="flex h-[50px] items-center justify-center">
                     <input
                       type="checkbox"
                       className={cn(
@@ -254,7 +254,7 @@ const TasksTable: React.FC<TasksTableProps> = ({
                   <input
                     placeholder="+ Add a new task and press Enter..."
                     onKeyDown={addTask}
-                    className="px-6 py-4 w-full border-none bg-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-600 dark:text-gray-400 placeholder-gray-400 dark:placeholder-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-150 ease-in-out rounded-b-md"
+                    className="px-6 py-4 w-full border-none bg-transparent focus:outline-none text-gray-600 dark:text-gray-400 placeholder-gray-400 dark:placeholder-gray-500 hover:bg-muted/25 transition-colors duration-150 ease-in-out"
                     aria-label="Add new task"
                   />
                 </td>
