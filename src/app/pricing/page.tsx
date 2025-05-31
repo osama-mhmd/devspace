@@ -42,8 +42,11 @@ export default function Pricing() {
     <main className="py-16">
       <style jsx global>{`
         body {
-          background-image: radial-gradient(#ffffff44 1px, #252525 1px);
+          background-image: radial-gradient(#00000044 1px, #dddddd 1px);
           background-size: 20px 20px;
+        }
+        .dark body {
+          background-image: radial-gradient(#ffffff44 1px, #252525 1px);
         }
       `}</style>
       <section>
