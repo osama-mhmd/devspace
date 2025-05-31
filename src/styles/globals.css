@@ -262,7 +262,6 @@ li[data-type="success"] {
   @apply px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400;
 }
 .tasks-table-title-column {
-  @apply px-6 py-4 w-full border-none bg-transparent dark:bg-transparent focus:outline-none focus:ring-2 
-  focus:ring-indigo-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 
-  dark:placeholder-gray-500 transition-all;
+  @apply px-6 py-3 w-full border-none bg-transparent focus:outline-0 focus:!bg-muted/50 text-gray-900 dark:text-gray-100 placeholder-gray-400 
+  dark:placeholder-gray-500 transition-all duration-75;
 }
