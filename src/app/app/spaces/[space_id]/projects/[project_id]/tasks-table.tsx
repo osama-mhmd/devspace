@@ -23,8 +23,9 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import getDocument from "@/db/actions/documents/get";
+import getDocument, { Document } from "@/db/actions/documents/get";
 import createDocument from "@/db/actions/documents/create";
+import DocumentModal from "./document-modal";
 
 interface TasksTableProps {
   tasks: Task[];
@@ -43,7 +44,7 @@ const TasksTable: React.FC<TasksTableProps> = ({
   spaceUsers: users,
 }) => {
   const [tasks, setTasks] = useState<Task[]>(_tasks);
-  const [document, setDocument] = useState({});
+  const [document, setDocument] = useState<Document | null>(null);
   const [documentVisible, setDocumentVisibility] = useState(false);
 
   const addTask = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -262,6 +263,14 @@ const TasksTable: React.FC<TasksTableProps> = ({
           </table>
         </div>
       </div>
+      {document && (
+        <DocumentModal
+          document={document}
+          documentVisible={documentVisible}
+          setDocumentVisibility={setDocumentVisibility}
+          space_id={space_id}
+        />
+      )}
     </section>
   );
 };
