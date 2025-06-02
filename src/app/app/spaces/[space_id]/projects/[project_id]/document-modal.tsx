@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { X, FileText } from "lucide-react";
 import { Document } from "@/db/actions/documents/get";
 import EditableContent from "@/components/editable-content";
@@ -17,22 +17,36 @@ export default function DocumentModal({
   space_id: string;
 }) {
   const [doc, setDocument] = useState<Document>(document);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const updateTitle = React.useCallback(
+    debounce(
+      (title: string) => updateDocument(doc.id, { title }, space_id),
+      300,
+    ),
+    [doc.id, space_id],
+  );
+
+  const updateContent = React.useCallback(
+    debounce((content: string) => {
+      updateDocument(doc.id, { content }, space_id);
+      setDocument((prev) => ({ ...prev, content }));
+    }, 300),
+    [doc.id, space_id],
+  );
 
   useEffect(() => {
     setDocument(document);
   }, [document]);
 
+  useEffect(() => {
+    return () => {
+      updateTitle.cancel();
+      updateContent.cancel();
+    };
+  }, [updateTitle, updateContent]);
+
   if (!documentVisible) return;
-
-  const updateTitle = debounce(
-    (title: string) => updateDocument(doc.id, { title }, space_id),
-    300,
-  );
-
-  const updateContent = debounce(
-    (content: string) => updateDocument(doc.id, { content }, space_id),
-    300,
-  );
 
   return (
     <div
@@ -69,15 +83,23 @@ export default function DocumentModal({
             <div className="mb-2">
               <EditableContent
                 as="h2"
-                initialContent={doc.title ?? ""}
+                initialContent={document.title ?? ""}
                 onContentChange={updateTitle}
               />
             </div>
 
             <div className="mb-4">
               <EditableContent
-                initialContent={doc.content ?? ""}
-                onContentChange={updateContent}
+                initialContent={document.content ?? ""}
+                onContentChange={(content) => {
+                  updateContent(content);
+
+                  setDocument((prev) => ({
+                    ...prev,
+                    content: contentRef.current!.textContent,
+                  }));
+                }}
+                ref={contentRef}
               />
             </div>
           </div>
