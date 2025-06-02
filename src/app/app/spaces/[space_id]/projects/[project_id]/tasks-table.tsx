@@ -11,16 +11,26 @@ import { SpaceUser } from "@/db/actions/spaces/get";
 import { createTask, Task } from "@/db/actions/tasks/create";
 import { updateTask } from "@/db/actions/tasks/update";
 import debounce from "lodash.debounce";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
 import { deleteTask } from "@/db/actions/tasks/delete";
 
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
+import { Document } from "@/db/actions/documents/get";
+import createDocument from "@/db/actions/documents/create";
+import DocumentModal from "./document-modal";
+import { FilePen } from "lucide-react";
+import { FullTask } from "@/db/actions/tasks/get";
+
 interface TasksTableProps {
-  tasks: Task[];
+  tasks: FullTask[];
   project_id: string;
   space_id: string;
   spaceUsers: SpaceUser[];
@@ -35,29 +45,8 @@ const TasksTable: React.FC<TasksTableProps> = ({
   space_id,
   spaceUsers: users,
 }) => {
-  const [tasks, setTasks] = useState<Task[]>(_tasks);
-  const [mode, setMode] = useState<"normal" | "delete" | "move">("normal");
-
-  useEffect(() => {
-    const doAction = (e: KeyboardEvent) => {
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
-      )
-        return;
-
-      switch (e.key) {
-        case "d":
-        case "D":
-          setMode((prev) => (prev == "delete" ? "normal" : "delete"));
-          break;
-      }
-    };
-
-    document.addEventListener("keypress", doAction);
-
-    return () => document.removeEventListener("keypress", doAction);
-  }, []);
+  const [tasks, setTasks] = useState(_tasks);
+  const [document, setDocument] = useState<Document | null>(null);
 
   const addTask = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
@@ -103,6 +92,7 @@ const TasksTable: React.FC<TasksTableProps> = ({
       toast.error("Failed to save changes. Please try again.");
     }
   };
+
   const changeStatus = async (id: string, checked: boolean) => {
     const status = checked ? "done" : "todo";
     const previousTasks = tasks;
@@ -118,9 +108,8 @@ const TasksTable: React.FC<TasksTableProps> = ({
       toast.error("Failed to save changes. Please try again.");
     }
   };
-  const removeTask = async (task: Task) => {
-    if (mode !== "delete") return;
 
+  const removeTask = async (task: Task) => {
     setTasks((prev) => prev.filter((ts) => ts.id !== task.id));
 
     await deleteTask(task.id, space_id);
@@ -136,22 +125,28 @@ const TasksTable: React.FC<TasksTableProps> = ({
     });
   };
 
+  const openDocument = async (task: FullTask) => {
+    let document = task.document;
+
+    if (!document) {
+      document = await createDocument({
+        space_id: space_id,
+        for_id: task.id,
+        title: task.title,
+        content: task.description,
+        for: "task",
+      });
+
+      setTasks((prev) =>
+        prev.map((ts) => (ts.id === task.id ? { ...task, document } : ts)),
+      );
+    }
+
+    setDocument(document);
+  };
+
   return (
     <section className="my-4">
-      <div className="flex justify-end mb-2">
-        <Button
-          variant="outline"
-          className={cn("px-3", {
-            "bg-accent text-accent-foreground": mode == "delete",
-            "hover:text-inherit hover:bg-inherit": mode !== "delete",
-          })}
-          onClick={() =>
-            setMode((prev) => (prev == "delete" ? "normal" : "delete"))
-          }
-        >
-          <Trash2 size={18} />
-        </Button>
-      </div>
       <div className="shadow-xl overflow-hidden border border-gray-100 dark:border-gray-800">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -168,86 +163,103 @@ const TasksTable: React.FC<TasksTableProps> = ({
             </thead>
             <tbody className="bg-background divide-y divide-gray-200 dark:divide-gray-700">
               {tasks.map((task) => (
-                <tr
-                  key={task.id}
-                  className={cn(
-                    "group transition-colors duration-150 ease-in-out hover:bg-muted/10",
-                    {
-                      "opacity-50": task.status === "done",
-                      "cursor-crosshair": mode === "delete",
-                    },
-                  )}
-                  onClick={() => removeTask(task)}
-                >
-                  <td className="flex h-[50px] items-center justify-center">
-                    <input
-                      type="checkbox"
+                <ContextMenu key={task.id}>
+                  <ContextMenuTrigger asChild>
+                    <tr
                       className={cn(
-                        "size-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded cursor-pointer hover:border-indigo-400 transition-colors",
+                        "group transition-colors duration-150 ease-in-out hover:bg-muted/10",
                         {
-                          "pointer-events-none": mode == "delete",
+                          "opacity-50": task.status === "done",
                         },
                       )}
-                      onChange={(e) => changeStatus(task.id, e.target.checked)}
-                      checked={task.status == "done"}
-                    />
-                  </td>
-                  <td className="whitespace-nowrap">
-                    <input
-                      defaultValue={task.title}
-                      onChange={(e) => changeTitle(e, task.id)}
-                      className={cn("tasks-table-title-column", {
-                        "line-through !text-muted-foreground":
-                          task.status === "done",
-                        "pointer-events-none": mode == "delete",
-                      })}
-                      disabled={task.status == "done"}
-                      aria-label={`Edit task title: ${task.title}`}
-                    />
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate">
-                    {task.description || "-"}
-                  </td>
-                  <td className="tasks-table-columns">
-                    {task.importance || "-"}
-                  </td>
-                  <td className="tasks-table-columns">{task.points || "-"}</td>
-                  <td className="tasks-table-columns !py-1">
-                    <Select
-                      defaultValue={task.assigned_to || "unassigned"}
-                      onValueChange={(val) => changeAssignedTo(val, task.id)}
-                      disabled={task.status == "done"}
                     >
-                      <SelectTrigger
-                        className={cn("", {
-                          "pointer-events-none": mode == "delete",
-                        })}
-                      >
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="unassigned">Unassigned</SelectItem>
-                        {users.map((user) => (
-                          <SelectItem
-                            value={user.id}
-                            key={user.username}
-                            className="pe-8"
-                          >
-                            <Image
-                              width={20}
-                              height={20}
-                              src={user.avatar!}
-                              alt="avatar"
-                              className="inline rounded-full mb-0.5 me-1.5"
-                            />
-                            {user.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </td>
-                  <td className="tasks-table-columns">-</td>
-                </tr>
+                      <td className="flex h-[50px] items-center justify-center">
+                        <input
+                          type="checkbox"
+                          className="size-4 cursor-pointer"
+                          onChange={(e) =>
+                            changeStatus(task.id, e.target.checked)
+                          }
+                          checked={task.status == "done"}
+                        />
+                      </td>
+                      <td className="whitespace-nowrap relative">
+                        <input
+                          defaultValue={task.title}
+                          onChange={(e) => changeTitle(e, task.id)}
+                          className={cn("tasks-table-title-column !pl-12", {
+                            "line-through !text-muted-foreground":
+                              task.status === "done",
+                          })}
+                          disabled={task.status == "done"}
+                          aria-label={`Edit task title: ${task.title}`}
+                        />
+                        <FilePen
+                          size={28}
+                          onClick={() => openDocument(task)}
+                          className={cn(
+                            "rounded-md bg-muted p-1.5 absolute top-1/2 -translate-y-1/2 left-2 cursor-pointer",
+                            {
+                              "bg-primary/20": task.document?.id,
+                            },
+                          )}
+                        />
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate">
+                        {task.description || "-"}
+                      </td>
+                      <td className="tasks-table-columns">
+                        {task.importance || "-"}
+                      </td>
+                      <td className="tasks-table-columns">
+                        {task.points || "-"}
+                      </td>
+                      <td className="tasks-table-columns !py-1">
+                        <Select
+                          defaultValue={task.assigned_to || "unassigned"}
+                          onValueChange={(val) =>
+                            changeAssignedTo(val, task.id)
+                          }
+                          disabled={task.status == "done"}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="unassigned">
+                              Unassigned
+                            </SelectItem>
+                            {users.map((user) => (
+                              <SelectItem
+                                value={user.id}
+                                key={user.username}
+                                className="pe-8"
+                              >
+                                <Image
+                                  width={20}
+                                  height={20}
+                                  src={user.avatar!}
+                                  alt="avatar"
+                                  className="inline rounded-full mb-0.5 me-1.5"
+                                />
+                                {user.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </td>
+                      <td className="tasks-table-columns">-</td>
+                    </tr>
+                  </ContextMenuTrigger>
+                  <ContextMenuContent className="min-w-52">
+                    <ContextMenuItem
+                      onClick={() => removeTask(task)}
+                      className="text-red-400"
+                    >
+                      Delete
+                    </ContextMenuItem>
+                  </ContextMenuContent>
+                </ContextMenu>
               ))}
               <tr>
                 <td colSpan={8}>
@@ -263,6 +275,13 @@ const TasksTable: React.FC<TasksTableProps> = ({
           </table>
         </div>
       </div>
+      {document && (
+        <DocumentModal
+          document={document}
+          dismiss={setDocument}
+          space_id={space_id}
+        />
+      )}
     </section>
   );
 };

@@ -1,10 +1,11 @@
 "use server";
 
 import db from "@/db";
-import { projectsTable, tasksTable } from "@/db/schemas";
-import { and, eq } from "drizzle-orm";
+import { documentsTable, projectsTable, tasksTable } from "@/db/schemas";
+import { and, eq, getTableColumns } from "drizzle-orm";
 import $user from "../spaces/permission";
 import { Task } from "./create";
+import { Document } from "../documents/get";
 
 export async function getTask(id: string, space_id: string) {
   const user = await $user(space_id);
@@ -24,18 +25,28 @@ export async function getTask(id: string, space_id: string) {
   }
 }
 
+export interface FullTask extends Task {
+  document?: Document | null;
+}
+
 export async function getProjectTasks(
   space_id: string,
   project_id: string,
-): Promise<Task[]> {
+): Promise<FullTask[]> {
   const user = await $user(space_id);
 
   if (user.permission == "no-access") throw new Error("Unauthorized Request");
 
   try {
     const tasks = await db
-      .select()
+      .select({
+        ...getTableColumns(tasksTable),
+        document: {
+          ...getTableColumns(documentsTable),
+        },
+      })
       .from(tasksTable)
+      .leftJoin(documentsTable, eq(tasksTable.id, documentsTable.for_id))
       .where(eq(tasksTable.project_id, project_id))
       .orderBy(tasksTable.created_at);
 

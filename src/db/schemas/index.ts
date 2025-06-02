@@ -117,6 +117,30 @@ export const tasksTable = pgTable(
   ],
 );
 
+export const documentForEnum = pgEnum("for", ["task", "capture"]);
+
+export const documentsTable = pgTable(
+  "documents",
+  {
+    id: text("id").primaryKey(),
+    title: text("title"),
+    content: text("content"),
+    space_id: text("space_id")
+      .notNull()
+      .references(() => spacesTable.id),
+    for: documentForEnum(),
+    for_id: text("for_id"),
+    created_at: timestamp("created_at").notNull().defaultNow(),
+    updated_at: timestamp("updated_at"),
+  },
+  (tb) => [
+    check(
+      "for_id exists if for",
+      sql`(${tb.for} IS NULL AND ${tb.for_id} IS NULL) OR (${tb.for} IS NOT NULL AND ${tb.for_id} IS NOT NULL)`,
+    ),
+  ],
+);
+
 export const pomodorosTable = pgTable("pomodoros", {
   id: text("id").primaryKey(),
   user_id: text("user_id")
