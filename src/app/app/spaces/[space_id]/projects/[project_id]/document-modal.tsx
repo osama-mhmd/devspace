@@ -28,10 +28,10 @@ export default function DocumentModal({
   );
 
   const updateContent = React.useCallback(
-    debounce((content: string) => {
-      updateDocument(doc.id, { content }, space_id);
-      setDocument((prev) => ({ ...prev, content }));
-    }, 300),
+    debounce(
+      (content: string) => updateDocument(doc.id, { content }, space_id),
+      300,
+    ),
     [doc.id, space_id],
   );
 
