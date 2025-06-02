@@ -23,12 +23,14 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import getDocument, { Document } from "@/db/actions/documents/get";
+import { Document } from "@/db/actions/documents/get";
 import createDocument from "@/db/actions/documents/create";
 import DocumentModal from "./document-modal";
+import { FilePen } from "lucide-react";
+import { FullTask } from "@/db/actions/tasks/get";
 
 interface TasksTableProps {
-  tasks: Task[];
+  tasks: FullTask[];
   project_id: string;
   space_id: string;
   spaceUsers: SpaceUser[];
@@ -43,9 +45,8 @@ const TasksTable: React.FC<TasksTableProps> = ({
   space_id,
   spaceUsers: users,
 }) => {
-  const [tasks, setTasks] = useState<Task[]>(_tasks);
+  const [tasks, setTasks] = useState(_tasks);
   const [document, setDocument] = useState<Document | null>(null);
-  const [documentVisible, setDocumentVisibility] = useState(false);
 
   const addTask = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
@@ -124,8 +125,9 @@ const TasksTable: React.FC<TasksTableProps> = ({
     });
   };
 
-  const openDocument = async (task: Task) => {
-    let document = await getDocument("for_id", task.id, space_id);
+  const openDocument = async (task: FullTask) => {
+    let document = task.document;
+
     if (!document) {
       document = await createDocument({
         space_id: space_id,
@@ -134,10 +136,13 @@ const TasksTable: React.FC<TasksTableProps> = ({
         content: task.description,
         for: "task",
       });
+
+      setTasks((prev) =>
+        prev.map((ts) => (ts.id === task.id ? { ...task, document } : ts)),
+      );
     }
 
     setDocument(document);
-    setDocumentVisibility(true);
   };
 
   return (
@@ -178,16 +183,26 @@ const TasksTable: React.FC<TasksTableProps> = ({
                           checked={task.status == "done"}
                         />
                       </td>
-                      <td className="whitespace-nowrap">
+                      <td className="whitespace-nowrap relative">
                         <input
                           defaultValue={task.title}
                           onChange={(e) => changeTitle(e, task.id)}
-                          className={cn("tasks-table-title-column", {
+                          className={cn("tasks-table-title-column !pl-12", {
                             "line-through !text-muted-foreground":
                               task.status === "done",
                           })}
                           disabled={task.status == "done"}
                           aria-label={`Edit task title: ${task.title}`}
+                        />
+                        <FilePen
+                          size={28}
+                          onClick={() => openDocument(task)}
+                          className={cn(
+                            "rounded-md bg-muted p-1.5 absolute top-1/2 -translate-y-1/2 left-2 cursor-pointer",
+                            {
+                              "bg-primary/20": task.document?.id,
+                            },
+                          )}
                         />
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate">
@@ -237,9 +252,6 @@ const TasksTable: React.FC<TasksTableProps> = ({
                     </tr>
                   </ContextMenuTrigger>
                   <ContextMenuContent className="min-w-52">
-                    <ContextMenuItem onClick={() => openDocument(task)}>
-                      Open as document
-                    </ContextMenuItem>
                     <ContextMenuItem
                       onClick={() => removeTask(task)}
                       className="text-red-400"
@@ -266,8 +278,7 @@ const TasksTable: React.FC<TasksTableProps> = ({
       {document && (
         <DocumentModal
           document={document}
-          documentVisible={documentVisible}
-          setDocumentVisibility={setDocumentVisibility}
+          dismiss={setDocument}
           space_id={space_id}
         />
       )}

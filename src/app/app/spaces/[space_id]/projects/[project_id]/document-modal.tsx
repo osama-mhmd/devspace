@@ -8,13 +8,11 @@ import DocumentLastUpdate from "./document-last-update";
 
 export default function DocumentModal({
   document,
-  documentVisible,
-  setDocumentVisibility,
+  dismiss,
   space_id,
 }: {
   document: Document;
-  documentVisible: boolean;
-  setDocumentVisibility: (state: boolean) => void;
+  dismiss: (doc: Document | null) => void;
   space_id: string;
 }) {
   const [doc, setDocument] = useState<Document>(document);
@@ -53,12 +51,12 @@ export default function DocumentModal({
     };
   }, [updateTitle, updateContent]);
 
-  if (!documentVisible) return;
+  if (!document) return;
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-20 backdrop-blur-sm"
-      onClick={() => setDocumentVisibility(false)}
+      className="animate-hello fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-20 backdrop-blur-sm"
+      onClick={() => dismiss(null)}
     >
       <div
         className="bg-background rounded-lg shadow-2xl w-full max-w-4xl h-[85vh] flex flex-col overflow-hidden border"
@@ -71,7 +69,7 @@ export default function DocumentModal({
             <div className="w-3 h-3 rounded-full bg-green-400"></div>
           </div>
           <button
-            onClick={() => setDocumentVisibility(false)}
+            onClick={() => dismiss(null)}
             className="p-2 hover:bg-muted rounded-lg transition-colors"
           >
             <X className="size-4" />
