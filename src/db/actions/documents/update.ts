@@ -10,7 +10,7 @@ export default async function updateDocument(
   document_id: string,
   data: Partial<Document>,
   space_id: string,
-) {
+): Promise<Document> {
   try {
     const user = await $user(space_id);
 

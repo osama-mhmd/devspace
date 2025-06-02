@@ -4,6 +4,7 @@ import { Document } from "@/db/actions/documents/get";
 import EditableContent from "@/components/editable-content";
 import updateDocument from "@/db/actions/documents/update";
 import debounce from "lodash.debounce";
+import DocumentLastUpdate from "./document-last-update";
 
 export default function DocumentModal({
   document,
@@ -20,18 +21,24 @@ export default function DocumentModal({
   const contentRef = useRef<HTMLDivElement>(null);
 
   const updateTitle = React.useCallback(
-    debounce(
-      (title: string) => updateDocument(doc.id, { title }, space_id),
-      300,
-    ),
+    debounce(async (title: string) => {
+      const { updated_at } = await updateDocument(doc.id, { title }, space_id);
+
+      setDocument((prev) => ({ ...prev, updated_at }));
+    }, 300),
     [doc.id, space_id],
   );
 
   const updateContent = React.useCallback(
-    debounce(
-      (content: string) => updateDocument(doc.id, { content }, space_id),
-      300,
-    ),
+    debounce(async (content: string) => {
+      const { updated_at } = await updateDocument(
+        doc.id,
+        { content },
+        space_id,
+      );
+
+      setDocument((prev) => ({ ...prev, updated_at }));
+    }, 300),
     [doc.id, space_id],
   );
 
@@ -115,7 +122,9 @@ export default function DocumentModal({
                 words
               </span>
             </div>
-            <div>Last edited now</div>
+            <div>
+              <DocumentLastUpdate updated_at={doc.updated_at} />
+            </div>
           </div>
         </div>
       </div>
