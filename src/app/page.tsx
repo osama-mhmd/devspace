@@ -8,8 +8,13 @@ import From1To2 from "./from-1-to-2";
 import CallAuthorize from "@/components/authorize";
 import Footer from "./footer";
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ login: string }>;
+}) {
   const { session } = await validateRequest();
+  const login = (await searchParams).login !== undefined;
 
   return (
     <main className="flex flex-col">
@@ -26,7 +31,9 @@ export default async function Home() {
               {!session && (
                 <>
                   <CallAuthorize variant="outline">Login</CallAuthorize>
-                  <CallAuthorize arrow="has">Sign up for free</CallAuthorize>
+                  <CallAuthorize defaultOpen={login} arrow="has">
+                    Sign up for free
+                  </CallAuthorize>
                 </>
               )}
               {session && (

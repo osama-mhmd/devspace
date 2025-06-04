@@ -22,7 +22,7 @@ const plans: Plan[] = [
     name: "free",
     features: ["Core Functionality", "Unlimited Projects"],
     action: (router: AppRouterInstance) => {
-      router.push("/auth/login");
+      router.push("/?login");
     },
   },
   {

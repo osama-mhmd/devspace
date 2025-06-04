@@ -15,9 +15,10 @@ import RocketIcon from "@/components/icons/rocket";
 export default function CallAuthorize({
   onClick,
   children,
+  defaultOpen,
   ...props
-}: ButtonProps) {
-  const [open, setOpen] = useState(false);
+}: ButtonProps & { defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen ?? false);
   const [loading, setLoading] = useState(false);
 
   return (

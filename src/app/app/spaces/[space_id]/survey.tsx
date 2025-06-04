@@ -90,7 +90,7 @@ export default function Survey() {
         <DialogHeader>
           <DialogTitle>Survey</DialogTitle>
         </DialogHeader>
-        <p>What do you feel about DevSpace? and the text editor?</p>
+        <p>What do you feel about DevSpace?</p>
         <textarea
           className="p-2 px-4 rounded-md bg-input"
           name="feedback"
