@@ -31,13 +31,17 @@ function getLastPomodoro() {
   };
 }
 
+const defaultPomodoroProps = {
+  id: "",
+  time: 0,
+  type: "work" as "work" | "break",
+  paused: true,
+  timerMax,
+  breakTimerMax,
+};
+
 export default function Pomodoro() {
-  const [pomodoroProps, setPomodoroProps] = useState({
-    id: "",
-    time: 0,
-    type: "work" as "work" | "break",
-    paused: true,
-  });
+  const [pomodoroProps, setPomodoroProps] = useState(defaultPomodoroProps);
 
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -48,14 +52,15 @@ export default function Pomodoro() {
   useEffect(() => {
     const lastPomodoro = getLastPomodoro();
 
-    setPomodoroProps({
+    setPomodoroProps((prev) => ({
+      ...prev,
       id: lastPomodoro.id ?? "",
       time: lastPomodoro.time ? parseInt(lastPomodoro.time) : 0,
       type: (["work", "break"].includes(lastPomodoro.type ?? "")
         ? lastPomodoro.type
         : "work") as "work" | "break",
       paused: lastPomodoro.time ? false : true,
-    });
+    }));
 
     setIsInitialized(true);
 
@@ -86,7 +91,7 @@ export default function Pomodoro() {
             });
         }
 
-        if (prev.type === "work" && prev.time >= timerMax) {
+        if (prev.type === "work" && prev.time >= prev.timerMax) {
           const message = "Time's up! Take a 5 minutes break";
 
           // Notifications (toast, and web)
@@ -95,10 +100,10 @@ export default function Pomodoro() {
 
           // Reset localStorage, and Pomodoro
           saveLocally(0, "break", "");
-          return { id: "", type: "break", time: 0, paused: true };
+          return { ...defaultPomodoroProps, type: "break" };
         }
 
-        if (prev.type === "break" && prev.time >= breakTimerMax) {
+        if (prev.type === "break" && prev.time >= prev.breakTimerMax) {
           const message = "Break finished! Let's start again";
 
           // TODO: this toast is triggered twise in development mode (coz of React.StrictMode)
@@ -107,7 +112,7 @@ export default function Pomodoro() {
 
           // Reset localStorage, and Pomodoro
           saveLocally(0, "work", "");
-          return { id: "", type: "work", time: 0, paused: true };
+          return defaultPomodoroProps;
         }
 
         // update the localStorage
@@ -148,34 +153,108 @@ export default function Pomodoro() {
           </Button>
         </div>
       </PanelTrigger>
-      <PanelBody>
+      <PanelBody className="absolute top-12">
         <PanelHeader>Pomodoro</PanelHeader>
-        <div
-          onClick={() => {
-            setPomodoroProps((prev) => ({ ...prev, paused: !prev.paused }));
-          }}
-          style={{
-            background: `conic-gradient(
-              hsl(var(--primary)) ${
-                pomodoroProps.type == "work"
-                  ? ((timerMax - pomodoroProps.time) / timerMax) * 100
-                  : ((breakTimerMax - pomodoroProps.time) / breakTimerMax) * 100
-              }%,
-              transparent 0
+
+        <div className="flex flex-col items-center space-y-2 py-6">
+          <div
+            onClick={() => {
+              setPomodoroProps((prev) => ({ ...prev, paused: !prev.paused }));
+            }}
+            style={{
+              background: `conic-gradient(
+                ${
+                  pomodoroProps.type === "work"
+                    ? "hsl(15, 100%, 55%)"
+                    : "hsl(120, 60%, 50%)"
+                } ${
+                  pomodoroProps.type === "work"
+                    ? ((pomodoroProps.timerMax - pomodoroProps.time) /
+                        pomodoroProps.timerMax) *
+                      100
+                    : ((pomodoroProps.breakTimerMax - pomodoroProps.time) /
+                        pomodoroProps.breakTimerMax) *
+                      100
+                }%,
+              hsl(var(--muted)) 0
             )`,
-            transition: "background 0.5s linear",
-          }}
-          className="border-4 cursor-pointer hover:bg-muted/30 rounded-full mx-auto border-primary flex items-center justify-center w-36 h-36"
-        >
-          {pomodoroProps.paused ? (
-            <Play fill="white" size={80} stroke="white" />
-          ) : (
-            <Pause fill="white" size={80} stroke="white" />
-          )}
+              transition: "all 0.3s ease-in-out",
+            }}
+            className="relative cursor-pointer rounded-full mx-auto border-8 border-background shadow-2xl flex items-center justify-center w-44 h-44 group"
+          >
+            <div className="absolute inset-2 bg-background rounded-full flex items-center justify-center">
+              <div className="flex flex-col items-center">
+                {pomodoroProps.paused ? (
+                  <Play
+                    fill={
+                      pomodoroProps.type === "work"
+                        ? "hsl(15, 100%, 55%)"
+                        : "hsl(120, 60%, 50%)"
+                    }
+                    size={48}
+                    stroke={
+                      pomodoroProps.type === "work"
+                        ? "hsl(15, 100%, 55%)"
+                        : "hsl(120, 60%, 50%)"
+                    }
+                  />
+                ) : (
+                  <Pause
+                    fill={
+                      pomodoroProps.type === "work"
+                        ? "hsl(15, 100%, 55%)"
+                        : "hsl(120, 60%, 50%)"
+                    }
+                    size={48}
+                    stroke={
+                      pomodoroProps.type === "work"
+                        ? "hsl(15, 100%, 55%)"
+                        : "hsl(120, 60%, 50%)"
+                    }
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center space-y-2">
+            <div className="font-mono text-4xl font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
+              {minutesLeft}:{secondsLeft}
+            </div>
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-sm font-medium uppercase tracking-wider text-muted-foreground mt-4">
+                {pomodoroProps.type} Session
+              </span>
+            </div>
+          </div>
+          <div className="text-center">
+            {pomodoroProps.type == "work" &&
+              [-10, -5, 5, 10].map((el) => (
+                <Button
+                  variant="outline"
+                  key={el}
+                  onClick={() =>
+                    setPomodoroProps((prev) => ({
+                      ...prev,
+                      timerMax: prev.timerMax + el * 60,
+                    }))
+                  }
+                >
+                  {el > 0 ? `+${el}` : el}
+                </Button>
+              ))}
+            {pomodoroProps.type == "break" && (
+              <Button
+                variant="outline"
+                onClick={() =>
+                  setPomodoroProps({ ...defaultPomodoroProps, paused: false })
+                }
+              >
+                Skip break
+              </Button>
+            )}
+          </div>
         </div>
-        <h3 className="text-center mt-4">
-          {minutesLeft}:{secondsLeft} - {pomodoroProps.type}
-        </h3>
       </PanelBody>
     </Panel>
   );

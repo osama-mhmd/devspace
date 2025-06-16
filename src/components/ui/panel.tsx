@@ -4,6 +4,7 @@ import { ReactNode, useState, createContext, useContext } from "react";
 import BackDrop from "./backdrop";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface VisibilityContext {
   visible: boolean;
@@ -50,7 +51,10 @@ export function PanelClose({
   );
 }
 
-export function PanelBody({ children }: HaveChild) {
+export function PanelBody({
+  children,
+  className,
+}: HaveChild & { className?: string }) {
   const visibilityContext = useContext(VisibilityContext);
 
   return (
@@ -59,7 +63,10 @@ export function PanelBody({ children }: HaveChild) {
         <BackDrop closePanel={() => visibilityContext?.setVisibility(false)}>
           <motion.div
             onClick={(e) => e.stopPropagation()}
-            className="bg-card rounded-md p-4 w-full max-w-2xl border"
+            className={cn(
+              "bg-card rounded-md p-4 w-full max-w-2xl border",
+              className,
+            )}
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 20, opacity: 0 }}
