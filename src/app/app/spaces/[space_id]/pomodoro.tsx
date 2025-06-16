@@ -16,40 +16,59 @@ import { toast } from "sonner";
 const timerMax = 25 * 60;
 const breakTimerMax = 5 * 60;
 
-function setCookies(time?: number, type?: "work" | "break", id?: string) {
-  if (time !== undefined) document.cookie = `last-pomodoro.time=${time}`;
-  if (type) document.cookie = `last-pomodoro.type=${type}`;
-  if (id !== undefined) document.cookie = `last-pomodoro.id=${id}`;
+function saveLocally(time?: number, type?: "work" | "break", id?: string) {
+  if (time !== undefined)
+    localStorage.setItem("last-pomodoro.time", time.toString());
+  if (type) localStorage.setItem("last-pomodoro.type", type);
+  if (id !== undefined) localStorage.setItem("last-pomodoro.id", id);
 }
 
-export default function Pomodoro({
-  lastPomodoro,
-}: {
-  lastPomodoro: {
-    id: string | undefined;
-    time: string | undefined;
-    type: string | undefined;
+function getLastPomodoro() {
+  return {
+    id: localStorage.getItem("last-pomodoro.id") || undefined,
+    time: localStorage.getItem("last-pomodoro.time") || undefined,
+    type: localStorage.getItem("last-pomodoro.type") || undefined,
   };
-}) {
+}
+
+export default function Pomodoro() {
   const [pomodoroProps, setPomodoroProps] = useState({
-    id: lastPomodoro.id ?? "",
-    time: lastPomodoro.time ? parseInt(lastPomodoro.time) : 0,
-    type: (["work", "break"].includes(lastPomodoro.type ?? "")
-      ? lastPomodoro.type
-      : "work") as "work" | "break",
-    paused: lastPomodoro.time ? false : true,
+    id: "",
+    time: 0,
+    type: "work" as "work" | "break",
+    paused: true,
   });
+
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const minutesLeft = `${Math.floor(pomodoroProps.time / 60)}`.padStart(2, "0");
   const secondsLeft = `${pomodoroProps.time % 60}`.padStart(2, "0");
 
+  // Initialize from localStorage on component mount
   useEffect(() => {
-    // Enable Notifications
-    Notification.requestPermission().then((result) => console.log(result));
+    const lastPomodoro = getLastPomodoro();
+
+    setPomodoroProps({
+      id: lastPomodoro.id ?? "",
+      time: lastPomodoro.time ? parseInt(lastPomodoro.time) : 0,
+      type: (["work", "break"].includes(lastPomodoro.type ?? "")
+        ? lastPomodoro.type
+        : "work") as "work" | "break",
+      paused: lastPomodoro.time ? false : true,
+    });
+
+    setIsInitialized(true);
 
     if (lastPomodoro.time || lastPomodoro.type == "break") {
       toast("Resuming your last pomodoro");
     }
+  }, []);
+
+  useEffect(() => {
+    if (!isInitialized) return;
+
+    // Enable Notifications
+    Notification.requestPermission().then((result) => console.log(result));
 
     const interval = setInterval(async () => {
       setPomodoroProps((prev) => {
@@ -57,6 +76,7 @@ export default function Pomodoro({
 
         // saving to the db every minute in the work mode
         if (prev.time % 60 == 0 && prev.type === "work" && prev.time !== 0) {
+          // FIX: Cannot update a component while rendering a different component
           updatePomodoro(prev.id, prev.time)
             .then((result) => {
               if (!result) toast.error("Something went wrong!");
@@ -73,8 +93,8 @@ export default function Pomodoro({
           toast.success(message);
           new Notification(message);
 
-          // Reset Cookie, and Pomodoro
-          setCookies(0, "break", "");
+          // Reset localStorage, and Pomodoro
+          saveLocally(0, "break", "");
           return { id: "", type: "break", time: 0, paused: true };
         }
 
@@ -85,22 +105,24 @@ export default function Pomodoro({
           toast.success(message);
           new Notification(message);
 
-          // Reset Cookies, and Pomodoro
-          setCookies(0, "work", "");
+          // Reset localStorage, and Pomodoro
+          saveLocally(0, "work", "");
           return { id: "", type: "work", time: 0, paused: true };
         }
 
-        // update the cookies
-        setCookies(prev.time + 1);
+        // update the localStorage
+        saveLocally(prev.time + 1);
 
         return { ...prev, time: prev.time + 1 };
       });
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isInitialized]);
 
   useEffect(() => {
+    if (!isInitialized) return;
+
     if (!pomodoroProps.id && pomodoroProps.type == "work") {
       createPomodoro().then((id) => {
         if (!id) {
@@ -110,11 +132,11 @@ export default function Pomodoro({
           return;
         }
 
-        setCookies(undefined, undefined, id);
+        saveLocally(undefined, undefined, id);
         setPomodoroProps((prev) => ({ ...prev, id }));
       });
     }
-  }, [pomodoroProps.id, pomodoroProps.type]);
+  }, [pomodoroProps.id, pomodoroProps.type, isInitialized]);
 
   return (
     <Panel>
