@@ -32,3 +32,6 @@ export function isWithinExpirationDate(expirationDate: Date) {
     return false;
   }
 }
+
+export const isNumericString = (value: unknown) =>
+  typeof value === "string" && /^\d+$/.test(value);

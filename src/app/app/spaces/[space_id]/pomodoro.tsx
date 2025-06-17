@@ -9,8 +9,9 @@ import {
 } from "@/components/ui/panel";
 import createPomodoro from "@/db/actions/pomodoros/create";
 import updatePomodoro from "@/db/actions/pomodoros/update";
+import { isNumericString } from "@/db/utils/utils";
 import { AlarmClock, Pause, Play } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { toast } from "sonner";
 
 const timerMax = 25 * 60;
@@ -24,11 +25,22 @@ function saveLocally(time?: number, type?: "work" | "break", id?: string) {
 }
 
 function getLastPomodoro() {
-  return {
-    id: localStorage.getItem("last-pomodoro.id") || undefined,
-    time: localStorage.getItem("last-pomodoro.time") || undefined,
-    type: localStorage.getItem("last-pomodoro.type") || undefined,
-  };
+  const keys = ["id", "time", "type", "timerMax", "breakTimerMax"] as const;
+
+  const result = {} as typeof defaultPomodoroProps;
+
+  for (const key of keys) {
+    const value = localStorage.getItem(`last-pomodoro.${key}`);
+
+    if (!value) continue;
+
+    Object.defineProperty(result, key, {
+      value: isNumericString(value) ? +value : value,
+      enumerable: true,
+    });
+  }
+
+  return result;
 }
 
 const defaultPomodoroProps = {
@@ -48,19 +60,14 @@ export default function Pomodoro() {
   const minutesLeft = `${Math.floor(pomodoroProps.time / 60)}`.padStart(2, "0");
   const secondsLeft = `${pomodoroProps.time % 60}`.padStart(2, "0");
 
-  // Initialize from localStorage on component mount
   useEffect(() => {
     const lastPomodoro = getLastPomodoro();
 
-    setPomodoroProps((prev) => ({
-      ...prev,
-      id: lastPomodoro.id ?? "",
-      time: lastPomodoro.time ? parseInt(lastPomodoro.time) : 0,
-      type: (["work", "break"].includes(lastPomodoro.type ?? "")
-        ? lastPomodoro.type
-        : "work") as "work" | "break",
-      paused: lastPomodoro.time ? false : true,
-    }));
+    setPomodoroProps({
+      ...defaultPomodoroProps,
+      ...lastPomodoro,
+      paused: !lastPomodoro.time,
+    });
 
     setIsInitialized(true);
 
@@ -81,14 +88,15 @@ export default function Pomodoro() {
 
         // saving to the db every minute in the work mode
         if (prev.time % 60 == 0 && prev.type === "work" && prev.time !== 0) {
-          // FIX: Cannot update a component while rendering a different component
-          updatePomodoro(prev.id, prev.time)
-            .then((result) => {
+          // FIX: Bad approach, I think :(
+          setTimeout(async () => {
+            try {
+              const result = await updatePomodoro(prev.id, prev.time);
               if (!result) toast.error("Something went wrong!");
-            })
-            .catch(() => {
-              toast.error("Something went wrong!");
-            });
+            } catch {
+              toast.error("Something went wrong");
+            }
+          }, 500);
         }
 
         if (prev.type === "work" && prev.time >= prev.timerMax) {
@@ -142,6 +150,28 @@ export default function Pomodoro() {
       });
     }
   }, [pomodoroProps.id, pomodoroProps.type, isInitialized]);
+
+  const changeMax = useCallback(
+    (timer: "timerMax" | "breakTimerMax", minutes: number) => {
+      const proposedNewTime = pomodoroProps[timer] + minutes * 60;
+
+      const thresholds = {
+        timerMax: 15,
+        breakTimerMax: 2,
+      } as const;
+
+      if (proposedNewTime < thresholds[timer] * 60) {
+        toast(`Work timer cannot be less than ${thresholds[timer]} minutes`);
+        return;
+      }
+
+      setPomodoroProps((prev) => ({
+        ...prev,
+        [timer]: proposedNewTime,
+      }));
+    },
+    [pomodoroProps.timerMax, pomodoroProps.breakTimerMax],
+  );
 
   return (
     <Panel>
@@ -224,6 +254,11 @@ export default function Pomodoro() {
             <div className="flex items-center justify-center gap-2">
               <span className="text-sm font-medium uppercase tracking-wider text-muted-foreground mt-4">
                 {pomodoroProps.type} Session
+                <span className="size-2 bg-blue-700 inline-block mx-2 rounded-full"></span>
+                {(pomodoroProps.type == "work"
+                  ? pomodoroProps.timerMax
+                  : pomodoroProps.breakTimerMax) / 60}{" "}
+                minute
               </span>
             </div>
           </div>
@@ -233,12 +268,17 @@ export default function Pomodoro() {
                 <Button
                   variant="outline"
                   key={el}
-                  onClick={() =>
-                    setPomodoroProps((prev) => ({
-                      ...prev,
-                      timerMax: prev.timerMax + el * 60,
-                    }))
-                  }
+                  onClick={() => changeMax("timerMax", el)}
+                >
+                  {el > 0 ? `+${el}` : el}
+                </Button>
+              ))}
+            {pomodoroProps.type == "break" &&
+              [-1, 1].map((el) => (
+                <Button
+                  variant="outline"
+                  key={el}
+                  onClick={() => changeMax("breakTimerMax", el)}
                 >
                   {el > 0 ? `+${el}` : el}
                 </Button>
