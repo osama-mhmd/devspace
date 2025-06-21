@@ -1,11 +1,12 @@
 import Habit from "@/types/habit";
 import AddHabit from "./add-habit";
 import {
-  Panel,
-  PanelBody,
-  PanelHeader,
-  PanelTrigger,
-} from "@/components/ui/panel";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import SaveRecordButton from "./save-record";
 import getRecords from "@/db/actions/habits/get-records";
 import HabitLink from "./habit-link";
@@ -43,8 +44,8 @@ export default async function Habits({ habits }: { habits: Habit[] }) {
           }
 
           return (
-            <Panel key={index}>
-              <PanelTrigger>
+            <Dialog key={index}>
+              <DialogTrigger>
                 <div
                   className={cn(
                     "rounded-md bg-green-300 flex justify-between items-center hover:ring-2 ring-black dark:ring-white dark:bg-green-800/30 py-3 px-4 cursor-pointer",
@@ -72,13 +73,13 @@ export default async function Habits({ habits }: { habits: Habit[] }) {
                     )}
                   </div>
                 </div>
-              </PanelTrigger>
-              <PanelBody>
-                <PanelHeader>
-                  <h3>{habit.name}</h3>
-                </PanelHeader>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>{habit.name}</DialogTitle>
+                </DialogHeader>
                 <p>{habit.quote}</p>
-                <div className="m-1 rounded-md bg-gray-200 dark:bg-gray-800 p-4 text-center">
+                <div className="m-1 rounded-md bg-muted/50 p-4 text-center">
                   {done ? (
                     <p className="text-muted-foreground font-bold">
                       <CircleCheck
@@ -94,8 +95,8 @@ export default async function Habits({ habits }: { habits: Habit[] }) {
                     </div>
                   )}
                 </div>
-              </PanelBody>
-            </Panel>
+              </DialogContent>
+            </Dialog>
           );
         })}
         {!habits.length && <i>{m.noHabits()}</i>}

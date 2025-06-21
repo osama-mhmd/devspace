@@ -95,14 +95,3 @@ const useStep = () => {
 
   return stepContext;
 };
-
-/**
- * Anatomy:
- * <Panel>
- *  <PanelTrigger><Button>Show Settings</Button></PanelTrigger>
- *  <PanelBody>
- *    <PanelHeader>Settings</PanelHeader>
- *    <PanelContent>{// here is your content \\}</PanelContent>
- *  </PanelBody>
- * </Panel>
- */

@@ -2,11 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Panel,
-  PanelBody,
-  PanelHeader,
-  PanelTrigger,
-} from "@/components/ui/panel";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useForm } from "react-hook-form";
 import { habitFields, HabitFields } from "./schema";
@@ -47,16 +48,16 @@ export default function AddHabit() {
   }
 
   return (
-    <Panel>
-      <PanelTrigger>
+    <Dialog>
+      <DialogTrigger>
         <div className="p-4 border-2 cursor-pointer border-green-400 dark:border-green-700/30 dark:hover:bg-green-700/20 hover:bg-green-300/50 transition rounded-md">
           <PlusCircle className="mx-auto" />
         </div>
-      </PanelTrigger>
-      <PanelBody>
-        <PanelHeader>
-          <h3>{m.createAHabit()}</h3>
-        </PanelHeader>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{m.createAHabit()}</DialogTitle>
+        </DialogHeader>
         <form
           onSubmit={handleSubmit(async (data) => await onsubmit(data))}
           className="flex flex-col gap-2 w-full"
@@ -91,7 +92,7 @@ export default function AddHabit() {
             {m.add()}
           </Button>
         </form>
-      </PanelBody>
-    </Panel>
+      </DialogContent>
+    </Dialog>
   );
 }
