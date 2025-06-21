@@ -2,11 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Panel,
-  PanelBody,
-  PanelHeader,
-  PanelTrigger,
-} from "@/components/ui/panel";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import createPomodoro from "@/db/actions/pomodoros/create";
 import updatePomodoro from "@/db/actions/pomodoros/update";
 import { isNumericString } from "@/db/utils/utils";
@@ -95,6 +96,7 @@ export default function Pomodoro() {
     Notification.requestPermission().then((result) => console.log(result));
 
     const initialTime = Date.now() - pomodoroProps.time * 1000;
+    pausedAt.current = Date.now();
 
     const interval = setInterval(async () => {
       setPomodoroProps((prev) => {
@@ -190,29 +192,37 @@ export default function Pomodoro() {
     [pomodoroProps.timerMax, pomodoroProps.breakTimerMax],
   );
 
+  console.log(pausedTime);
+
+  const handlePause = useCallback(() => {
+    if (!isInitialized) return;
+
+    const paused = !pomodoroProps.paused;
+
+    if (paused) pausedAt.current = Date.now();
+    if (!paused) pausedTime.current += Date.now() - pausedAt.current;
+
+    setPomodoroProps((prev) => ({ ...prev, paused }));
+  }, [isInitialized, pomodoroProps.paused]);
+
   return (
-    <Panel>
-      <PanelTrigger>
+    <Dialog>
+      <DialogTrigger asChild>
         <div className="fixed z-[23] top-2 right-2 rtl:left-2">
           <Button variant="secondary" className="gap-2">
             {minutesLeft}:{secondsLeft}
             <AlarmClock size={18} className="mb-0.5" />
           </Button>
         </div>
-      </PanelTrigger>
-      <PanelBody className="absolute top-12">
-        <PanelHeader>Pomodoro</PanelHeader>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Pomodoro</DialogTitle>
+        </DialogHeader>
 
         <div className="flex flex-col items-center space-y-2 py-6">
           <div
-            onClick={() => {
-              const paused = !pomodoroProps.paused;
-
-              if (paused) pausedAt.current = Date.now();
-              if (!paused) pausedTime.current += Date.now() - pausedAt.current;
-
-              setPomodoroProps((prev) => ({ ...prev, paused }));
-            }}
+            onClick={handlePause}
             style={{
               background: `conic-gradient(
                 ${
@@ -284,7 +294,7 @@ export default function Pomodoro() {
               </span>
             </div>
           </div>
-          <div className="text-center">
+          <div className="text-center space-x-1">
             {pomodoroProps.type == "work" &&
               [-10, -5, 5, 10].map((el) => (
                 <Button
@@ -317,7 +327,7 @@ export default function Pomodoro() {
             )}
           </div>
         </div>
-      </PanelBody>
-    </Panel>
+      </DialogContent>
+    </Dialog>
   );
 }
