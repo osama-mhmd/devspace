@@ -11,7 +11,7 @@ import createPomodoro from "@/db/actions/pomodoros/create";
 import updatePomodoro from "@/db/actions/pomodoros/update";
 import { isNumericString } from "@/db/utils/utils";
 import { AlarmClock, Pause, Play } from "lucide-react";
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useState, useRef } from "react";
 import { toast } from "sonner";
 
 const timerMax = 25 * 60;
@@ -25,9 +25,9 @@ function saveLocally(time?: number, type?: "work" | "break", id?: string) {
 }
 
 function getLastPomodoro() {
-  const keys = ["id", "time", "type", "timerMax", "breakTimerMax"] as const;
+  const keys = Object.keys(defaultPomodoroProps);
 
-  const result = {} as typeof defaultPomodoroProps;
+  const result = {} as Pomodoro;
 
   for (const key of keys) {
     const value = localStorage.getItem(`last-pomodoro.${key}`);
@@ -43,19 +43,31 @@ function getLastPomodoro() {
   return result;
 }
 
-const defaultPomodoroProps = {
+interface Pomodoro {
+  id: string;
+  time: number;
+  type: "work" | "break";
+  paused: boolean;
+  timerMax: number;
+  breakTimerMax: number;
+}
+
+const defaultPomodoroProps: Pomodoro = {
   id: "",
   time: 0,
-  type: "work" as "work" | "break",
+  type: "work",
   paused: true,
   timerMax,
   breakTimerMax,
 };
 
 export default function Pomodoro() {
-  const [pomodoroProps, setPomodoroProps] = useState(defaultPomodoroProps);
+  const [pomodoroProps, setPomodoroProps] =
+    useState<Pomodoro>(defaultPomodoroProps);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
-  const [isInitialized, setIsInitialized] = useState(false);
+  const pausedTime = useRef<number>(0);
+  const pausedAt = useRef<number>(0);
 
   const minutesLeft = `${Math.floor(pomodoroProps.time / 60)}`.padStart(2, "0");
   const secondsLeft = `${pomodoroProps.time % 60}`.padStart(2, "0");
@@ -82,12 +94,18 @@ export default function Pomodoro() {
     // Enable Notifications
     Notification.requestPermission().then((result) => console.log(result));
 
+    const initialTime = Date.now() - pomodoroProps.time * 1000;
+
     const interval = setInterval(async () => {
       setPomodoroProps((prev) => {
         if (prev.paused) return prev;
 
+        const time = Math.floor(
+          (Date.now() - (initialTime + pausedTime.current)) / 1000,
+        );
+
         // saving to the db every minute in the work mode
-        if (prev.time % 60 == 0 && prev.type === "work" && prev.time !== 0) {
+        if (time % 60 == 0 && prev.type === "work" && time !== 0) {
           // FIX: Bad approach, I think :(
           setTimeout(async () => {
             try {
@@ -99,7 +117,7 @@ export default function Pomodoro() {
           }, 500);
         }
 
-        if (prev.type === "work" && prev.time >= prev.timerMax) {
+        if (prev.type === "work" && time >= prev.timerMax) {
           const message = "Time's up! Take a 5 minutes break";
 
           // Notifications (toast, and web)
@@ -111,10 +129,9 @@ export default function Pomodoro() {
           return { ...defaultPomodoroProps, type: "break" };
         }
 
-        if (prev.type === "break" && prev.time >= prev.breakTimerMax) {
+        if (prev.type === "break" && time >= prev.breakTimerMax) {
           const message = "Break finished! Let's start again";
 
-          // TODO: this toast is triggered twise in development mode (coz of React.StrictMode)
           toast.success(message);
           new Notification(message);
 
@@ -124,9 +141,9 @@ export default function Pomodoro() {
         }
 
         // update the localStorage
-        saveLocally(prev.time + 1);
+        saveLocally(time);
 
-        return { ...prev, time: prev.time + 1 };
+        return { ...prev, time: time };
       });
     }, 1000);
 
@@ -189,7 +206,12 @@ export default function Pomodoro() {
         <div className="flex flex-col items-center space-y-2 py-6">
           <div
             onClick={() => {
-              setPomodoroProps((prev) => ({ ...prev, paused: !prev.paused }));
+              const paused = !pomodoroProps.paused;
+
+              if (paused) pausedAt.current = Date.now();
+              if (!paused) pausedTime.current += Date.now() - pausedAt.current;
+
+              setPomodoroProps((prev) => ({ ...prev, paused }));
             }}
             style={{
               background: `conic-gradient(
