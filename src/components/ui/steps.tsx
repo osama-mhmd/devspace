@@ -10,7 +10,6 @@ import {
 } from "react";
 import { AnimatePresence, HTMLMotionProps, motion } from "framer-motion";
 import { Button } from "./button";
-import { HaveChild } from "./panel";
 import { cn } from "@/lib/utils";
 
 interface StepContext {

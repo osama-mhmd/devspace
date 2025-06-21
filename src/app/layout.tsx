@@ -26,11 +26,7 @@ export const metadata: Metadata = {
     "Everyday you see a new note taking app appears, but they all don't fit you. Don't worry, this app will fit you",
 };
 
-export default async function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default async function RootLayout({ children }: Readonly<HaveChild>) {
   const { session } = await validateRequest();
 
   const cookieLang = (await cookies()).get("lang")?.value;

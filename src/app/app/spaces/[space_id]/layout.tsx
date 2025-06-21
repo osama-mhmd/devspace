@@ -1,11 +1,7 @@
 import { cookies } from "next/headers";
 import Pomodoro from "./pomodoro";
 
-export default async function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function Layout({ children }: HaveChild) {
   const cs = await cookies(); // cookie store
   const lastPomodoroType = cs.get("last-pomodoro.type")?.value;
   const lastPomodoroId = cs.get("last-pomodoro.id")?.value;
