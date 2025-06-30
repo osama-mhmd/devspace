@@ -26,7 +26,6 @@ import {
 import { Document } from "@/db/actions/documents/get";
 import createDocument from "@/db/actions/documents/create";
 import DocumentModal from "./document-modal";
-import { FilePen } from "lucide-react";
 import { FullTask } from "@/db/actions/tasks/get";
 
 interface TasksTableProps {
@@ -187,23 +186,32 @@ const TasksTable: React.FC<TasksTableProps> = ({
                         <input
                           defaultValue={task.title}
                           onChange={(e) => changeTitle(e, task.id)}
-                          className={cn("tasks-table-title-column !pl-12", {
+                          className={cn("tasks-table-title-column", {
                             "line-through !text-muted-foreground":
                               task.status === "done",
                           })}
                           disabled={task.status == "done"}
                           aria-label={`Edit task title: ${task.title}`}
                         />
-                        <FilePen
-                          size={28}
+                        <span
+                          role="button"
                           onClick={() => openDocument(task)}
-                          className={cn(
-                            "rounded-md bg-muted p-1.5 absolute top-1/2 -translate-y-1/2 left-2 cursor-pointer",
-                            {
-                              "bg-primary/20": task.document?.id,
-                            },
-                          )}
-                        />
+                          className="rounded-md opacity-0 group-hover:opacity-100 transition bg-muted p-1.5 px-2 absolute top-1/2 -translate-y-1/2 right-2 cursor-pointer"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width={20}
+                            height={20}
+                            viewBox="0 0 14 14"
+                          >
+                            <path
+                              fill="currentColor"
+                              fillRule="evenodd"
+                              d="M8.403.419c-.94 0-1.854.093-2.72.192a2.59 2.59 0 0 0-2.275 2.281c-.095.863-.182 1.771-.182 2.705c0 .933.087 1.841.182 2.704a2.59 2.59 0 0 0 2.275 2.281c.866.1 1.78.192 2.72.192s1.855-.093 2.72-.192A2.59 2.59 0 0 0 13.4 8.301c.095-.863.182-1.771.182-2.704s-.087-1.842-.182-2.705A2.59 2.59 0 0 0 11.124.611c-.866-.099-1.78-.192-2.72-.192Zm1.553 6.695a.75.75 0 0 1-.576-.44a5 5 0 0 0-.345-.65L7.28 7.78a.75.75 0 1 1-1.06-1.06l1.753-1.754a5 5 0 0 0-.642-.34a.75.75 0 0 1-.44-.576a.67.67 0 0 1 .399-.71c.426-.19.956-.247 1.461-.206c.51.042 1.047.189 1.493.456a.5.5 0 0 1 .172.172c.268.446.414.983.456 1.493c.042.506-.015 1.035-.206 1.462a.67.67 0 0 1-.71.398ZM1.802 5.16a.75.75 0 0 0-1.478-.252c-.057.33-.155 1.228-.155 2.43c0 1.29.135 2.543.267 3.714a2.84 2.84 0 0 0 2.492 2.499c1.175.136 2.436.28 3.735.28a17 17 0 0 0 2.185-.128a.75.75 0 0 0-.221-1.483c-.226.034-.978.111-1.964.111c-1.2 0-2.378-.133-3.562-.27a1.34 1.34 0 0 1-1.175-1.176C1.794 9.71 1.67 8.533 1.67 7.337c0-1.134.094-1.945.133-2.177Z"
+                              clipRule="evenodd"
+                            ></path>
+                          </svg>
+                        </span>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate">
                         {task.description || "-"}
